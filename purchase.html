@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Purchase AB-M1 from Athletic Biotechnics using Stripe or Shopify checkout.">
+    <title>Purchase AB-M1 | Athletic Biotechnics</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="venture-home performance-home">
+    <canvas id="marble-field" aria-hidden="true"></canvas>
+    <header class="site-header venture-header">
+      <a class="brand" href="index.html"><span class="brand-mark">AB</span><span>Athletic Biotechnics</span></a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="index.html#products">Products</a>
+        <a href="product.html">AB-M1</a>
+        <a href="cart.html">Cart</a>
+      </nav>
+      <a class="nav-cta" href="cart.html">View cart</a>
+    </header>
+
+    <main class="page-main commerce-main">
+      <section class="purchase-hero">
+        <div>
+          <p class="eyebrow">Secure purchase</p>
+          <h1>AB-M1 Compact Athlete's Metronome.</h1>
+          <p>
+            Use Stripe Payment Links or Shopify Buy Button checkout. Both embeds
+            are ready; add your live account IDs in commerce-config.js.
+          </p>
+        </div>
+        <figure class="image-tile purchase-product-image">
+          <img src="images/image4.png" alt="AB-M1 compact athlete's metronome">
+          <figcaption>AB-M1</figcaption>
+        </figure>
+      </section>
+
+      <section class="checkout-grid">
+        <article class="checkout-panel">
+          <span class="section-kicker">Stripe</span>
+          <h2>Payment Links Buy Button</h2>
+          <p>Best when you want a fast hosted checkout without building a backend.</p>
+          <div class="commerce-embed" data-stripe-buy-button></div>
+        </article>
+
+        <article class="checkout-panel">
+          <span class="section-kicker">Shopify</span>
+          <h2>Buy Button + Cart</h2>
+          <p>Best when you want Shopify products, inventory, orders, tax, shipping, and cart behavior.</p>
+          <div class="commerce-embed" data-shopify-buy-button></div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Athletic Biotechnics</span>
+      <span><a href="cart.html">Back to cart</a></span>
+    </footer>
+    <script src="commerce-config.js"></script>
+    <script src="commerce.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
