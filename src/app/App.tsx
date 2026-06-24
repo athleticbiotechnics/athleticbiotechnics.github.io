@@ -30,6 +30,8 @@ import alpineBackground from "@/imports/alpine-background.avif";
 import mcdonaldLakeBackground from "@/imports/mcdonald-lake-background.jpg";
 import glacierSnowBackground from "@/imports/glacier-snow-background.jpg";
 import legalIceBackground from "@/imports/legal-ice-background.webp";
+import kenzoTree from "@/imports/kenzo-tree.jpg";
+import sidakProfile from "@/imports/sidak-profile.jpg";
 
 /* dark-bg logo treatment: invert dark-on-white to light-on-transparent */
 const LOGO_STYLE: React.CSSProperties = {
@@ -218,10 +220,12 @@ function Navbar({
   scrolled,
   onHome,
   onPreorder,
+  onNavigateSection,
 }: {
   scrolled: boolean;
   onHome: () => void;
   onPreorder: () => void;
+  onNavigateSection: (section: string) => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -258,20 +262,28 @@ function Navbar({
           onClick={onHome}
           aria-label="Arktos Systems home"
         >
-          <ImageWithFallback
-            src={logoWordmark}
-            alt="Arktos"
-            className="h-6 w-full object-contain"
-            style={{ ...LOGO_STYLE, opacity: 0.72 }}
-          />
+          <span
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              fontSize: "1.05rem",
+              fontWeight: 500,
+              letterSpacing: "0.52em",
+              color: "rgba(235,245,255,0.78)",
+              textTransform: "uppercase",
+              textShadow: "0 0 20px rgba(140,210,255,0.16)",
+            }}
+          >
+            Arktos
+          </span>
         </button>
 
         {/* Desktop links */}
         <ul className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
             <li key={link}>
-              <a
-                href={`#${link.toLowerCase()}`}
+              <button
+                type="button"
+                onClick={() => onNavigateSection(link.toLowerCase())}
                 style={{
                   fontFamily: "'Barlow', sans-serif",
                   fontWeight: 400,
@@ -282,14 +294,14 @@ function Navbar({
                   textDecoration: "none",
                 }}
                 onMouseEnter={(e) =>
-                  ((e.target as HTMLAnchorElement).style.color = "rgba(255,255,255,0.95)")
+                  ((e.target as HTMLButtonElement).style.color = "rgba(255,255,255,0.95)")
                 }
                 onMouseLeave={(e) =>
-                  ((e.target as HTMLAnchorElement).style.color = "oklch(0.68 0.02 225)")
+                  ((e.target as HTMLButtonElement).style.color = "oklch(0.68 0.02 225)")
                 }
               >
                 {link}
-              </a>
+              </button>
             </li>
           ))}
         </ul>
@@ -332,9 +344,12 @@ function Navbar({
           <ul className="flex flex-col gap-4">
             {NAV_LINKS.map((link) => (
               <li key={link}>
-                <a
-                  href={`#${link.toLowerCase()}`}
-                  onClick={() => setOpen(false)}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    onNavigateSection(link.toLowerCase());
+                  }}
                   style={{
                     fontFamily: "'Barlow', sans-serif",
                     color: "rgba(255,255,255,0.7)",
@@ -343,7 +358,7 @@ function Navbar({
                   }}
                 >
                   {link}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
@@ -911,7 +926,7 @@ function GlacierLine({ onPreorder }: { onPreorder: () => void }) {
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={glacierSnowBackground} position="center" opacity={0.96} />
+      <PhotoBackdrop image={glacierPrototype} position="center 38%" opacity={0.9} />
       <div
         className="absolute inset-0 pointer-events-none opacity-70"
         style={{
@@ -1040,6 +1055,8 @@ const TEAM = [
     initials: "SM",
     gradient: "linear-gradient(135deg, oklch(0.68 0.14 220), oklch(0.52 0.16 244))",
     accent: "oklch(0.74 0.11 216)",
+    photo: sidakProfile,
+    photoPosition: "center 32%",
   },
   {
     name: "Kenzo Liddle",
@@ -1048,6 +1065,8 @@ const TEAM = [
     initials: "KL",
     gradient: "linear-gradient(135deg, oklch(0.58 0.14 196), oklch(0.48 0.14 220))",
     accent: "oklch(0.68 0.13 196)",
+    photo: kenzoTree,
+    photoPosition: "center 52%",
   },
 ];
 
@@ -1132,16 +1151,19 @@ function Team() {
                 {/* Avatar + name */}
                 <div className="flex items-center gap-5">
                   <div
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 text-lg font-semibold text-white"
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden"
                     style={{
-                      background: member.gradient,
                       boxShadow: `0 0 32px ${member.accent}44`,
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      letterSpacing: "0.06em",
-                      fontSize: "1.15rem",
+                      border: `1px solid ${member.accent}44`,
+                      background: member.gradient,
                     }}
                   >
-                    {member.initials}
+                    <img
+                      src={member.photo}
+                      alt={`${member.name} profile`}
+                      className="w-full h-full object-cover"
+                      style={{ objectPosition: member.photoPosition }}
+                    />
                   </div>
                   <div>
                     <h3
@@ -1880,6 +1902,20 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   };
 
+  const goSection = (section: string) => {
+    setPage("home");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const target = document.getElementById(section);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      });
+    });
+  };
+
   const goLegalPage = (nextPage: "privacy" | "terms") => {
     setPage(nextPage);
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
@@ -1891,7 +1927,12 @@ export default function App() {
       style={{ fontFamily: "'Barlow', sans-serif", background: "oklch(0.09 0.022 242)" }}
     >
       <Snow />
-      <Navbar scrolled={scrolled} onHome={goHome} onPreorder={goPreorder} />
+      <Navbar
+        scrolled={scrolled}
+        onHome={goHome}
+        onPreorder={goPreorder}
+        onNavigateSection={goSection}
+      />
       {page === "home" ? (
         <>
           <Hero onPreorder={goPreorder} />
