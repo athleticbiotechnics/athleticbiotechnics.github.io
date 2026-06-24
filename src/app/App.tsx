@@ -15,11 +15,21 @@ import {
   Leaf,
   Cpu,
   Wind,
+  Instagram,
+  Youtube,
+  MessageCircle,
 } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import logoDiamond from "@/imports/ChatGPT_Image_Jun_23__2026__10_27_23_AM-1.png";
 import logoPanoramic from "@/imports/f91d02c4-0551-4c7a-ba6c-43bb14ed07ee-1.png";
 import logoWordmark from "@/imports/baf1f67e-cc7b-4774-b710-419ff7e8d793-1.png";
+import glacierCave from "@/imports/glacier-cave.jpg";
+import glacierField from "@/imports/glacier-field.jpg";
+import glacierPrototype from "@/imports/glacier-prototype.jpg";
+import alpineBackground from "@/imports/alpine-background.avif";
+import mcdonaldLakeBackground from "@/imports/mcdonald-lake-background.jpg";
+import glacierSnowBackground from "@/imports/glacier-snow-background.jpg";
+import legalIceBackground from "@/imports/legal-ice-background.webp";
 
 /* dark-bg logo treatment: invert dark-on-white to light-on-transparent */
 const LOGO_STYLE: React.CSSProperties = {
@@ -43,15 +53,52 @@ function GlassPanel({
 }) {
   return (
     <div
-      className={`backdrop-blur-[28px] bg-white/[0.06] border border-white/[0.12] rounded-2xl ${className}`}
+      className={`backdrop-blur-[10px] bg-slate-950/[0.5] border border-white/[0.16] rounded-2xl ${className}`}
       style={{
+        backdropFilter: "blur(6px) saturate(1.08)",
+        background: "rgba(5,12,26,0.58)",
         boxShadow:
-          "inset 0 1.5px 0 rgba(200,230,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.2), 0 24px 64px rgba(0,0,0,0.6)",
+          "inset 0 1.5px 0 rgba(200,230,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.22), 0 24px 64px rgba(0,0,0,0.56)",
         ...style,
       }}
     >
       {children}
     </div>
+  );
+}
+
+function PhotoBackdrop({
+  image,
+  position = "center",
+  opacity = 0.9,
+}: {
+  image: string;
+  position?: string;
+  opacity?: number;
+}) {
+  return (
+    <>
+      <img
+        src={image}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{ objectPosition: position, opacity, filter: "brightness(0.78) saturate(1.02)" }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(3,8,18,0.58) 0%, rgba(5,14,30,0.46) 45%, rgba(3,8,18,0.76) 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 24%, rgba(255,255,255,0.08) 0%, transparent 55%)",
+        }}
+      />
+    </>
   );
 }
 
@@ -102,13 +149,14 @@ function GhostBtn({
   return (
     <button
       onClick={onClick}
-      className={`group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-sm font-medium tracking-wide backdrop-blur-xl border transition-all duration-300 hover:bg-white/[0.1] hover:border-white/[0.2] ${className}`}
+      className={`group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-sm font-medium tracking-wide border transition-all duration-300 hover:bg-white/[0.1] hover:border-white/[0.2] ${className}`}
       style={{
         background: "rgba(160,200,255,0.06)",
         borderColor: "rgba(160,200,255,0.14)",
         color: "oklch(0.82 0.015 222)",
         boxShadow: "inset 0 1px 0 rgba(200,230,255,0.08)",
         fontFamily: "'Barlow', sans-serif",
+        backdropFilter: "blur(4px)",
       }}
     >
       {children}
@@ -142,7 +190,7 @@ function Snow() {
           100% { transform: translateY(105vh) translateX(var(--drift)); opacity: 0; }
         }
       `}</style>
-      <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
+      <div className="fixed inset-0 z-10 pointer-events-none overflow-hidden">
         {flakes.map((f) => (
           <div
             key={f.id}
@@ -166,7 +214,15 @@ function Snow() {
 /* ── Navbar ──────────────────────────────────────────────────────── */
 const NAV_LINKS = ["Platform", "Mission", "Team", "Docs"];
 
-function Navbar({ scrolled }: { scrolled: boolean }) {
+function Navbar({
+  scrolled,
+  onHome,
+  onPreorder,
+}: {
+  scrolled: boolean;
+  onHome: () => void;
+  onPreorder: () => void;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -179,8 +235,8 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
       <div
         className="max-w-6xl mx-auto flex items-center justify-between rounded-2xl px-6 py-4 transition-all duration-700"
         style={{
-          backdropFilter: scrolled ? "blur(32px) saturate(1.4)" : "blur(14px)",
-          background: scrolled ? "rgba(6,12,26,0.78)" : "rgba(6,12,26,0.32)",
+          backdropFilter: scrolled ? "blur(8px) saturate(1.2)" : "blur(4px)",
+          background: scrolled ? "rgba(6,12,26,0.82)" : "rgba(6,12,26,0.48)",
           border: `1px solid ${scrolled ? "rgba(160,200,255,0.12)" : "rgba(160,200,255,0.07)"}`,
           boxShadow: scrolled
             ? "inset 0 1.5px 0 rgba(200,230,255,0.09), 0 8px 40px rgba(0,0,0,0.5)"
@@ -188,14 +244,27 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
         }}
       >
         {/* Logo */}
-        <div className="flex items-center">
+        <button className="flex items-center" onClick={onHome} aria-label="Go to home">
           <ImageWithFallback
             src={logoDiamond}
             alt="Arktos Systems — diamond mountain mark with wordmark"
             className="h-10 w-auto object-contain"
             style={LOGO_STYLE}
           />
-        </div>
+        </button>
+
+        <button
+          className="hidden lg:flex items-center justify-center flex-1 max-w-[240px] mx-6"
+          onClick={onHome}
+          aria-label="Arktos Systems home"
+        >
+          <ImageWithFallback
+            src={logoWordmark}
+            alt="Arktos"
+            className="h-6 w-full object-contain"
+            style={{ ...LOGO_STYLE, opacity: 0.72 }}
+          />
+        </button>
 
         {/* Desktop links */}
         <ul className="hidden md:flex items-center gap-8">
@@ -227,8 +296,8 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
 
         <div className="hidden md:flex items-center gap-3">
           <GhostBtn>Contact us</GhostBtn>
-          <PrimaryBtn>
-            Get early access <ArrowRight size={14} />
+          <PrimaryBtn onClick={onPreorder}>
+            Preorder Glacier <ArrowRight size={14} />
           </PrimaryBtn>
         </div>
 
@@ -248,7 +317,7 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
           className="md:hidden max-w-6xl mx-auto mt-2 rounded-2xl p-6"
           style={{
             background: "rgba(6,12,26,0.9)",
-            backdropFilter: "blur(32px)",
+            backdropFilter: "blur(8px)",
             border: "1px solid rgba(160,200,255,0.12)",
           }}
         >
@@ -278,6 +347,11 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
               </li>
             ))}
           </ul>
+          <div className="mt-5 pt-5 border-t border-white/[0.08]">
+            <PrimaryBtn onClick={() => { setOpen(false); onPreorder(); }}>
+              Preorder Glacier <ArrowRight size={14} />
+            </PrimaryBtn>
+          </div>
         </motion.div>
       )}
     </motion.nav>
@@ -285,20 +359,19 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
 }
 
 /* ── Hero ────────────────────────────────────────────────────────── */
-function Hero() {
+function Hero({ onPreorder }: { onPreorder: () => void }) {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
 
-  // Mountains rise / parallax: image moves up slower than scroll
-  const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
+  // Mountain rises and expands as the user scrolls, without competing animations.
+  const imgY = useTransform(scrollYProgress, [0, 1], ["4%", "-18%"]);
   // Content fades out as you scroll
   const contentOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
   const contentY = useTransform(scrollYProgress, [0, 0.45], ["0%", "-12%"]);
-  // Image scales slightly down as you scroll in, giving a "pop" on load
-  const imgScale = useTransform(scrollYProgress, [0, 0.6], [1.0, 1.06]);
+  const imgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.22]);
 
   return (
     <section
@@ -309,16 +382,13 @@ function Hero() {
       {/* Parallax image */}
       <motion.div
         className="absolute inset-0 z-0"
-        style={{ y: imgY, scale: imgScale }}
-        initial={{ scale: 1.1 }}
-        animate={{ scale: 1.0 }}
-        transition={{ duration: 10, ease: "easeOut" }}
+        style={{ y: imgY, scale: imgScale, transformOrigin: "center bottom", willChange: "transform" }}
       >
         <img
           src={HERO_IMG}
-          alt="Snow-capped Swiss Alps peak rising through a sea of clouds"
+          alt="Snow-covered Glacier National Park mountains reflected in Lake McDonald"
           className="w-full h-full object-cover object-center"
-          style={{ filter: "brightness(0.58) saturate(0.78)" }}
+          style={{ filter: "brightness(0.74) saturate(1.04)" }}
         />
         {/* Atmospheric overlay — darkens edges, keeps peak luminous */}
         <div
@@ -337,29 +407,11 @@ function Hero() {
         />
       </motion.div>
 
-      {/* Snow layer */}
-      <Snow />
-
       {/* Content */}
       <motion.div
         className="relative z-20 max-w-5xl mx-auto px-6 text-center flex flex-col items-center gap-7"
         style={{ opacity: contentOpacity, y: contentY }}
       >
-        {/* Hero logo mark */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-2"
-        >
-          <ImageWithFallback
-            src={logoDiamond}
-            alt="Arktos Systems"
-            className="h-24 w-auto object-contain"
-            style={{ ...LOGO_STYLE, filter: "invert(1) brightness(1.3)", opacity: 0.88 }}
-          />
-        </motion.div>
-
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -448,8 +500,8 @@ function Hero() {
           transition={{ delay: 0.98, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-wrap gap-3 justify-center"
         >
-          <PrimaryBtn>
-            Explore our tech <ArrowRight size={15} />
+          <PrimaryBtn onClick={onPreorder}>
+            Get started today <ArrowRight size={15} />
           </PrimaryBtn>
           <GhostBtn>Watch overview</GhostBtn>
         </motion.div>
@@ -552,6 +604,7 @@ function Mission() {
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.085 0.024 244)" }}
     >
+      <PhotoBackdrop image={alpineBackground} position="center" opacity={0.92} />
       {/* grid texture */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -717,10 +770,11 @@ function Platform() {
     <section
       id="platform"
       ref={ref}
-      className="relative py-28 px-6"
+      className="relative py-28 px-6 overflow-hidden"
       style={{ background: "oklch(0.09 0.022 242)" }}
     >
-      <div className="max-w-6xl mx-auto">
+      <PhotoBackdrop image={mcdonaldLakeBackground} position="center" opacity={0.94} />
+      <div className="relative max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -824,6 +878,159 @@ function Platform() {
   );
 }
 
+/* ── Glacier line ────────────────────────────────────────────────── */
+function GlacierLine({ onPreorder }: { onPreorder: () => void }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+
+  const glacierCards = [
+    {
+      image: glacierCave,
+      eyebrow: "GLACIER CORE",
+      title: "Cold air shaped by ice-cave geometry",
+      body: "Our Glacier air cooler line channels dense intake paths through a fin stack inspired by frozen cavern flow: quiet, direct, and built for high thermal pressure.",
+    },
+    {
+      image: glacierField,
+      eyebrow: "AIRFLOW FIELD",
+      title: "Wide-surface cooling for everyday builds",
+      body: "A broad contact plate, calmer fan curve, and frosted shroud language bring the Arktos mountain theme into a practical air-cooling platform.",
+    },
+    {
+      image: glacierPrototype,
+      eyebrow: "PROTOTYPE IN PROGRESS",
+      title: "Glacier white sample under development",
+      body: "This early white-ice concept is being refined now: blade shape, heat pipe routing, acoustic profile, and final finish are still moving through prototype testing.",
+    },
+  ];
+
+  return (
+    <section
+      id="glacier"
+      ref={ref}
+      className="relative py-32 px-6 overflow-hidden"
+      style={{ background: "oklch(0.064 0.026 246)" }}
+    >
+      <PhotoBackdrop image={glacierSnowBackground} position="center" opacity={0.96} />
+      <div
+        className="absolute inset-0 pointer-events-none opacity-70"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(3,8,18,0.68) 0%, rgba(5,16,34,0.86) 48%, rgba(3,8,18,0.96) 100%)",
+        }}
+      />
+
+      <div className="relative max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-14 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8"
+        >
+          <div className="max-w-2xl">
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.7rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "oklch(0.68 0.1 204)",
+                display: "block",
+                marginBottom: "1.1rem",
+              }}
+            >
+              Glacier line
+            </span>
+            <h2
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 300,
+                fontSize: "clamp(2.6rem, 5.5vw, 4.5rem)",
+                lineHeight: 0.95,
+                color: "rgba(255,255,255,0.96)",
+              }}
+            >
+              Air coolers carved from
+              <br />
+              <span style={{ fontWeight: 700 }}>the coldest idea.</span>
+            </h2>
+          </div>
+          <PrimaryBtn onClick={onPreorder}>
+            Preorder Glacier <ArrowRight size={14} />
+          </PrimaryBtn>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-3 gap-5">
+          {glacierCards.map((card, i) => (
+            <motion.article
+              key={card.title}
+              initial={{ opacity: 0, y: 34 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.12 + i * 0.12, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="relative min-h-[520px] overflow-hidden rounded-2xl border border-white/[0.12]"
+              style={{
+                boxShadow: "0 28px 70px rgba(0,0,0,0.55)",
+                background: "rgba(255,255,255,0.04)",
+              }}
+            >
+              <img
+                src={card.image}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ filter: "brightness(0.62) saturate(0.95)" }}
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(3,8,18,0.16) 0%, rgba(3,8,18,0.45) 38%, rgba(3,8,18,0.92) 100%)",
+                }}
+              />
+              <div className="relative z-10 h-full flex flex-col justify-end p-7">
+                <span
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: "0.68rem",
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: "oklch(0.75 0.11 205)",
+                    marginBottom: "0.9rem",
+                  }}
+                >
+                  {card.eyebrow}
+                </span>
+                <h3
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontWeight: 600,
+                    fontSize: "1.55rem",
+                    lineHeight: 1.05,
+                    color: "rgba(255,255,255,0.96)",
+                    marginBottom: "0.85rem",
+                  }}
+                >
+                  {card.title}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "'Barlow', sans-serif",
+                    fontWeight: 300,
+                    fontSize: "0.92rem",
+                    color: "oklch(0.72 0.02 225)",
+                    lineHeight: 1.72,
+                  }}
+                >
+                  {card.body}
+                </p>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── Team ────────────────────────────────────────────────────────── */
 const TEAM = [
   {
@@ -857,6 +1064,7 @@ function Team() {
         background: "linear-gradient(160deg, oklch(0.082 0.028 246) 0%, oklch(0.09 0.02 238) 100%)",
       }}
     >
+      <PhotoBackdrop image={alpineBackground} position="center" opacity={0.9} />
       {/* glow */}
       <div
         className="absolute pointer-events-none inset-0 flex items-center justify-center"
@@ -1007,7 +1215,7 @@ function Team() {
 }
 
 /* ── CTA ─────────────────────────────────────────────────────────── */
-function CTA() {
+function CTA({ onPreorder }: { onPreorder: () => void }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -1017,6 +1225,7 @@ function CTA() {
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.09 0.022 242)" }}
     >
+      <PhotoBackdrop image={mcdonaldLakeBackground} position="center" opacity={0.94} />
       <div
         className="absolute inset-0 pointer-events-none flex items-center justify-center"
       >
@@ -1076,10 +1285,9 @@ function CTA() {
               No obligation — just real engineering conversations.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <PrimaryBtn>
-                Request a pilot <ArrowRight size={14} />
+              <PrimaryBtn onClick={onPreorder}>
+                Get started today <ArrowRight size={14} />
               </PrimaryBtn>
-              <GhostBtn>Read the whitepaper</GhostBtn>
             </div>
           </GlassPanel>
         </motion.div>
@@ -1088,8 +1296,488 @@ function CTA() {
   );
 }
 
+/* ── Preorder page ───────────────────────────────────────────────── */
+function PreorderPage({ onHome }: { onHome: () => void }) {
+  const preorderCount = 0;
+  const [submitted, setSubmitted] = useState(false);
+
+  const preorderFields = [
+    ["Full name", "Your name", "text"],
+    ["Email", "you@example.com", "email"],
+    ["Phone", "(555) 123-4567", "tel"],
+    ["Company / team", "Arktos Lab, home build, studio...", "text"],
+    ["Role / credentials", "CAD engineer, PC builder, IT lead...", "text"],
+    ["Shipping region", "Arizona, United States", "text"],
+    ["Build type", "Gaming PC, workstation, server rack...", "text"],
+    ["Units wanted", "1", "number"],
+  ];
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitted(true);
+    event.currentTarget.reset();
+  };
+
+  return (
+    <main
+      className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
+      style={{ background: "oklch(0.064 0.026 246)" }}
+    >
+      <PhotoBackdrop image={mcdonaldLakeBackground} position="center" opacity={0.96} />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(5,12,26,0.72) 0%, rgba(4,9,20,0.95) 72%), radial-gradient(ellipse at 50% 20%, rgba(64,176,216,0.18) 0%, transparent 58%)",
+        }}
+      />
+      <img
+        src={glacierSnowBackground}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-20"
+        style={{ filter: "brightness(0.72) saturate(0.9)", mixBlendMode: "screen" }}
+      />
+
+      <div className="relative z-20 max-w-6xl mx-auto">
+        <GlassPanel className="mb-8 px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <button
+            onClick={onHome}
+            className="inline-flex items-center gap-2 text-sm"
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              color: "oklch(0.78 0.05 218)",
+            }}
+          >
+            <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
+            Back to Arktos
+          </button>
+
+          <div className="flex items-center gap-4">
+            <span
+              className="w-2.5 h-2.5 rounded-full"
+              style={{
+                background: "oklch(0.72 0.12 196)",
+                boxShadow: "0 0 14px oklch(0.72 0.12 196)",
+                animation: "pulse 2s infinite",
+              }}
+            />
+            <div className="flex items-baseline gap-3">
+              <span
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: "0.66rem",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "oklch(0.68 0.1 204)",
+                }}
+              >
+                Live preorders
+              </span>
+              <strong
+                style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: "2rem",
+                  lineHeight: 0.9,
+                  color: "rgba(255,255,255,0.96)",
+                }}
+              >
+                {preorderCount.toLocaleString()}
+              </strong>
+            </div>
+          </div>
+        </GlassPanel>
+      </div>
+
+      <div className="relative z-20 max-w-6xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="pt-8"
+        >
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.72rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.72 0.11 204)",
+              display: "block",
+              marginBottom: "1.2rem",
+            }}
+          >
+            Glacier preorder
+          </span>
+          <h1
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 300,
+              fontSize: "clamp(3.3rem, 8vw, 7rem)",
+              lineHeight: 0.92,
+              color: "rgba(255,255,255,0.97)",
+              marginBottom: "1.5rem",
+            }}
+          >
+            Reserve the first
+            <br />
+            <span style={{ fontWeight: 700 }}>Glacier air cooler.</span>
+          </h1>
+          <p
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              fontWeight: 300,
+              fontSize: "1.05rem",
+              color: "oklch(0.73 0.02 228)",
+              lineHeight: 1.8,
+              maxWidth: "39rem",
+            }}
+          >
+            Join the early list for Arktos Glacier: a prototype-stage air cooler
+            line built around calm acoustics, high-pressure airflow, and the
+            frozen visual language you already love.
+          </p>
+
+          <div className="grid sm:grid-cols-3 gap-3 mt-8 max-w-2xl">
+            {["Prototype access", "Launch updates", "Founders pricing"].map((item) => (
+              <GlassPanel key={item} className="px-4 py-4 text-center">
+                <span
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: "0.68rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "oklch(0.72 0.08 210)",
+                  }}
+                >
+                  {item}
+                </span>
+              </GlassPanel>
+            ))}
+          </div>
+
+          <GlassPanel className="mt-8 overflow-hidden max-w-2xl">
+            <div className="grid sm:grid-cols-[0.9fr_1.1fr] items-center">
+              <div className="h-44 sm:h-full min-h-44 overflow-hidden">
+                <img
+                  src={glacierPrototype}
+                  alt="White glacier prototype visual for the Glacier air cooler line"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <span
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: "0.66rem",
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: "oklch(0.72 0.1 204)",
+                  }}
+                >
+                  Prototype preview
+                </span>
+                <p
+                  style={{
+                    fontFamily: "'Barlow', sans-serif",
+                    fontSize: "0.92rem",
+                    color: "oklch(0.76 0.02 228)",
+                    lineHeight: 1.68,
+                    marginTop: "0.8rem",
+                  }}
+                >
+                  The Glacier white sample is still in progress while we tune
+                  fan geometry, acoustic profile, and final finish.
+                </p>
+              </div>
+            </div>
+          </GlassPanel>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <GlassPanel className="p-7">
+            <form className="grid gap-4" onSubmit={handleSubmit}>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {preorderFields.map(([label, placeholder, type]) => (
+                  <label key={label} className="grid gap-2">
+                    <span
+                      style={{
+                        fontFamily: "'DM Mono', monospace",
+                        fontSize: "0.68rem",
+                        letterSpacing: "0.14em",
+                        textTransform: "uppercase",
+                        color: "oklch(0.62 0.055 216)",
+                      }}
+                    >
+                      {label}
+                    </span>
+                    <input
+                      type={type}
+                      min={type === "number" ? 1 : undefined}
+                      required={["Full name", "Email"].includes(label)}
+                      placeholder={placeholder}
+                      className="w-full rounded-xl px-4 py-3 outline-none border"
+                      style={{
+                        background: "rgba(255,255,255,0.08)",
+                        borderColor: "rgba(160,200,255,0.18)",
+                        color: "rgba(255,255,255,0.92)",
+                        fontFamily: "'Barlow', sans-serif",
+                      }}
+                    />
+                  </label>
+                ))}
+              </div>
+
+              <label className="grid gap-2">
+                <span
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: "0.68rem",
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "oklch(0.62 0.055 216)",
+                  }}
+                >
+                  Prototype access notes
+                </span>
+                <textarea
+                  placeholder="Tell us your cooling goals, preferred contact method, and any builder credentials we should know."
+                  className="w-full min-h-28 rounded-xl px-4 py-3 outline-none border resize-none"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    borderColor: "rgba(160,200,255,0.18)",
+                    color: "rgba(255,255,255,0.92)",
+                    fontFamily: "'Barlow', sans-serif",
+                  }}
+                />
+              </label>
+
+              <label className="flex items-start gap-3 rounded-xl border p-4">
+                <input
+                  type="checkbox"
+                  required
+                  className="mt-1"
+                  style={{ accentColor: "oklch(0.7 0.14 220)" }}
+                />
+                <span
+                  style={{
+                    fontFamily: "'Barlow', sans-serif",
+                    fontSize: "0.86rem",
+                    color: "oklch(0.68 0.02 228)",
+                    lineHeight: 1.55,
+                  }}
+                >
+                  I understand Glacier is still a prototype and Arktos will
+                  contact me before any payment, shipment, or final reservation.
+                </span>
+              </label>
+
+              <PrimaryBtn className="justify-center mt-2">
+                Join preorder list <ArrowRight size={14} />
+              </PrimaryBtn>
+
+              {submitted && (
+                <div
+                  className="rounded-xl px-4 py-3 border"
+                  style={{
+                    background: "rgba(95,210,255,0.09)",
+                    borderColor: "rgba(130,220,255,0.22)",
+                    color: "oklch(0.82 0.07 204)",
+                    fontFamily: "'Barlow', sans-serif",
+                  }}
+                >
+                  You&apos;re on the prototype access list. The live counter has
+                  not changed until real preorders are recorded.
+                </div>
+              )}
+
+              <p
+                style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: "0.82rem",
+                  color: "oklch(0.58 0.02 228)",
+                  lineHeight: 1.6,
+                }}
+              >
+                Prototype in progress. Final specs, price, and ship window will
+                be announced after thermal and acoustic validation.
+              </p>
+            </form>
+          </GlassPanel>
+        </motion.div>
+      </div>
+    </main>
+  );
+}
+
+/* ── Legal pages ─────────────────────────────────────────────────── */
+function LegalPage({
+  type,
+  onHome,
+}: {
+  type: "privacy" | "terms";
+  onHome: () => void;
+}) {
+  const isPrivacy = type === "privacy";
+  const sections = isPrivacy
+    ? [
+        {
+          title: "What we collect",
+          body: "When you join the Glacier preorder list, Arktos collects the details you choose to submit, including name, email, phone, company or team, build type, shipping region, requested units, and prototype access notes.",
+        },
+        {
+          title: "How we use it",
+          body: "We use preorder information to contact interested builders, validate demand, plan prototype access, estimate regional launch needs, and send product updates related to Glacier and Arktos Systems.",
+        },
+        {
+          title: "Prototype access",
+          body: "Submitting the form does not create a purchase, payment obligation, or guaranteed shipment. We will contact you before any paid reservation or prototype program begins.",
+        },
+        {
+          title: "Data choices",
+          body: "You can ask us to update or remove your preorder information by contacting Arktos Systems. We do not sell preorder list information.",
+        },
+      ]
+    : [
+        {
+          title: "Use of the site",
+          body: "This site presents Arktos Systems concepts, prototype information, and early access opportunities. Product details may change as engineering validation continues.",
+        },
+        {
+          title: "Preorders",
+          body: "Joining the Glacier preorder list is an expression of interest only. It does not reserve final inventory, guarantee price, confirm specifications, or require payment.",
+        },
+        {
+          title: "Prototype status",
+          body: "Glacier hardware is in prototype development. Performance, acoustics, compatibility, materials, availability, and shipping windows may change before launch.",
+        },
+        {
+          title: "Site content",
+          body: "Arktos names, graphics, product concepts, and site assets are presented for Arktos Systems and may not be reused as a competing product identity without permission.",
+        },
+      ];
+
+  return (
+    <main
+      className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
+      style={{ background: "oklch(0.064 0.026 246)" }}
+    >
+      <img
+        src={legalIceBackground}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{ objectPosition: "center", filter: "brightness(0.92) saturate(1.06)" }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(3,8,18,0.2) 0%, rgba(3,8,18,0.36) 48%, rgba(3,8,18,0.58) 100%)",
+        }}
+      />
+
+      <div className="relative z-20 max-w-4xl mx-auto">
+        <button
+          onClick={onHome}
+          className="mb-8 inline-flex items-center gap-2 text-sm"
+          style={{
+            fontFamily: "'Barlow', sans-serif",
+            color: "oklch(0.78 0.05 218)",
+          }}
+        >
+          <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
+          Back to Arktos
+        </button>
+
+        <GlassPanel className="p-8 md:p-12">
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.72rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.72 0.11 204)",
+              display: "block",
+              marginBottom: "1.1rem",
+            }}
+          >
+            Arktos Systems
+          </span>
+          <h1
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 600,
+              fontSize: "clamp(3rem, 7vw, 5.8rem)",
+              lineHeight: 0.95,
+              color: "rgba(255,255,255,0.97)",
+              marginBottom: "1rem",
+            }}
+          >
+            {isPrivacy ? "Privacy Policy" : "Terms of Service"}
+          </h1>
+          <p
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              fontSize: "0.95rem",
+              color: "oklch(0.75 0.02 228)",
+              lineHeight: 1.75,
+              maxWidth: "42rem",
+              marginBottom: "2rem",
+            }}
+          >
+            Last updated June 24, 2026. This page is written for the current
+            Arktos Systems prototype website and Glacier preorder flow.
+          </p>
+
+          <div className="grid gap-6">
+            {sections.map((section) => (
+              <section key={section.title}>
+                <h2
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontWeight: 600,
+                    fontSize: "1.45rem",
+                    color: "rgba(255,255,255,0.94)",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  {section.title}
+                </h2>
+                <p
+                  style={{
+                    fontFamily: "'Barlow', sans-serif",
+                    fontSize: "0.98rem",
+                    color: "oklch(0.76 0.02 228)",
+                    lineHeight: 1.75,
+                  }}
+                >
+                  {section.body}
+                </p>
+              </section>
+            ))}
+          </div>
+        </GlassPanel>
+      </div>
+    </main>
+  );
+}
+
 /* ── Footer ──────────────────────────────────────────────────────── */
-function Footer() {
+function Footer({
+  onLegalPage,
+}: {
+  onLegalPage: (page: "privacy" | "terms") => void;
+}) {
+  const footerLinks = [
+    { label: "Privacy", action: () => onLegalPage("privacy") },
+    { label: "Terms", action: () => onLegalPage("terms") },
+    { label: "Careers", action: undefined },
+    { label: "Contact", action: undefined },
+  ];
+
   return (
     <footer
       className="py-12 px-6 border-t"
@@ -1099,20 +1787,44 @@ function Footer() {
       }}
     >
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-8 items-start md:items-center">
-        <div className="flex items-center">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-5">
           <ImageWithFallback
             src={logoPanoramic}
             alt="Arktos Systems — panoramic mountain logo"
             className="h-12 w-auto object-contain"
             style={{ ...LOGO_STYLE, opacity: 0.6 }}
           />
+
+          <div className="flex flex-wrap items-center gap-3">
+            {[
+              { icon: <Youtube size={15} />, label: "YouTube @ArktosSystems" },
+              { icon: <Instagram size={15} />, label: "Instagram @Arktos_Systems" },
+              { icon: <MessageCircle size={15} />, label: "Support Discord coming soon" },
+            ].map((item) => (
+              <span
+                key={item.label}
+                className="inline-flex items-center gap-2 rounded-lg px-3 py-2 border"
+                style={{
+                  borderColor: "rgba(160,200,255,0.12)",
+                  background: "rgba(255,255,255,0.04)",
+                  color: "oklch(0.58 0.025 228)",
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: "0.78rem",
+                }}
+              >
+                {item.icon}
+                {item.label}
+              </span>
+            ))}
+          </div>
         </div>
 
         <nav className="flex flex-wrap gap-x-8 gap-y-2">
-          {["Privacy", "Terms", "Careers", "Contact"].map((l) => (
-            <a
-              key={l}
-              href="#"
+          {footerLinks.map((l) => (
+            <button
+              key={l.label}
+              type="button"
+              onClick={l.action}
               style={{
                 fontFamily: "'Barlow', sans-serif",
                 fontSize: "0.8rem",
@@ -1122,14 +1834,14 @@ function Footer() {
                 transition: "color 0.2s",
               }}
               onMouseEnter={(e) =>
-                ((e.target as HTMLAnchorElement).style.color = "oklch(0.64 0.02 225)")
+                ((e.target as HTMLButtonElement).style.color = "oklch(0.64 0.02 225)")
               }
               onMouseLeave={(e) =>
-                ((e.target as HTMLAnchorElement).style.color = "oklch(0.42 0.02 230)")
+                ((e.target as HTMLButtonElement).style.color = "oklch(0.42 0.02 230)")
               }
             >
-              {l}
-            </a>
+              {l.label}
+            </button>
           ))}
         </nav>
 
@@ -1150,6 +1862,7 @@ function Footer() {
 /* ── Root ────────────────────────────────────────────────────────── */
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [page, setPage] = useState<"home" | "preorder" | "privacy" | "terms">("home");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -1157,15 +1870,43 @@ export default function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const goHome = () => {
+    setPage("home");
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
+  const goPreorder = () => {
+    setPage("preorder");
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
+  const goLegalPage = (nextPage: "privacy" | "terms") => {
+    setPage(nextPage);
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
   return (
-    <div style={{ fontFamily: "'Barlow', sans-serif", background: "oklch(0.09 0.022 242)" }}>
-      <Navbar scrolled={scrolled} />
-      <Hero />
-      <Mission />
-      <Platform />
-      <Team />
-      <CTA />
-      <Footer />
+    <div
+      className="relative"
+      style={{ fontFamily: "'Barlow', sans-serif", background: "oklch(0.09 0.022 242)" }}
+    >
+      <Snow />
+      <Navbar scrolled={scrolled} onHome={goHome} onPreorder={goPreorder} />
+      {page === "home" ? (
+        <>
+          <Hero onPreorder={goPreorder} />
+          <Mission />
+          <Platform />
+          <GlacierLine onPreorder={goPreorder} />
+          <Team />
+          <CTA onPreorder={goPreorder} />
+        </>
+      ) : page === "preorder" ? (
+        <PreorderPage onHome={goHome} />
+      ) : (
+        <LegalPage type={page} onHome={goHome} />
+      )}
+      <Footer onLegalPage={goLegalPage} />
     </div>
   );
 }
