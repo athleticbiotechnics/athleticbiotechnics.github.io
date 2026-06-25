@@ -20,9 +20,9 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
-import logoDiamond from "@/imports/ChatGPT_Image_Jun_23__2026__10_27_23_AM-1.png";
-import logoPanoramic from "@/imports/f91d02c4-0551-4c7a-ba6c-43bb14ed07ee-1.png";
-import logoWordmark from "@/imports/baf1f67e-cc7b-4774-b710-419ff7e8d793-1.png";
+import logoTaskbar from "@/imports/arktos-taskbar-circle.png";
+import logoPanoramic from "@/imports/arktos-panoramic.png";
+import logoWordmark from "@/imports/arktos-wordmark.png";
 import glacierCave from "@/imports/glacier-cave.jpg";
 import glacierField from "@/imports/glacier-field.jpg";
 import glacierPrototype from "@/imports/glacier-prototype.jpg";
@@ -30,13 +30,25 @@ import alpineBackground from "@/imports/alpine-background.avif";
 import mcdonaldLakeBackground from "@/imports/mcdonald-lake-background.jpg";
 import glacierSnowBackground from "@/imports/glacier-snow-background.jpg";
 import legalIceBackground from "@/imports/legal-ice-background.webp";
+import contactBackground from "@/imports/contact-background.png";
+import productSpecBackground from "@/imports/product-spec-background.jpg";
+import careersBackground from "@/imports/careers-background.jpg";
 import kenzoTree from "@/imports/kenzo-tree.jpg";
 import sidakProfile from "@/imports/sidak-profile.jpg";
 
-/* dark-bg logo treatment: invert dark-on-white to light-on-transparent */
+const FORMSPREE_CONTACT_ENDPOINT = import.meta.env.VITE_FORMSPREE_CONTACT_ENDPOINT ?? "";
+const DISCORD_INVITE_URL = import.meta.env.VITE_DISCORD_INVITE_URL ?? "";
+const ARKTOS_EMAIL = "arktossystems@gmail.com";
+
+/* dark-bg logo treatment: invert charcoal marks to light on transparent PNGs */
 const LOGO_STYLE: React.CSSProperties = {
-  filter: "invert(1) brightness(1.1)",
+  filter: "invert(1) brightness(1.12) contrast(1.05)",
   mixBlendMode: "screen",
+};
+
+const LOGO_SHARP: React.CSSProperties = {
+  ...LOGO_STYLE,
+  imageRendering: "auto",
 };
 
 /* ── Images ─────────────────────────────────────────────────────────── */
@@ -104,18 +116,47 @@ function PhotoBackdrop({
   );
 }
 
+const FORM_LABEL_STYLE: React.CSSProperties = {
+  fontFamily: "'DM Mono', monospace",
+  fontSize: "0.68rem",
+  letterSpacing: "0.14em",
+  textTransform: "uppercase",
+  color: "oklch(0.62 0.055 216)",
+};
+
+const FORM_FIELD_CLASS = "w-full rounded-xl px-4 py-3 outline-none border";
+
+const FORM_FIELD_STYLE: React.CSSProperties = {
+  background: "rgba(255,255,255,0.08)",
+  borderColor: "rgba(160,200,255,0.18)",
+  color: "rgba(255,255,255,0.92)",
+  fontFamily: "'Barlow', sans-serif",
+};
+
+const CONTACT_PANEL_OUTLINE: React.CSSProperties = {
+  borderColor: "rgba(160,200,255,0.34)",
+  boxShadow:
+    "inset 0 1.5px 0 rgba(200,230,255,0.24), inset 0 -1px 0 rgba(0,0,0,0.22), 0 24px 64px rgba(0,0,0,0.56)",
+};
+
 /* ── Button variants ─────────────────────────────────────────────── */
 function PrimaryBtn({
   children,
   className = "",
   onClick,
+  type = "button",
+  disabled = false,
 }: {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }) {
   return (
     <button
+      type={type}
+      disabled={disabled}
       onClick={onClick}
       className={`group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-sm font-medium tracking-wide overflow-hidden transition-all duration-300 ${className}`}
       style={{
@@ -220,11 +261,15 @@ function Navbar({
   scrolled,
   onHome,
   onPreorder,
+  onContact,
+  onDocs,
   onNavigateSection,
 }: {
   scrolled: boolean;
   onHome: () => void;
   onPreorder: () => void;
+  onContact: () => void;
+  onDocs: () => void;
   onNavigateSection: (section: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -249,12 +294,20 @@ function Navbar({
       >
         {/* Logo */}
         <button className="flex items-center" onClick={onHome} aria-label="Go to home">
-          <ImageWithFallback
-            src={logoDiamond}
-            alt="Arktos Systems — diamond mountain mark with wordmark"
-            className="h-10 w-auto object-contain"
-            style={LOGO_STYLE}
-          />
+          <div
+            className="h-14 w-14 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center ring-1 ring-white/12"
+            style={{
+              background: "rgba(8,16,32,0.5)",
+              boxShadow: "0 0 14px rgba(140,210,255,0.12)",
+            }}
+          >
+            <ImageWithFallback
+              src={logoTaskbar}
+              alt="Arktos Systems"
+              className="h-[76%] w-[76%] object-contain object-center"
+              style={LOGO_SHARP}
+            />
+          </div>
         </button>
 
         <button
@@ -283,7 +336,9 @@ function Navbar({
             <li key={link}>
               <button
                 type="button"
-                onClick={() => onNavigateSection(link.toLowerCase())}
+                onClick={() =>
+                  link === "Docs" ? onDocs() : onNavigateSection(link.toLowerCase())
+                }
                 style={{
                   fontFamily: "'Barlow', sans-serif",
                   fontWeight: 400,
@@ -307,7 +362,7 @@ function Navbar({
         </ul>
 
         <div className="hidden md:flex items-center gap-3">
-          <GhostBtn>Contact us</GhostBtn>
+          <GhostBtn onClick={onContact}>Contact us</GhostBtn>
           <PrimaryBtn onClick={onPreorder}>
             Preorder Glacier <ArrowRight size={14} />
           </PrimaryBtn>
@@ -337,8 +392,8 @@ function Navbar({
             <ImageWithFallback
               src={logoWordmark}
               alt="Arktos Systems"
-              className="h-6 w-auto object-contain"
-              style={LOGO_STYLE}
+              className="h-7 w-auto max-w-[220px] object-contain"
+              style={LOGO_SHARP}
             />
           </div>
           <ul className="flex flex-col gap-4">
@@ -348,7 +403,11 @@ function Navbar({
                   type="button"
                   onClick={() => {
                     setOpen(false);
-                    onNavigateSection(link.toLowerCase());
+                    if (link === "Docs") {
+                      onDocs();
+                    } else {
+                      onNavigateSection(link.toLowerCase());
+                    }
                   }}
                   style={{
                     fontFamily: "'Barlow', sans-serif",
@@ -362,7 +421,10 @@ function Navbar({
               </li>
             ))}
           </ul>
-          <div className="mt-5 pt-5 border-t border-white/[0.08]">
+          <div className="mt-5 pt-5 border-t border-white/[0.08] flex flex-col gap-3">
+            <GhostBtn onClick={() => { setOpen(false); onContact(); }}>
+              Contact us
+            </GhostBtn>
             <PrimaryBtn onClick={() => { setOpen(false); onPreorder(); }}>
               Preorder Glacier <ArrowRight size={14} />
             </PrimaryBtn>
@@ -1321,23 +1383,65 @@ function CTA({ onPreorder }: { onPreorder: () => void }) {
 /* ── Preorder page ───────────────────────────────────────────────── */
 function PreorderPage({ onHome }: { onHome: () => void }) {
   const preorderCount = 0;
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const preorderFields = [
-    ["Full name", "Your name", "text"],
-    ["Email", "you@example.com", "email"],
-    ["Phone", "(555) 123-4567", "tel"],
-    ["Company / team", "Arktos Lab, home build, studio...", "text"],
-    ["Role / credentials", "CAD engineer, PC builder, IT lead...", "text"],
-    ["Shipping region", "Arizona, United States", "text"],
-    ["Build type", "Gaming PC, workstation, server rack...", "text"],
-    ["Units wanted", "1", "number"],
-  ];
+    ["name", "Full name", "Your name", "text"],
+    ["email", "Email", "you@example.com", "email"],
+    ["phone", "Phone", "(555) 123-4567", "tel"],
+    ["company", "Company / team", "Arktos Lab, home build, studio...", "text"],
+    ["credentials", "Role / credentials", "CAD engineer, PC builder, IT lead...", "text"],
+    ["shipping_region", "Shipping region", "Arizona, United States", "text"],
+    ["build_type", "Build type", "Gaming PC, workstation, server rack...", "text"],
+    ["units_wanted", "Units wanted", "1", "number"],
+  ] as const;
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(true);
-    event.currentTarget.reset();
+
+    if (!FORMSPREE_CONTACT_ENDPOINT) {
+      setStatus("error");
+      setErrorMessage(
+        "Formspree is not configured yet. Add VITE_FORMSPREE_CONTACT_ENDPOINT to your .env file."
+      );
+      return;
+    }
+
+    setStatus("submitting");
+    setErrorMessage("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    formData.set("_subject", "[PREORDER] Glacier preorder request");
+    formData.set("form_type", "Preorder");
+    formData.set("_replyto", String(formData.get("email") ?? ""));
+
+    try {
+      const response = await fetch(FORMSPREE_CONTACT_ENDPOINT, {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(
+          (data as { error?: string } | null)?.error ??
+            `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
+        );
+      }
+
+      setStatus("success");
+      form.reset();
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
+      );
+    }
   };
 
   return (
@@ -1523,57 +1627,29 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
           <GlassPanel className="p-7">
             <form className="grid gap-4" onSubmit={handleSubmit}>
               <div className="grid sm:grid-cols-2 gap-4">
-                {preorderFields.map(([label, placeholder, type]) => (
-                  <label key={label} className="grid gap-2">
-                    <span
-                      style={{
-                        fontFamily: "'DM Mono', monospace",
-                        fontSize: "0.68rem",
-                        letterSpacing: "0.14em",
-                        textTransform: "uppercase",
-                        color: "oklch(0.62 0.055 216)",
-                      }}
-                    >
-                      {label}
-                    </span>
+                {preorderFields.map(([name, label, placeholder, type]) => (
+                  <label key={name} className="grid gap-2">
+                    <span style={FORM_LABEL_STYLE}>{label}</span>
                     <input
+                      name={name}
                       type={type}
                       min={type === "number" ? 1 : undefined}
-                      required={["Full name", "Email"].includes(label)}
+                      required={["name", "email"].includes(name)}
                       placeholder={placeholder}
-                      className="w-full rounded-xl px-4 py-3 outline-none border"
-                      style={{
-                        background: "rgba(255,255,255,0.08)",
-                        borderColor: "rgba(160,200,255,0.18)",
-                        color: "rgba(255,255,255,0.92)",
-                        fontFamily: "'Barlow', sans-serif",
-                      }}
+                      className={FORM_FIELD_CLASS}
+                      style={FORM_FIELD_STYLE}
                     />
                   </label>
                 ))}
               </div>
 
               <label className="grid gap-2">
-                <span
-                  style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: "0.68rem",
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "oklch(0.62 0.055 216)",
-                  }}
-                >
-                  Prototype access notes
-                </span>
+                <span style={FORM_LABEL_STYLE}>Prototype access notes</span>
                 <textarea
+                  name="notes"
                   placeholder="Tell us your cooling goals, preferred contact method, and any builder credentials we should know."
-                  className="w-full min-h-28 rounded-xl px-4 py-3 outline-none border resize-none"
-                  style={{
-                    background: "rgba(255,255,255,0.08)",
-                    borderColor: "rgba(160,200,255,0.18)",
-                    color: "rgba(255,255,255,0.92)",
-                    fontFamily: "'Barlow', sans-serif",
-                  }}
+                  className={`${FORM_FIELD_CLASS} min-h-28 resize-none`}
+                  style={FORM_FIELD_STYLE}
                 />
               </label>
 
@@ -1597,11 +1673,16 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
                 </span>
               </label>
 
-              <PrimaryBtn className="justify-center mt-2">
-                Join preorder list <ArrowRight size={14} />
+              <PrimaryBtn
+                type="submit"
+                disabled={status === "submitting"}
+                className="justify-center mt-2"
+              >
+                {status === "submitting" ? "Sending..." : "Join preorder list"}{" "}
+                {status !== "submitting" && <ArrowRight size={14} />}
               </PrimaryBtn>
 
-              {submitted && (
+              {status === "success" && (
                 <div
                   className="rounded-xl px-4 py-3 border"
                   style={{
@@ -1613,6 +1694,20 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
                 >
                   You&apos;re on the prototype access list. The live counter has
                   not changed until real preorders are recorded.
+                </div>
+              )}
+
+              {status === "error" && (
+                <div
+                  className="rounded-xl px-4 py-3 border"
+                  style={{
+                    background: "rgba(255,120,120,0.08)",
+                    borderColor: "rgba(255,160,160,0.22)",
+                    color: "oklch(0.82 0.07 20)",
+                    fontFamily: "'Barlow', sans-serif",
+                  }}
+                >
+                  {errorMessage}
                 </div>
               )}
 
@@ -1629,6 +1724,802 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
               </p>
             </form>
           </GlassPanel>
+        </motion.div>
+      </div>
+    </main>
+  );
+}
+
+/* ── Contact page ────────────────────────────────────────────────── */
+function ContactPage({ onHome }: { onHome: () => void }) {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const contactFields = [
+    ["name", "Full name", "Your name", "text", true],
+    ["email", "Email", "you@example.com", "email", true],
+    ["phone", "Phone", "(555) 123-4567", "tel", false],
+    ["company", "Company / team", "Organization or build name", "text", false],
+    ["subject", "Subject", "Partnership, support, press...", "text", false],
+  ] as const;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!FORMSPREE_CONTACT_ENDPOINT) {
+      setStatus("error");
+      setErrorMessage(
+        "Formspree is not configured yet. Add VITE_FORMSPREE_CONTACT_ENDPOINT to your .env file."
+      );
+      return;
+    }
+
+    setStatus("submitting");
+    setErrorMessage("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    formData.set("_subject", "[CONTACT] New Arktos inquiry");
+    formData.set("form_type", "Contact");
+    formData.set("_replyto", String(formData.get("email") ?? ""));
+
+    try {
+      const response = await fetch(FORMSPREE_CONTACT_ENDPOINT, {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(
+          (data as { error?: string } | null)?.error ??
+            "Something went wrong. Please try again or email arktossystems@gmail.com directly."
+        );
+      }
+
+      setStatus("success");
+      form.reset();
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again or email arktossystems@gmail.com directly."
+      );
+    }
+  };
+
+  return (
+    <main
+      className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
+      style={{ background: "oklch(0.064 0.026 246)" }}
+    >
+      <img
+        src={contactBackground}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{
+          objectPosition: "center",
+          opacity: 1,
+          filter: "brightness(0.96) saturate(1.12) contrast(1.04)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(3,8,18,0.22) 0%, rgba(5,14,30,0.14) 42%, rgba(3,8,18,0.38) 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.1) 0%, transparent 62%)",
+        }}
+      />
+
+      <div className="relative z-20 max-w-6xl mx-auto">
+        <GlassPanel className="mb-8 px-5 py-4" style={CONTACT_PANEL_OUTLINE}>
+          <button
+            onClick={onHome}
+            className="inline-flex items-center gap-2 text-sm"
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              color: "oklch(0.78 0.05 218)",
+            }}
+          >
+            <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
+            Back to Arktos
+          </button>
+        </GlassPanel>
+      </div>
+
+      <div className="relative z-20 max-w-6xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="pt-4"
+        >
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.72rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.72 0.11 204)",
+              display: "block",
+              marginBottom: "1.2rem",
+            }}
+          >
+            Contact Arktos
+          </span>
+          <h1
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 300,
+              fontSize: "clamp(3.3rem, 8vw, 7rem)",
+              lineHeight: 0.92,
+              color: "rgba(255,255,255,0.97)",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            Let&apos;s start a
+            <br />
+            <span style={{ fontWeight: 700 }}>real conversation.</span>
+          </h1>
+          <p
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              fontWeight: 300,
+              fontSize: "1.02rem",
+              color: "oklch(0.72 0.02 228)",
+              lineHeight: 1.78,
+              maxWidth: "34rem",
+              marginTop: "1.4rem",
+            }}
+          >
+            Whether you&apos;re exploring Glacier, planning a pilot deployment,
+            or just want to talk thermal infrastructure, send us a note and the
+            Arktos team will get back to you.
+          </p>
+
+          <GlassPanel className="mt-8 p-6 max-w-xl" style={CONTACT_PANEL_OUTLINE}>
+            <p
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.68rem",
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "oklch(0.62 0.055 216)",
+                marginBottom: "0.75rem",
+              }}
+            >
+              Direct email
+            </p>
+            <a
+              href="mailto:arktossystems@gmail.com"
+              style={{
+                fontFamily: "'Barlow', sans-serif",
+                fontSize: "1rem",
+                color: "oklch(0.84 0.07 204)",
+                textDecoration: "none",
+              }}
+            >
+              arktossystems@gmail.com
+            </a>
+          </GlassPanel>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <GlassPanel className="p-7" style={CONTACT_PANEL_OUTLINE}>
+            <form className="grid gap-4" onSubmit={handleSubmit}>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {contactFields.map(([name, label, placeholder, type, required]) => (
+                  <label
+                    key={name}
+                    className={`grid gap-2 ${name === "subject" ? "sm:col-span-2" : ""}`}
+                  >
+                    <span style={FORM_LABEL_STYLE}>{label}</span>
+                    <input
+                      name={name}
+                      type={type}
+                      required={required}
+                      placeholder={placeholder}
+                      className={FORM_FIELD_CLASS}
+                      style={FORM_FIELD_STYLE}
+                    />
+                  </label>
+                ))}
+              </div>
+
+              <label className="grid gap-2">
+                <span style={FORM_LABEL_STYLE}>Message</span>
+                <textarea
+                  name="message"
+                  required
+                  placeholder="Tell us about your cooling goals, timeline, and how we can help."
+                  className={`${FORM_FIELD_CLASS} min-h-32 resize-none`}
+                  style={FORM_FIELD_STYLE}
+                />
+              </label>
+
+              <PrimaryBtn
+                type="submit"
+                disabled={status === "submitting"}
+                className="justify-center mt-2"
+              >
+                {status === "submitting" ? "Sending..." : "Send message"}{" "}
+                {status !== "submitting" && <ArrowRight size={14} />}
+              </PrimaryBtn>
+
+              {status === "success" && (
+                <div
+                  className="rounded-xl px-4 py-3 border"
+                  style={{
+                    background: "rgba(95,210,255,0.09)",
+                    borderColor: "rgba(130,220,255,0.22)",
+                    color: "oklch(0.82 0.07 204)",
+                    fontFamily: "'Barlow', sans-serif",
+                  }}
+                >
+                  Thanks for reaching out. We&apos;ll reply to your email soon.
+                </div>
+              )}
+
+              {status === "error" && (
+                <div
+                  className="rounded-xl px-4 py-3 border"
+                  style={{
+                    background: "rgba(255,120,120,0.08)",
+                    borderColor: "rgba(255,160,160,0.22)",
+                    color: "oklch(0.82 0.07 20)",
+                    fontFamily: "'Barlow', sans-serif",
+                  }}
+                >
+                  {errorMessage}
+                </div>
+              )}
+
+              <p
+                style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: "0.82rem",
+                  color: "oklch(0.58 0.02 228)",
+                  lineHeight: 1.6,
+                }}
+              >
+                Submissions are delivered securely through Formspree to
+                arktossystems@gmail.com.
+              </p>
+            </form>
+          </GlassPanel>
+        </motion.div>
+      </div>
+    </main>
+  );
+}
+
+/* ── Careers page ────────────────────────────────────────────────── */
+function CareersPage({ onHome }: { onHome: () => void }) {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const careersFields = [
+    ["name", "Full name", "Your name", "text", true],
+    ["email", "Email", "you@example.com", "email", true],
+    ["role", "Role of interest", "Engineering, design, operations...", "text", false],
+  ] as const;
+
+  const openRoles = [
+    "Thermal & mechanical engineering",
+    "Embedded systems & firmware",
+    "Product design & visual identity",
+    "Community & builder relations",
+  ];
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!FORMSPREE_CONTACT_ENDPOINT) {
+      setStatus("error");
+      setErrorMessage(
+        "Formspree is not configured yet. Add VITE_FORMSPREE_CONTACT_ENDPOINT to your .env file."
+      );
+      return;
+    }
+
+    setStatus("submitting");
+    setErrorMessage("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    formData.set("_subject", "[APPLICATION] Arktos job application");
+    formData.set("form_type", "Application");
+    formData.set("_replyto", String(formData.get("email") ?? ""));
+
+    try {
+      const response = await fetch(FORMSPREE_CONTACT_ENDPOINT, {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(
+          (data as { error?: string } | null)?.error ??
+            `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
+        );
+      }
+
+      setStatus("success");
+      form.reset();
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
+      );
+    }
+  };
+
+  return (
+    <main
+      className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
+      style={{ background: "oklch(0.064 0.026 246)" }}
+    >
+      <img
+        src={careersBackground}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{
+          objectPosition: "center",
+          opacity: 1,
+          filter: "brightness(0.96) saturate(1.08)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(3,8,18,0.22) 0%, rgba(5,14,30,0.14) 42%, rgba(3,8,18,0.38) 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.1) 0%, transparent 62%)",
+        }}
+      />
+
+      <div className="relative z-20 max-w-6xl mx-auto">
+        <GlassPanel className="mb-8 px-5 py-4" style={CONTACT_PANEL_OUTLINE}>
+          <button
+            onClick={onHome}
+            className="inline-flex items-center gap-2 text-sm"
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              color: "oklch(0.78 0.05 218)",
+            }}
+          >
+            <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
+            Back to Arktos
+          </button>
+        </GlassPanel>
+      </div>
+
+      <div className="relative z-20 max-w-6xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="pt-4"
+        >
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.72rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.72 0.11 204)",
+              display: "block",
+              marginBottom: "1.2rem",
+            }}
+          >
+            Careers at Arktos
+          </span>
+          <h1
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 300,
+              fontSize: "clamp(3.3rem, 8vw, 7rem)",
+              lineHeight: 0.92,
+              color: "rgba(255,255,255,0.97)",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            Build cold
+            <br />
+            <span style={{ fontWeight: 700 }}>infrastructure.</span>
+          </h1>
+          <p
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              fontWeight: 300,
+              fontSize: "1.02rem",
+              color: "oklch(0.72 0.02 228)",
+              lineHeight: 1.78,
+              maxWidth: "34rem",
+              marginTop: "1.4rem",
+            }}
+          >
+            Arktos is a small team rethinking thermal systems for builders and
+            data centers. Fill out a short application and tell us why you want
+            to join.
+          </p>
+
+          <GlassPanel className="mt-8 p-6 max-w-xl" style={CONTACT_PANEL_OUTLINE}>
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.68rem",
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "oklch(0.62 0.055 216)",
+                marginBottom: "0.75rem",
+                display: "block",
+              }}
+            >
+              Open focus areas
+            </span>
+            <ul className="grid gap-2.5">
+              {openRoles.map((role) => (
+                <li
+                  key={role}
+                  style={{
+                    fontFamily: "'Barlow', sans-serif",
+                    fontSize: "0.92rem",
+                    color: "oklch(0.76 0.02 228)",
+                    lineHeight: 1.55,
+                  }}
+                >
+                  {role}
+                </li>
+              ))}
+            </ul>
+          </GlassPanel>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <GlassPanel className="p-7" style={CONTACT_PANEL_OUTLINE}>
+            <form className="grid gap-4" onSubmit={handleSubmit}>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {careersFields.map(([name, label, placeholder, type, required]) => (
+                  <label
+                    key={name}
+                    className={`grid gap-2 ${name === "role" ? "sm:col-span-2" : ""}`}
+                  >
+                    <span style={FORM_LABEL_STYLE}>{label}</span>
+                    <input
+                      name={name}
+                      type={type}
+                      required={required}
+                      placeholder={placeholder}
+                      className={FORM_FIELD_CLASS}
+                      style={FORM_FIELD_STYLE}
+                    />
+                  </label>
+                ))}
+              </div>
+
+              <label className="grid gap-2">
+                <span style={FORM_LABEL_STYLE}>Experience</span>
+                <textarea
+                  name="experience"
+                  required
+                  placeholder="Relevant work, projects, or skills you would bring to Arktos."
+                  className={`${FORM_FIELD_CLASS} min-h-28 resize-none`}
+                  style={FORM_FIELD_STYLE}
+                />
+              </label>
+
+              <label className="grid gap-2">
+                <span style={FORM_LABEL_STYLE}>Why you want to join</span>
+                <textarea
+                  name="why_join"
+                  required
+                  placeholder="What draws you to Arktos and what do you want to help build?"
+                  className={`${FORM_FIELD_CLASS} min-h-28 resize-none`}
+                  style={FORM_FIELD_STYLE}
+                />
+              </label>
+
+              <PrimaryBtn
+                type="submit"
+                disabled={status === "submitting"}
+                className="justify-center mt-2"
+              >
+                {status === "submitting" ? "Sending..." : "Send application"}{" "}
+                {status !== "submitting" && <ArrowRight size={14} />}
+              </PrimaryBtn>
+
+              {status === "success" && (
+                <div
+                  className="rounded-xl px-4 py-3 border"
+                  style={{
+                    background: "rgba(95,210,255,0.09)",
+                    borderColor: "rgba(130,220,255,0.22)",
+                    color: "oklch(0.82 0.07 204)",
+                    fontFamily: "'Barlow', sans-serif",
+                  }}
+                >
+                  Thanks for applying. We&apos;ll review your message and get back to you soon.
+                </div>
+              )}
+
+              {status === "error" && (
+                <div
+                  className="rounded-xl px-4 py-3 border"
+                  style={{
+                    background: "rgba(255,120,120,0.08)",
+                    borderColor: "rgba(255,160,160,0.22)",
+                    color: "oklch(0.82 0.07 20)",
+                    fontFamily: "'Barlow', sans-serif",
+                  }}
+                >
+                  {errorMessage}
+                </div>
+              )}
+
+              <p
+                style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: "0.82rem",
+                  color: "oklch(0.58 0.02 228)",
+                  lineHeight: 1.6,
+                }}
+              >
+                Submissions are delivered securely through Formspree to {ARKTOS_EMAIL}.
+              </p>
+            </form>
+          </GlassPanel>
+        </motion.div>
+      </div>
+    </main>
+  );
+}
+
+/* ── Product specification page ──────────────────────────────────── */
+function ProductSpecPage({
+  onHome,
+  onPreorder,
+}: {
+  onHome: () => void;
+  onPreorder: () => void;
+}) {
+  const specRows = [
+    ["Product line", "Glacier air cooler"],
+    ["Cooling architecture", "High-pressure tower with ice-cave inspired fin stack"],
+    ["Target TDP class", "Up to 250W (thermal validation in progress)"],
+    ["Fan configuration", "120mm intake, calmer acoustic curve"],
+    ["Heat pipe routing", "Prototype geometry under active testing"],
+    ["Contact interface", "Broad nickel-plated base plate"],
+    ["Enclosure", "Frosted shroud with mountain-line visual language"],
+    ["Acoustic profile", "Quiet daily-build target, fan curve tuning ongoing"],
+    ["Compatibility", "Standard ATX tower and workstation builds"],
+    ["Finish", "Glacier white sample (development unit)"],
+    ["Prototype status", "Pre-production — specifications may change"],
+  ];
+
+  const specSections = [
+    {
+      title: "Thermal design",
+      body: "Glacier channels dense intake paths through a fin stack shaped by frozen cavern airflow. The goal is quiet, direct cooling under sustained thermal pressure without the waste heat footprint of legacy air platforms.",
+    },
+    {
+      title: "Acoustic engineering",
+      body: "Fan geometry, blade pitch, and shroud damping are still being tuned on the white prototype sample. Final acoustics will be published after validation against workstation and gaming load profiles.",
+    },
+    {
+      title: "Materials and finish",
+      body: "The current Glacier white concept uses a frosted exterior treatment and broad contact plate language drawn from the Arktos mountain theme. Final materials, coatings, and colorways may shift before launch.",
+    },
+    {
+      title: "Prototype disclaimer",
+      body: "All values on this page reflect the current development program. Performance, compatibility, dimensions, pricing, and ship windows will be finalized after thermal, acoustic, and reliability testing.",
+    },
+  ];
+
+  return (
+    <main
+      className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
+      style={{ background: "oklch(0.064 0.026 246)" }}
+    >
+      <img
+        src={productSpecBackground}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{
+          objectPosition: "center",
+          opacity: 1,
+          filter: "brightness(0.96) saturate(1.08)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(3,8,18,0.22) 0%, rgba(5,14,30,0.14) 42%, rgba(3,8,18,0.38) 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.1) 0%, transparent 62%)",
+        }}
+      />
+
+      <div className="relative z-20 max-w-6xl mx-auto">
+        <GlassPanel className="mb-8 px-5 py-4" style={CONTACT_PANEL_OUTLINE}>
+          <button
+            onClick={onHome}
+            className="inline-flex items-center gap-2 text-sm"
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              color: "oklch(0.78 0.05 218)",
+            }}
+          >
+            <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
+            Back to Arktos
+          </button>
+        </GlassPanel>
+      </div>
+
+      <div className="relative z-20 max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.1fr] gap-8 items-start">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="pt-4"
+        >
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.72rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.72 0.11 204)",
+              display: "block",
+              marginBottom: "1.2rem",
+            }}
+          >
+            Product documentation
+          </span>
+          <h1
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 300,
+              fontSize: "clamp(3.3rem, 8vw, 7rem)",
+              lineHeight: 0.92,
+              color: "rgba(255,255,255,0.97)",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            Glacier
+            <br />
+            <span style={{ fontWeight: 700 }}>specifications.</span>
+          </h1>
+          <p
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              fontWeight: 300,
+              fontSize: "1.02rem",
+              color: "oklch(0.72 0.02 228)",
+              lineHeight: 1.78,
+              maxWidth: "34rem",
+              marginTop: "1.4rem",
+            }}
+          >
+            Current prototype targets for the Arktos Glacier air cooler line.
+            These figures reflect engineering direction while the white sample
+            moves through thermal, acoustic, and finish validation.
+          </p>
+          <PrimaryBtn onClick={onPreorder} className="mt-8">
+            Preorder Glacier <ArrowRight size={14} />
+          </PrimaryBtn>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          className="grid gap-6"
+        >
+          <GlassPanel className="p-7 overflow-hidden" style={CONTACT_PANEL_OUTLINE}>
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.68rem",
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "oklch(0.62 0.055 216)",
+                display: "block",
+                marginBottom: "1rem",
+              }}
+            >
+              Specification sheet
+            </span>
+            <div className="grid gap-0 divide-y divide-white/[0.08]">
+              {specRows.map(([label, value]) => (
+                <div
+                  key={label}
+                  className="grid sm:grid-cols-[0.95fr_1.05fr] gap-3 py-3.5 first:pt-0 last:pb-0"
+                >
+                  <span
+                    style={{
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: "0.72rem",
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      color: "oklch(0.62 0.055 216)",
+                    }}
+                  >
+                    {label}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "'Barlow', sans-serif",
+                      fontSize: "0.95rem",
+                      color: "oklch(0.84 0.02 228)",
+                      lineHeight: 1.55,
+                    }}
+                  >
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </GlassPanel>
+
+          {specSections.map((section) => (
+            <GlassPanel key={section.title} className="p-7" style={CONTACT_PANEL_OUTLINE}>
+              <h2
+                style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontWeight: 600,
+                  fontSize: "1.45rem",
+                  color: "rgba(255,255,255,0.94)",
+                  marginBottom: "0.55rem",
+                }}
+              >
+                {section.title}
+              </h2>
+              <p
+                style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: "0.98rem",
+                  color: "oklch(0.76 0.02 228)",
+                  lineHeight: 1.75,
+                }}
+              >
+                {section.body}
+              </p>
+            </GlassPanel>
+          ))}
         </motion.div>
       </div>
     </main>
@@ -1790,14 +2681,18 @@ function LegalPage({
 /* ── Footer ──────────────────────────────────────────────────────── */
 function Footer({
   onLegalPage,
+  onContact,
+  onCareers,
 }: {
   onLegalPage: (page: "privacy" | "terms") => void;
+  onContact: () => void;
+  onCareers: () => void;
 }) {
   const footerLinks = [
     { label: "Privacy", action: () => onLegalPage("privacy") },
     { label: "Terms", action: () => onLegalPage("terms") },
-    { label: "Careers", action: undefined },
-    { label: "Contact", action: undefined },
+    { label: "Careers", action: () => onCareers() },
+    { label: "Contact", action: () => onContact() },
   ];
 
   return (
@@ -1813,31 +2708,64 @@ function Footer({
           <ImageWithFallback
             src={logoPanoramic}
             alt="Arktos Systems — panoramic mountain logo"
-            className="h-12 w-auto object-contain"
-            style={{ ...LOGO_STYLE, opacity: 0.6 }}
+            className="h-14 w-auto max-w-[280px] object-contain"
+            style={{ ...LOGO_SHARP, opacity: 0.72 }}
           />
 
           <div className="flex flex-wrap items-center gap-3">
             {[
-              { icon: <Youtube size={15} />, label: "YouTube @ArktosSystems" },
-              { icon: <Instagram size={15} />, label: "Instagram @Arktos_Systems" },
-              { icon: <MessageCircle size={15} />, label: "Support Discord coming soon" },
-            ].map((item) => (
-              <span
-                key={item.label}
-                className="inline-flex items-center gap-2 rounded-lg px-3 py-2 border"
-                style={{
-                  borderColor: "rgba(160,200,255,0.12)",
-                  background: "rgba(255,255,255,0.04)",
-                  color: "oklch(0.58 0.025 228)",
-                  fontFamily: "'Barlow', sans-serif",
-                  fontSize: "0.78rem",
-                }}
-              >
-                {item.icon}
-                {item.label}
-              </span>
-            ))}
+              {
+                icon: <Youtube size={15} />,
+                label: "YouTube @ArktosSystems",
+                href: "https://www.youtube.com/@ArktosSystems",
+              },
+              {
+                icon: <Instagram size={15} />,
+                label: "Instagram @Arktos_Systems",
+                href: "https://www.instagram.com/Arktos_Systems/",
+              },
+              {
+                icon: <MessageCircle size={15} />,
+                label: "Join Arktos Discord",
+                href: DISCORD_INVITE_URL || undefined,
+              },
+            ].map((item) => {
+              const itemStyle = {
+                borderColor: "rgba(160,200,255,0.12)",
+                background: "rgba(255,255,255,0.04)",
+                color: "oklch(0.58 0.025 228)",
+                fontFamily: "'Barlow', sans-serif",
+                fontSize: "0.78rem",
+                textDecoration: "none",
+              };
+
+              if (item.href) {
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg px-3 py-2 border transition-colors duration-200 hover:text-white/90"
+                    style={itemStyle}
+                  >
+                    {item.icon}
+                    {item.label}
+                  </a>
+                );
+              }
+
+              return (
+                <span
+                  key={item.label}
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 border"
+                  style={itemStyle}
+                >
+                  {item.icon}
+                  {item.label}
+                </span>
+              );
+            })}
           </div>
         </div>
 
@@ -1884,7 +2812,9 @@ function Footer({
 /* ── Root ────────────────────────────────────────────────────────── */
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
-  const [page, setPage] = useState<"home" | "preorder" | "privacy" | "terms">("home");
+  const [page, setPage] = useState<
+    "home" | "preorder" | "contact" | "docs" | "careers" | "privacy" | "terms"
+  >("home");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -1916,6 +2846,21 @@ export default function App() {
     });
   };
 
+  const goContact = () => {
+    setPage("contact");
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
+  const goDocs = () => {
+    setPage("docs");
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
+  const goCareers = () => {
+    setPage("careers");
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
   const goLegalPage = (nextPage: "privacy" | "terms") => {
     setPage(nextPage);
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
@@ -1931,6 +2876,8 @@ export default function App() {
         scrolled={scrolled}
         onHome={goHome}
         onPreorder={goPreorder}
+        onContact={goContact}
+        onDocs={goDocs}
         onNavigateSection={goSection}
       />
       {page === "home" ? (
@@ -1944,10 +2891,16 @@ export default function App() {
         </>
       ) : page === "preorder" ? (
         <PreorderPage onHome={goHome} />
+      ) : page === "contact" ? (
+        <ContactPage onHome={goHome} />
+      ) : page === "docs" ? (
+        <ProductSpecPage onHome={goHome} onPreorder={goPreorder} />
+      ) : page === "careers" ? (
+        <CareersPage onHome={goHome} />
       ) : (
         <LegalPage type={page} onHome={goHome} />
       )}
-      <Footer onLegalPage={goLegalPage} />
+      <Footer onLegalPage={goLegalPage} onContact={goContact} onCareers={goCareers} />
     </div>
   );
 }
