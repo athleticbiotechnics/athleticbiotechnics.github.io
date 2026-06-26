@@ -18,6 +18,7 @@ import {
   Instagram,
   Youtube,
   MessageCircle,
+  Timer,
 } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import logoTaskbar from "@/imports/arktos-taskbar-circle.png";
@@ -35,6 +36,7 @@ import productSpecBackground from "@/imports/product-spec-background.jpg";
 import careersBackground from "@/imports/careers-background.jpg";
 import kenzoTree from "@/imports/kenzo-tree.jpg";
 import sidakProfile from "@/imports/sidak-profile.jpg";
+import kryosMotionBackground from "@/imports/kryos-motion-background.jpg";
 
 const FORMSPREE_CONTACT_ENDPOINT = import.meta.env.VITE_FORMSPREE_CONTACT_ENDPOINT ?? "";
 const DISCORD_INVITE_URL = import.meta.env.VITE_DISCORD_INVITE_URL ?? "";
@@ -255,7 +257,18 @@ function Snow() {
 }
 
 /* ── Navbar ──────────────────────────────────────────────────────── */
-const NAV_LINKS = ["Platform", "Mission", "Team", "Docs"];
+type NavItem =
+  | { label: string; kind: "section"; section: string }
+  | { label: string; kind: "page"; page: "docs" | "cooling" | "kryos" };
+
+const NAV_LINKS: NavItem[] = [
+  { label: "Divisions", kind: "section", section: "divisions" },
+  { label: "Cooling", kind: "page", page: "cooling" },
+  { label: "Kryos", kind: "page", page: "kryos" },
+  { label: "Mission", kind: "section", section: "mission" },
+  { label: "Team", kind: "section", section: "team" },
+  { label: "Docs", kind: "page", page: "docs" },
+];
 
 function Navbar({
   scrolled,
@@ -263,6 +276,8 @@ function Navbar({
   onPreorder,
   onContact,
   onDocs,
+  onCooling,
+  onKryos,
   onNavigateSection,
 }: {
   scrolled: boolean;
@@ -270,8 +285,19 @@ function Navbar({
   onPreorder: () => void;
   onContact: () => void;
   onDocs: () => void;
+  onCooling: () => void;
+  onKryos: () => void;
   onNavigateSection: (section: string) => void;
 }) {
+  const handleNav = (link: NavItem) => {
+    if (link.kind === "section") {
+      onNavigateSection(link.section);
+      return;
+    }
+    if (link.page === "docs") onDocs();
+    if (link.page === "cooling") onCooling();
+    if (link.page === "kryos") onKryos();
+  };
   const [open, setOpen] = useState(false);
 
   return (
@@ -333,12 +359,10 @@ function Navbar({
         {/* Desktop links */}
         <ul className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
-            <li key={link}>
+            <li key={link.label}>
               <button
                 type="button"
-                onClick={() =>
-                  link === "Docs" ? onDocs() : onNavigateSection(link.toLowerCase())
-                }
+                onClick={() => handleNav(link)}
                 style={{
                   fontFamily: "'Barlow', sans-serif",
                   fontWeight: 400,
@@ -355,7 +379,7 @@ function Navbar({
                   ((e.target as HTMLButtonElement).style.color = "oklch(0.68 0.02 225)")
                 }
               >
-                {link}
+                {link.label}
               </button>
             </li>
           ))}
@@ -398,16 +422,12 @@ function Navbar({
           </div>
           <ul className="flex flex-col gap-4">
             {NAV_LINKS.map((link) => (
-              <li key={link}>
+              <li key={link.label}>
                 <button
                   type="button"
                   onClick={() => {
                     setOpen(false);
-                    if (link === "Docs") {
-                      onDocs();
-                    } else {
-                      onNavigateSection(link.toLowerCase());
-                    }
+                    handleNav(link);
                   }}
                   style={{
                     fontFamily: "'Barlow', sans-serif",
@@ -416,7 +436,7 @@ function Navbar({
                     textDecoration: "none",
                   }}
                 >
-                  {link}
+                  {link.label}
                 </button>
               </li>
             ))}
@@ -436,7 +456,13 @@ function Navbar({
 }
 
 /* ── Hero ────────────────────────────────────────────────────────── */
-function Hero({ onPreorder }: { onPreorder: () => void }) {
+function Hero({
+  onCooling,
+  onKryos,
+}: {
+  onCooling: () => void;
+  onKryos: () => void;
+}) {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -516,7 +542,7 @@ function Hero({ onPreorder }: { onPreorder: () => void }) {
                 animation: "pulse 2s infinite",
               }}
             />
-            Sustainable thermal infrastructure
+            Sustainable thermal & performance systems
           </div>
         </motion.div>
 
@@ -535,7 +561,7 @@ function Hero({ onPreorder }: { onPreorder: () => void }) {
             textShadow: "0 4px 48px rgba(0,0,0,0.6)",
           }}
         >
-          Cool the
+          Two divisions.
           <br />
           <span
             style={{
@@ -546,7 +572,7 @@ function Hero({ onPreorder }: { onPreorder: () => void }) {
               WebkitTextFillColor: "transparent",
             }}
           >
-            future.
+            One Arktos.
           </span>
         </motion.h1>
 
@@ -565,9 +591,15 @@ function Hero({ onPreorder }: { onPreorder: () => void }) {
             letterSpacing: "0.01em",
           }}
         >
-          Arktos Systems engineers next-generation sustainable CPU cooling
-          infrastructure for data centers that demand both performance and
-          planetary responsibility.
+          Arktos Systems is the parent company behind{" "}
+          <strong style={{ color: "rgba(255,255,255,0.92)", fontWeight: 500 }}>
+            Arktos Cooling
+          </strong>{" "}
+          — PC performance and phase-change cooling chambers — and{" "}
+          <strong style={{ color: "rgba(255,255,255,0.92)", fontWeight: 500 }}>
+            Kryos Motion
+          </strong>{" "}
+          — portable athlete metronomes built for peak performance.
         </motion.p>
 
         {/* CTAs */}
@@ -577,10 +609,10 @@ function Hero({ onPreorder }: { onPreorder: () => void }) {
           transition={{ delay: 0.98, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-wrap gap-3 justify-center"
         >
-          <PrimaryBtn onClick={onPreorder}>
-            Get started today <ArrowRight size={15} />
+          <PrimaryBtn onClick={onCooling}>
+            Arktos Cooling <ArrowRight size={15} />
           </PrimaryBtn>
-          <GhostBtn>Watch overview</GhostBtn>
+          <GhostBtn onClick={onKryos}>Kryos Motion</GhostBtn>
         </motion.div>
 
         {/* Stat strip */}
@@ -593,9 +625,9 @@ function Hero({ onPreorder }: { onPreorder: () => void }) {
           <GlassPanel className="px-8 py-5">
             <div className="grid grid-cols-3 divide-x divide-white/[0.07]">
               {[
-                { value: "68%", label: "Power reduction" },
-                { value: "0 GWh", label: "Waste heat emitted" },
-                { value: "100%", label: "Recyclable materials" },
+                { value: "Cooling", label: "Phase-change PC thermal" },
+                { value: "Kryos", label: "Athlete metronomes" },
+                { value: "Systems", label: "Shared Arktos engineering" },
               ].map(({ value, label }) => (
                 <div key={label} className="px-6 text-center first:pl-0 last:pr-0">
                   <div
@@ -642,6 +674,183 @@ function Hero({ onPreorder }: { onPreorder: () => void }) {
           <ChevronDown size={18} style={{ color: "oklch(0.5 0.02 228)" }} />
         </motion.div>
       </motion.div>
+    </section>
+  );
+}
+
+/* ── Divisions ───────────────────────────────────────────────────── */
+function Divisions({
+  onCooling,
+  onKryos,
+}: {
+  onCooling: () => void;
+  onKryos: () => void;
+}) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+
+  const divisions = [
+    {
+      eyebrow: "Arktos Cooling",
+      title: "PC performance & phase-change cooling",
+      body: "From Glacier air coolers to phase-change cooling chambers, Arktos Cooling engineers thermal systems for builders, studios, and high-performance compute.",
+      image: glacierCave,
+      icon: <Thermometer size={20} />,
+      cta: "Explore Cooling",
+      onClick: onCooling,
+    },
+    {
+      eyebrow: "Kryos Motion",
+      title: "Portable athlete metronomes",
+      body: "Kryos Motion builds wearable rhythm tools that help athletes lock cadence, pace, and recovery — engineered for training floors, tracks, and travel.",
+      image: kryosMotionBackground,
+      icon: <Timer size={20} />,
+      cta: "Explore Kryos",
+      onClick: onKryos,
+    },
+  ];
+
+  return (
+    <section
+      id="divisions"
+      ref={ref}
+      className="relative py-32 px-6 overflow-hidden"
+      style={{ background: "oklch(0.082 0.024 244)" }}
+    >
+      <PhotoBackdrop image={mcdonaldLakeBackground} position="center" opacity={0.88} />
+      <div className="relative max-w-6xl mx-auto flex flex-col gap-14">
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-2xl"
+        >
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.7rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.6 0.07 214)",
+              display: "block",
+              marginBottom: "1.2rem",
+            }}
+          >
+            Arktos Systems
+          </span>
+          <h2
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 300,
+              fontSize: "clamp(2.6rem, 5.5vw, 4.4rem)",
+              lineHeight: 0.95,
+              letterSpacing: "-0.01em",
+              color: "rgba(255,255,255,0.96)",
+              marginBottom: "1.2rem",
+            }}
+          >
+            A parent company for
+            <br />
+            <span style={{ fontWeight: 700 }}>two product lines.</span>
+          </h2>
+          <p
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              fontWeight: 300,
+              fontSize: "1.05rem",
+              color: "oklch(0.62 0.018 228)",
+              lineHeight: 1.82,
+              maxWidth: "38rem",
+            }}
+          >
+            Arktos Systems is the shell — shared engineering, brand, and mission —
+            while Arktos Cooling and Kryos Motion each ship focused hardware for
+            thermal performance and athlete rhythm.
+          </p>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-2 gap-6">
+          {divisions.map((division, i) => (
+            <motion.article
+              key={division.eyebrow}
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.12 + i * 0.12, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="relative min-h-[460px] overflow-hidden rounded-2xl border border-white/[0.12]"
+              style={{
+                boxShadow: "0 28px 70px rgba(0,0,0,0.55)",
+                background: "rgba(255,255,255,0.04)",
+              }}
+            >
+              <img
+                src={division.image}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ filter: "brightness(0.62) saturate(0.95)" }}
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(3,8,18,0.18) 0%, rgba(3,8,18,0.52) 42%, rgba(3,8,18,0.94) 100%)",
+                }}
+              />
+              <div className="relative z-10 h-full flex flex-col justify-end p-8">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-5"
+                  style={{
+                    background: "rgba(90,150,255,0.12)",
+                    border: "1px solid rgba(90,150,255,0.18)",
+                    color: "oklch(0.74 0.11 216)",
+                  }}
+                >
+                  {division.icon}
+                </div>
+                <span
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: "0.68rem",
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: "oklch(0.75 0.11 205)",
+                    marginBottom: "0.8rem",
+                  }}
+                >
+                  {division.eyebrow}
+                </span>
+                <h3
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontWeight: 600,
+                    fontSize: "1.8rem",
+                    lineHeight: 1.05,
+                    color: "rgba(255,255,255,0.96)",
+                    marginBottom: "0.85rem",
+                  }}
+                >
+                  {division.title}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "'Barlow', sans-serif",
+                    fontWeight: 300,
+                    fontSize: "0.95rem",
+                    color: "oklch(0.72 0.02 225)",
+                    lineHeight: 1.72,
+                    marginBottom: "1.4rem",
+                    maxWidth: "34rem",
+                  }}
+                >
+                  {division.body}
+                </p>
+                <PrimaryBtn onClick={division.onClick}>
+                  {division.cta} <ArrowRight size={14} />
+                </PrimaryBtn>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
@@ -753,10 +962,10 @@ function Mission() {
             }}
           >
             Global data centers consume more electricity than entire nations.
-            Arktos Systems was founded on a single conviction: the cooling layer
-            is the most leveraged point to make computation radically more
-            sustainable — without sacrificing a single millisecond of
-            performance.
+            Arktos Systems is the parent company behind Arktos Cooling and Kryos
+            Motion — united by a conviction that performance hardware should be
+            engineered responsibly, from phase-change thermal systems to athlete
+            rhythm tools.
           </p>
         </motion.div>
 
@@ -1380,69 +1589,330 @@ function CTA({ onPreorder }: { onPreorder: () => void }) {
   );
 }
 
+/* ── Arktos Cooling page ─────────────────────────────────────────── */
+function CoolingPage({
+  onHome,
+  onPreorder,
+}: {
+  onHome: () => void;
+  onPreorder: () => void;
+}) {
+  const highlights = [
+    {
+      icon: <Thermometer size={20} />,
+      title: "Phase-change chambers",
+      body: "Two-phase immersion and chamber cooling for PC builds that need chip-level heat capture without legacy air limits.",
+    },
+    {
+      icon: <Wind size={20} />,
+      title: "Glacier air coolers",
+      body: "High-pressure tower airflow, ice-cave fin geometry, and calm acoustics for everyday performance builds.",
+    },
+    {
+      icon: <Cpu size={20} />,
+      title: "PC performance focus",
+      body: "CAD-modeled cold plates, CFD-validated manifolds, and builder-first specs from prototype through launch.",
+    },
+  ];
+
+  return (
+    <main
+      className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
+      style={{ background: "oklch(0.064 0.026 246)" }}
+    >
+      <PhotoBackdrop image={glacierSnowBackground} position="center" opacity={0.94} />
+      <div className="relative z-20 max-w-6xl mx-auto">
+        <GlassPanel className="mb-8 px-5 py-4">
+          <button
+            onClick={onHome}
+            className="inline-flex items-center gap-2 text-sm"
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              color: "oklch(0.78 0.05 218)",
+            }}
+          >
+            <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
+            Back to Arktos
+          </button>
+        </GlassPanel>
+
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.72rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "oklch(0.72 0.11 204)",
+                display: "block",
+                marginBottom: "1.2rem",
+              }}
+            >
+              Arktos Cooling
+            </span>
+            <h1
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 300,
+                fontSize: "clamp(3.3rem, 8vw, 7rem)",
+                lineHeight: 0.92,
+                color: "rgba(255,255,255,0.97)",
+                marginBottom: "1.5rem",
+              }}
+            >
+              Cool harder.
+              <br />
+              <span style={{ fontWeight: 700 }}>Build smarter.</span>
+            </h1>
+            <p
+              style={{
+                fontFamily: "'Barlow', sans-serif",
+                fontWeight: 300,
+                fontSize: "1.05rem",
+                color: "oklch(0.73 0.02 228)",
+                lineHeight: 1.8,
+                maxWidth: "39rem",
+                marginBottom: "2rem",
+              }}
+            >
+              Arktos Cooling is the PC performance division of Arktos Systems —
+              phase-change cooling chambers, Glacier air coolers, and thermal
+              infrastructure for builders who refuse to trade speed for heat.
+            </p>
+            <PrimaryBtn onClick={onPreorder}>
+              Reserve Glacier <ArrowRight size={14} />
+            </PrimaryBtn>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="grid gap-4"
+          >
+            {highlights.map((item) => (
+              <GlassPanel key={item.title} className="p-6 flex gap-4">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{
+                    background: "rgba(90,150,255,0.1)",
+                    border: "1px solid rgba(90,150,255,0.18)",
+                    color: "oklch(0.74 0.11 216)",
+                  }}
+                >
+                  {item.icon}
+                </div>
+                <div>
+                  <h2
+                    style={{
+                      fontFamily: "'Barlow Condensed', sans-serif",
+                      fontWeight: 500,
+                      fontSize: "1.15rem",
+                      color: "rgba(255,255,255,0.92)",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    {item.title}
+                  </h2>
+                  <p
+                    style={{
+                      fontFamily: "'Barlow', sans-serif",
+                      fontSize: "0.9rem",
+                      color: "oklch(0.68 0.02 228)",
+                      lineHeight: 1.7,
+                    }}
+                  >
+                    {item.body}
+                  </p>
+                </div>
+              </GlassPanel>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+/* ── Kryos Motion page ───────────────────────────────────────────── */
+function KryosPage({ onHome, onContact }: { onHome: () => void; onContact: () => void }) {
+  const features = [
+    {
+      icon: <Timer size={20} />,
+      title: "Portable athlete metronomes",
+      body: "Wearable rhythm hardware that keeps cadence honest across sprints, lifts, and recovery sessions.",
+    },
+    {
+      icon: <Activity size={20} />,
+      title: "Performance-first pacing",
+      body: "Built for coaches and athletes who need tactile tempo cues without pulling out a phone mid-set.",
+    },
+    {
+      icon: <Layers size={20} />,
+      title: "Travel-ready design",
+      body: "Compact enough for gym bags, durable enough for daily training blocks and competition travel.",
+    },
+  ];
+
+  return (
+    <main
+      className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
+      style={{ background: "oklch(0.064 0.026 246)" }}
+    >
+      <PhotoBackdrop image={kryosMotionBackground} position="center" opacity={0.96} />
+      <div className="relative z-20 max-w-6xl mx-auto">
+        <GlassPanel className="mb-8 px-5 py-4">
+          <button
+            onClick={onHome}
+            className="inline-flex items-center gap-2 text-sm"
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              color: "oklch(0.78 0.05 218)",
+            }}
+          >
+            <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
+            Back to Arktos
+          </button>
+        </GlassPanel>
+
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.72rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "oklch(0.72 0.11 204)",
+                display: "block",
+                marginBottom: "1.2rem",
+              }}
+            >
+              Kryos Motion
+            </span>
+            <h1
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 300,
+                fontSize: "clamp(3.3rem, 8vw, 7rem)",
+                lineHeight: 0.92,
+                color: "rgba(255,255,255,0.97)",
+                marginBottom: "1.5rem",
+              }}
+            >
+              Lock the
+              <br />
+              <span style={{ fontWeight: 700 }}>tempo.</span>
+            </h1>
+            <p
+              style={{
+                fontFamily: "'Barlow', sans-serif",
+                fontWeight: 300,
+                fontSize: "1.05rem",
+                color: "oklch(0.73 0.02 228)",
+                lineHeight: 1.8,
+                maxWidth: "39rem",
+                marginBottom: "2rem",
+              }}
+            >
+              Kryos Motion is the athlete performance division of Arktos Systems —
+              portable metronomes engineered to keep training rhythm consistent
+              from warmup through final rep.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <GhostBtn onClick={onContact}>Contact for early access</GhostBtn>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="grid gap-4"
+          >
+            {features.map((item) => (
+              <GlassPanel key={item.title} className="p-6 flex gap-4">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{
+                    background: "rgba(90,150,255,0.1)",
+                    border: "1px solid rgba(90,150,255,0.18)",
+                    color: "oklch(0.74 0.11 216)",
+                  }}
+                >
+                  {item.icon}
+                </div>
+                <div>
+                  <h2
+                    style={{
+                      fontFamily: "'Barlow Condensed', sans-serif",
+                      fontWeight: 500,
+                      fontSize: "1.15rem",
+                      color: "rgba(255,255,255,0.92)",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    {item.title}
+                  </h2>
+                  <p
+                    style={{
+                      fontFamily: "'Barlow', sans-serif",
+                      fontSize: "0.9rem",
+                      color: "oklch(0.68 0.02 228)",
+                      lineHeight: 1.7,
+                    }}
+                  >
+                    {item.body}
+                  </p>
+                </div>
+              </GlassPanel>
+            ))}
+
+            <GlassPanel className="p-7 text-center">
+              <span
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: "0.68rem",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "oklch(0.72 0.1 204)",
+                  display: "block",
+                  marginBottom: "0.8rem",
+                }}
+              >
+                Preorder
+              </span>
+              <p
+                style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: "1rem",
+                  color: "oklch(0.78 0.02 228)",
+                  lineHeight: 1.7,
+                }}
+              >
+                Kryos athlete metronome preorders are opening shortly. Reach out
+                through contact if you want to be first on the list.
+              </p>
+            </GlassPanel>
+          </motion.div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 /* ── Preorder page ───────────────────────────────────────────────── */
 function PreorderPage({ onHome }: { onHome: () => void }) {
   const preorderCount = 0;
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const preorderFields = [
-    ["name", "Full name", "Your name", "text"],
-    ["email", "Email", "you@example.com", "email"],
-    ["phone", "Phone", "(555) 123-4567", "tel"],
-    ["company", "Company / team", "Arktos Lab, home build, studio...", "text"],
-    ["credentials", "Role / credentials", "CAD engineer, PC builder, IT lead...", "text"],
-    ["shipping_region", "Shipping region", "Arizona, United States", "text"],
-    ["build_type", "Build type", "Gaming PC, workstation, server rack...", "text"],
-    ["units_wanted", "Units wanted", "1", "number"],
-  ] as const;
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!FORMSPREE_CONTACT_ENDPOINT) {
-      setStatus("error");
-      setErrorMessage(
-        "Formspree is not configured yet. Add VITE_FORMSPREE_CONTACT_ENDPOINT to your .env file."
-      );
-      return;
-    }
-
-    setStatus("submitting");
-    setErrorMessage("");
-
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    formData.set("_subject", "[PREORDER] Glacier preorder request");
-    formData.set("form_type", "Preorder");
-    formData.set("_replyto", String(formData.get("email") ?? ""));
-
-    try {
-      const response = await fetch(FORMSPREE_CONTACT_ENDPOINT, {
-        method: "POST",
-        body: formData,
-        headers: { Accept: "application/json" },
-      });
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        throw new Error(
-          (data as { error?: string } | null)?.error ??
-            `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
-        );
-      }
-
-      setStatus("success");
-      form.reset();
-    } catch (error) {
-      setStatus("error");
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
-      );
-    }
-  };
 
   return (
     <main
@@ -1625,104 +2095,54 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
           transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         >
           <GlassPanel className="p-7">
-            <form className="grid gap-4" onSubmit={handleSubmit}>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {preorderFields.map(([name, label, placeholder, type]) => (
-                  <label key={name} className="grid gap-2">
-                    <span style={FORM_LABEL_STYLE}>{label}</span>
-                    <input
-                      name={name}
-                      type={type}
-                      min={type === "number" ? 1 : undefined}
-                      required={["name", "email"].includes(name)}
-                      placeholder={placeholder}
-                      className={FORM_FIELD_CLASS}
-                      style={FORM_FIELD_STYLE}
-                    />
-                  </label>
-                ))}
-              </div>
-
-              <label className="grid gap-2">
-                <span style={FORM_LABEL_STYLE}>Prototype access notes</span>
-                <textarea
-                  name="notes"
-                  placeholder="Tell us your cooling goals, preferred contact method, and any builder credentials we should know."
-                  className={`${FORM_FIELD_CLASS} min-h-28 resize-none`}
-                  style={FORM_FIELD_STYLE}
-                />
-              </label>
-
-              <label className="flex items-start gap-3 rounded-xl border p-4">
-                <input
-                  type="checkbox"
-                  required
-                  className="mt-1"
-                  style={{ accentColor: "oklch(0.7 0.14 220)" }}
-                />
-                <span
-                  style={{
-                    fontFamily: "'Barlow', sans-serif",
-                    fontSize: "0.86rem",
-                    color: "oklch(0.68 0.02 228)",
-                    lineHeight: 1.55,
-                  }}
-                >
-                  I understand Glacier is still a prototype and Arktos will
-                  contact me before any payment, shipment, or final reservation.
-                </span>
-              </label>
-
-              <PrimaryBtn
-                type="submit"
-                disabled={status === "submitting"}
-                className="justify-center mt-2"
-              >
-                {status === "submitting" ? "Sending..." : "Join preorder list"}{" "}
-                {status !== "submitting" && <ArrowRight size={14} />}
-              </PrimaryBtn>
-
-              {status === "success" && (
-                <div
-                  className="rounded-xl px-4 py-3 border"
-                  style={{
-                    background: "rgba(95,210,255,0.09)",
-                    borderColor: "rgba(130,220,255,0.22)",
-                    color: "oklch(0.82 0.07 204)",
-                    fontFamily: "'Barlow', sans-serif",
-                  }}
-                >
-                  You&apos;re on the prototype access list. The live counter has
-                  not changed until real preorders are recorded.
-                </div>
-              )}
-
-              {status === "error" && (
-                <div
-                  className="rounded-xl px-4 py-3 border"
-                  style={{
-                    background: "rgba(255,120,120,0.08)",
-                    borderColor: "rgba(255,160,160,0.22)",
-                    color: "oklch(0.82 0.07 20)",
-                    fontFamily: "'Barlow', sans-serif",
-                  }}
-                >
-                  {errorMessage}
-                </div>
-              )}
-
-              <p
-                style={{
-                  fontFamily: "'Barlow', sans-serif",
-                  fontSize: "0.82rem",
-                  color: "oklch(0.58 0.02 228)",
-                  lineHeight: 1.6,
-                }}
-              >
-                Prototype in progress. Final specs, price, and ship window will
-                be announced after thermal and acoustic validation.
-              </p>
-            </form>
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.68rem",
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "oklch(0.72 0.1 204)",
+                display: "block",
+                marginBottom: "0.8rem",
+              }}
+            >
+              Reserve list
+            </span>
+            <h2
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 500,
+                fontSize: "1.6rem",
+                color: "rgba(255,255,255,0.95)",
+                marginBottom: "0.9rem",
+              }}
+            >
+              Glacier preorder opening shortly
+            </h2>
+            <p
+              style={{
+                fontFamily: "'Barlow', sans-serif",
+                fontSize: "0.95rem",
+                color: "oklch(0.72 0.02 228)",
+                lineHeight: 1.75,
+                marginBottom: "1.2rem",
+              }}
+            >
+              The Glacier reserve flow is not live yet. Prototype in progress —
+              final specs, price, and ship window will be announced after
+              thermal and acoustic validation.
+            </p>
+            <p
+              style={{
+                fontFamily: "'Barlow', sans-serif",
+                fontSize: "0.82rem",
+                color: "oklch(0.58 0.02 228)",
+                lineHeight: 1.6,
+              }}
+            >
+              For early access questions, reach us through the Contact page at{" "}
+              {ARKTOS_EMAIL}.
+            </p>
           </GlassPanel>
         </motion.div>
       </div>
@@ -2683,12 +3103,18 @@ function Footer({
   onLegalPage,
   onContact,
   onCareers,
+  onCooling,
+  onKryos,
 }: {
   onLegalPage: (page: "privacy" | "terms") => void;
   onContact: () => void;
   onCareers: () => void;
+  onCooling: () => void;
+  onKryos: () => void;
 }) {
   const footerLinks = [
+    { label: "Arktos Cooling", action: () => onCooling() },
+    { label: "Kryos Motion", action: () => onKryos() },
     { label: "Privacy", action: () => onLegalPage("privacy") },
     { label: "Terms", action: () => onLegalPage("terms") },
     { label: "Careers", action: () => onCareers() },
@@ -2813,7 +3239,7 @@ function Footer({
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [page, setPage] = useState<
-    "home" | "preorder" | "contact" | "docs" | "careers" | "privacy" | "terms"
+    "home" | "preorder" | "contact" | "docs" | "careers" | "privacy" | "terms" | "cooling" | "kryos"
   >("home");
 
   useEffect(() => {
@@ -2866,6 +3292,16 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   };
 
+  const goCooling = () => {
+    setPage("cooling");
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
+  const goKryos = () => {
+    setPage("kryos");
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
   return (
     <div
       className="relative"
@@ -2878,11 +3314,14 @@ export default function App() {
         onPreorder={goPreorder}
         onContact={goContact}
         onDocs={goDocs}
+        onCooling={goCooling}
+        onKryos={goKryos}
         onNavigateSection={goSection}
       />
       {page === "home" ? (
         <>
-          <Hero onPreorder={goPreorder} />
+          <Hero onCooling={goCooling} onKryos={goKryos} />
+          <Divisions onCooling={goCooling} onKryos={goKryos} />
           <Mission />
           <Platform />
           <GlacierLine onPreorder={goPreorder} />
@@ -2891,6 +3330,10 @@ export default function App() {
         </>
       ) : page === "preorder" ? (
         <PreorderPage onHome={goHome} />
+      ) : page === "cooling" ? (
+        <CoolingPage onHome={goHome} onPreorder={goPreorder} />
+      ) : page === "kryos" ? (
+        <KryosPage onHome={goHome} onContact={goContact} />
       ) : page === "contact" ? (
         <ContactPage onHome={goHome} />
       ) : page === "docs" ? (
@@ -2900,7 +3343,13 @@ export default function App() {
       ) : (
         <LegalPage type={page} onHome={goHome} />
       )}
-      <Footer onLegalPage={goLegalPage} onContact={goContact} onCareers={goCareers} />
+      <Footer
+        onLegalPage={goLegalPage}
+        onContact={goContact}
+        onCareers={goCareers}
+        onCooling={goCooling}
+        onKryos={goKryos}
+      />
     </div>
   );
 }
