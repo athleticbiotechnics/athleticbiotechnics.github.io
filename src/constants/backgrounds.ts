@@ -9,7 +9,9 @@ import arcticIceBackground from "@/imports/arctic-ice-real.jpg";
 import legalIceBackground from "@/imports/legal-ice-background.webp";
 import careersBackground from "@/imports/careers-background.jpg";
 import productSpecBackground from "@/imports/product-spec-background.jpg";
-import kryosMotionBackground from "@/imports/kryos-motion-background.jpg";
+import kryosContactBackground from "@/imports/kryos-contact-background.png";
+import privacyBackground from "@/imports/privacy-background.png";
+import accessibilityBackground from "@/imports/accessibility-background.png";
 import glacierBeachBackground from "@/imports/glacier-beach-background.png";
 
 export type BackdropPreset = ComponentProps<typeof PhotoBackdrop>;
@@ -74,11 +76,11 @@ export const PAGE_BACKDROPS = {
     scale: 1.05,
   },
   kryos: {
-    image: kryosMotionBackground,
-    position: "center center",
-    opacity: 0.9,
-    brightness: 0.98,
-    overlay: "light",
+    image: kryosContactBackground,
+    position: "center 42%",
+    opacity: 0.88,
+    brightness: 1,
+    overlay: "minimal",
     scale: 1.08,
   },
   preorder: {
@@ -90,12 +92,12 @@ export const PAGE_BACKDROPS = {
     scale: 1.06,
   },
   contact: {
-    image: glacierField,
-    position: "center 52%",
+    image: kryosContactBackground,
+    position: "center 42%",
     opacity: 0.88,
-    brightness: 0.99,
+    brightness: 1,
     overlay: "minimal",
-    scale: 1.06,
+    scale: 1.08,
   },
   careers: {
     image: careersBackground,
@@ -114,12 +116,12 @@ export const PAGE_BACKDROPS = {
     scale: 1.03,
   },
   privacy: {
-    image: legalIceBackground,
+    image: privacyBackground,
     position: "center 38%",
-    opacity: 0.9,
-    brightness: 0.99,
+    opacity: 0.92,
+    brightness: 1,
     overlay: "minimal",
-    scale: 1.05,
+    scale: 1.18,
   },
   terms: {
     image: arcticIceBackground,
@@ -130,12 +132,12 @@ export const PAGE_BACKDROPS = {
     scale: 1.05,
   },
   accessibility: {
-    image: legalIceBackground,
-    position: "center 38%",
-    opacity: 0.9,
-    brightness: 0.99,
+    image: accessibilityBackground,
+    position: "center 40%",
+    opacity: 0.92,
+    brightness: 1,
     overlay: "minimal",
-    scale: 1.05,
+    scale: 1.2,
   },
   product: {
     image: glacierBeachBackground,
