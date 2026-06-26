@@ -23,26 +23,72 @@ import {
   EyeOff,
 } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
-import logoTaskbar from "@/imports/arktos-taskbar-circle.png";
-import logoPanoramic from "@/imports/arktos-panoramic.png";
-import logoWordmark from "@/imports/arktos-wordmark.png";
-import glacierCave from "@/imports/glacier-cave.jpg";
-import glacierField from "@/imports/glacier-field.jpg";
-import glacierPrototype from "@/imports/glacier-prototype.jpg";
-import alpineBackground from "@/imports/alpine-background.avif";
-import mcdonaldLakeBackground from "@/imports/mcdonald-lake-background.jpg";
-import glacierSnowBackground from "@/imports/glacier-snow-background.jpg";
-import legalIceBackground from "@/imports/arctic-ice-real.jpg";
-import contactBackground from "@/imports/arctic-ice-real.jpg";
-import productSpecBackground from "@/imports/product-spec-background.jpg";
-import careersBackground from "@/imports/careers-background.jpg";
-import kenzoTree from "@/imports/kenzo-tree.jpg";
-import sidakProfile from "@/imports/sidak-profile.jpg";
-import kryosMotionBackground from "@/imports/kryos-motion-background.jpg";
+import { CookieBanner } from "@/components/CookieBanner";
+import { images, HERO_IMG } from "@/assets/images";
+import {
+  PRIVACY_POLICY_INTRO,
+  PRIVACY_POLICY_LAST_UPDATED,
+  PRIVACY_POLICY_SECTIONS,
+  PRIVACY_POLICY_SUMMARY,
+} from "@/content/privacy-policy";
+import { SOCIAL_LINKS } from "@/constants/social";
+
+const {
+  logoTaskbar,
+  logoPanoramic,
+  logoWordmark,
+  glacierCave,
+  glacierField,
+  glacierPrototype,
+  alpineBackground,
+  mcdonaldLakeBackground,
+  iceBeachBackground,
+  legalIceBackground,
+  contactBackground,
+  productSpecBackground,
+  careersBackground,
+  kenzoTree,
+  sidakProfile,
+  kryosMotionBackground,
+} = images;
 
 const FORMSPREE_CONTACT_ENDPOINT = import.meta.env.VITE_FORMSPREE_CONTACT_ENDPOINT ?? "";
-const DISCORD_INVITE_URL = import.meta.env.VITE_DISCORD_INVITE_URL ?? "";
 const ARKTOS_EMAIL = "arktossystems@gmail.com";
+
+const SOCIAL_LINK_ICONS = {
+  youtube: <Youtube size={15} />,
+  instagram: <Instagram size={15} />,
+  discord: <MessageCircle size={15} />,
+} as const;
+
+function SocialLinkButtons({ compact = false }: { compact?: boolean }) {
+  const itemStyle: React.CSSProperties = {
+    borderColor: "rgba(160,200,255,0.12)",
+    background: "rgba(255,255,255,0.04)",
+    color: "oklch(0.58 0.025 228)",
+    fontFamily: "'Barlow', sans-serif",
+    fontSize: compact ? "0.78rem" : "0.84rem",
+    textDecoration: "none",
+  };
+
+  return (
+    <div className={`flex flex-wrap items-center ${compact ? "gap-3" : "gap-3"}`}>
+      {SOCIAL_LINKS.map((item) => (
+        <a
+          key={item.id}
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 border transition-colors duration-200 hover:text-white/90 hover:border-white/20"
+          style={itemStyle}
+        >
+          {SOCIAL_LINK_ICONS[item.id]}
+          {item.label}
+        </a>
+      ))}
+    </div>
+  );
+}
 
 /* dark-bg logo treatment: invert charcoal marks to light on transparent PNGs */
 const LOGO_STYLE: React.CSSProperties = {
@@ -55,9 +101,6 @@ const LOGO_SHARP: React.CSSProperties = {
   imageRendering: "auto",
 };
 
-/* ── Images ─────────────────────────────────────────────────────────── */
-const HERO_IMG =
-  "https://images.unsplash.com/photo-1507039915464-9d829b6d2d78?w=3840&q=92&fit=crop&auto=format";
 
 /* ── Reusable glass panel ─────────────────────────────────────────── */
 function GlassPanel({
@@ -265,7 +308,7 @@ type NavItem =
 
 const NAV_LINKS: NavItem[] = [
   { label: "Divisions", kind: "section", section: "divisions" },
-  { label: "Cooling", kind: "page", page: "cooling" },
+  { label: "Arktos", kind: "page", page: "cooling" },
   { label: "Kryos", kind: "page", page: "kryos" },
   { label: "Mission", kind: "section", section: "mission" },
   { label: "Team", kind: "section", section: "team" },
@@ -454,13 +497,9 @@ function Navbar({
 function Hero({
   onCooling,
   onKryos,
-  a11y,
-  onToggleA11y,
 }: {
   onCooling: () => void;
   onKryos: () => void;
-  a11y: boolean;
-  onToggleA11y: () => void;
 }) {
   const heroRef = useRef<HTMLElement>(null);
 
@@ -572,20 +611,21 @@ function Hero({
           transition={{ delay: 0.82, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           style={{
             fontFamily: "'Barlow', sans-serif",
-            fontWeight: 300,
+            fontWeight: 400,
             fontSize: "1.1rem",
-            color: "oklch(0.72 0.02 228)",
+            color: "rgba(255,255,255,0.9)",
             lineHeight: 1.75,
             maxWidth: "38rem",
             letterSpacing: "0.01em",
+            textShadow: "0 1px 12px rgba(0,0,0,0.45)",
           }}
         >
           Arktos Systems is the parent company behind{" "}
-          <strong style={{ color: "rgba(255,255,255,0.92)", fontWeight: 500 }}>
+          <strong style={{ color: "rgba(255,255,255,0.98)", fontWeight: 600 }}>
             Arktos Cooling
           </strong>{" "}
           — PC performance and phase-change cooling chambers — and{" "}
-          <strong style={{ color: "rgba(255,255,255,0.92)", fontWeight: 500 }}>
+          <strong style={{ color: "rgba(255,255,255,0.98)", fontWeight: 600 }}>
             Kryos Motion
           </strong>{" "}
           — portable athlete metronomes built for peak performance.
@@ -596,39 +636,14 @@ function Hero({
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.98, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-wrap gap-3 justify-center"
+          className="flex flex-wrap gap-4 justify-center"
         >
           <PrimaryBtn onClick={onCooling}>
             Arktos Cooling <ArrowRight size={15} />
           </PrimaryBtn>
-          <GhostBtn onClick={onKryos}>Kryos Motion</GhostBtn>
-        </motion.div>
-
-        {/* Accessibility toggle */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.3, duration: 0.7 }}
-        >
-          <button
-            onClick={onToggleA11y}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs transition-all duration-300"
-            style={{
-              fontFamily: "'DM Mono', monospace",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              background: a11y ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.07)",
-              border: a11y ? "1px solid rgba(0,0,0,0.3)" : "1px solid rgba(255,255,255,0.18)",
-              color: a11y ? "#000" : "rgba(220,235,255,0.7)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
-            }}
-            aria-pressed={a11y}
-            aria-label="Toggle accessibility mode"
-          >
-            {a11y ? <EyeOff size={13} /> : <Eye size={13} />}
-            {a11y ? "Exit Accessibility Mode" : "Accessibility Mode"}
-          </button>
+          <PrimaryBtn onClick={onKryos}>
+            Kryos Motion <ArrowRight size={15} />
+          </PrimaryBtn>
         </motion.div>
 
         {/* Stat strip */}
@@ -641,7 +656,7 @@ function Hero({
           <GlassPanel className="px-8 py-5">
             <div className="grid grid-cols-3 divide-x divide-white/[0.07]">
               {[
-                { value: "Cooling", label: "Phase-change PC thermal" },
+                { value: "Arktos", label: "Phase-change PC thermal" },
                 { value: "Kryos", label: "Athlete metronomes" },
                 { value: "Systems", label: "Shared Arktos engineering" },
               ].map(({ value, label }) => (
@@ -1635,7 +1650,7 @@ function CoolingPage({
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={glacierSnowBackground} position="center" opacity={0.94} />
+      <PhotoBackdrop image={iceBeachBackground} position="center" opacity={0.94} />
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4">
           <button
@@ -1934,7 +1949,7 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={mcdonaldLakeBackground} position="center" opacity={0.96} />
+      <PhotoBackdrop image={iceBeachBackground} position="center" opacity={0.96} />
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -1942,18 +1957,12 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
             "linear-gradient(180deg, rgba(5,12,26,0.72) 0%, rgba(4,9,20,0.95) 72%), radial-gradient(ellipse at 50% 20%, rgba(64,176,216,0.18) 0%, transparent 58%)",
         }}
       />
-      <img
-        src={glacierSnowBackground}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover opacity-20"
-        style={{ filter: "brightness(0.72) saturate(0.9)", mixBlendMode: "screen" }}
-      />
 
       <div className="relative z-20 max-w-6xl mx-auto">
-        <GlassPanel className="mb-8 px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <GlassPanel className="mb-8 px-5 py-4 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
           <button
             onClick={onHome}
-            className="inline-flex items-center gap-2 text-sm"
+            className="inline-flex items-center gap-2 text-sm justify-self-start"
             style={{
               fontFamily: "'Barlow', sans-serif",
               color: "oklch(0.78 0.05 218)",
@@ -1963,7 +1972,7 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
             Back to Arktos
           </button>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center gap-4 justify-self-center">
             <span
               className="w-2.5 h-2.5 rounded-full"
               style={{
@@ -1996,6 +2005,8 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
               </strong>
             </div>
           </div>
+
+          <div aria-hidden className="justify-self-end" />
         </GlassPanel>
       </div>
 
@@ -2070,8 +2081,8 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
             <div className="grid sm:grid-cols-[0.9fr_1.1fr] items-center">
               <div className="h-44 sm:h-full min-h-44 overflow-hidden">
                 <img
-                  src={glacierPrototype}
-                  alt="White glacier prototype visual for the Glacier air cooler line"
+                  src={iceBeachBackground}
+                  alt="Glacial ice on black sand beach at sunset"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -2335,7 +2346,7 @@ function ContactPage({ onHome }: { onHome: () => void }) {
               Direct email
             </p>
             <a
-              href="mailto:arktossystems@gmail.com"
+              href={`mailto:${ARKTOS_EMAIL}`}
               style={{
                 fontFamily: "'Barlow', sans-serif",
                 fontSize: "1rem",
@@ -2343,8 +2354,24 @@ function ContactPage({ onHome }: { onHome: () => void }) {
                 textDecoration: "none",
               }}
             >
-              arktossystems@gmail.com
+              {ARKTOS_EMAIL}
             </a>
+          </GlassPanel>
+
+          <GlassPanel className="mt-4 p-6 max-w-xl" style={CONTACT_PANEL_OUTLINE}>
+            <p
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.68rem",
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "oklch(0.62 0.055 216)",
+                marginBottom: "0.75rem",
+              }}
+            >
+              Community & social
+            </p>
+            <SocialLinkButtons />
           </GlassPanel>
         </motion.div>
 
@@ -2971,24 +2998,7 @@ function LegalPage({
 }) {
   const isPrivacy = type === "privacy";
   const sections = isPrivacy
-    ? [
-        {
-          title: "What we collect",
-          body: "When you join the Glacier preorder list, Arktos collects the details you choose to submit, including name, email, phone, company or team, build type, shipping region, requested units, and prototype access notes.",
-        },
-        {
-          title: "How we use it",
-          body: "We use preorder information to contact interested builders, validate demand, plan prototype access, estimate regional launch needs, and send product updates related to Glacier and Arktos Systems.",
-        },
-        {
-          title: "Prototype access",
-          body: "Submitting the form does not create a purchase, payment obligation, or guaranteed shipment. We will contact you before any paid reservation or prototype program begins.",
-        },
-        {
-          title: "Data choices",
-          body: "You can ask us to update or remove your preorder information by contacting Arktos Systems. We do not sell preorder list information.",
-        },
-      ]
+    ? PRIVACY_POLICY_SECTIONS
     : [
         {
           title: "Use of the site",
@@ -3076,9 +3086,47 @@ function LegalPage({
               marginBottom: "2rem",
             }}
           >
-            Last updated June 24, 2026. This page is written for the current
-            Arktos Systems prototype website and Glacier preorder flow.
+            Last updated {PRIVACY_POLICY_LAST_UPDATED}.
+            {isPrivacy
+              ? ` ${PRIVACY_POLICY_INTRO}`
+              : " This page is written for the current Arktos Systems prototype website and Glacier preorder flow."}
           </p>
+
+          {isPrivacy && (
+            <div
+              className="mb-8 p-5 rounded-xl"
+              style={{
+                background: "rgba(90,150,255,0.06)",
+                border: "1px solid rgba(90,150,255,0.12)",
+              }}
+            >
+              <h2
+                style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontWeight: 600,
+                  fontSize: "1.2rem",
+                  color: "rgba(255,255,255,0.94)",
+                  marginBottom: "0.75rem",
+                }}
+              >
+                Summary of Key Points
+              </h2>
+              <ul
+                className="grid gap-2"
+                style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: "0.92rem",
+                  color: "oklch(0.76 0.02 228)",
+                  lineHeight: 1.7,
+                  paddingLeft: "1.1rem",
+                }}
+              >
+                {PRIVACY_POLICY_SUMMARY.map((point) => (
+                  <li key={point.slice(0, 40)}>{point}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="grid gap-6">
             {sections.map((section) => (
@@ -3120,12 +3168,16 @@ function Footer({
   onCareers,
   onCooling,
   onKryos,
+  a11y,
+  onToggleA11y,
 }: {
   onLegalPage: (page: "privacy" | "terms") => void;
   onContact: () => void;
   onCareers: () => void;
   onCooling: () => void;
   onKryos: () => void;
+  a11y: boolean;
+  onToggleA11y: () => void;
 }) {
   const footerLinks = [
     { label: "Arktos Cooling", action: () => onCooling() },
@@ -3153,64 +3205,10 @@ function Footer({
             style={{ ...LOGO_SHARP, opacity: 0.72 }}
           />
 
-          <div className="flex flex-wrap items-center gap-3">
-            {[
-              {
-                icon: <Youtube size={15} />,
-                label: "YouTube @ArktosSystems",
-                href: "https://www.youtube.com/@ArktosSystems",
-              },
-              {
-                icon: <Instagram size={15} />,
-                label: "Instagram @Arktos_Systems",
-                href: "https://www.instagram.com/Arktos_Systems/",
-              },
-              {
-                icon: <MessageCircle size={15} />,
-                label: "Join Arktos Discord",
-                href: DISCORD_INVITE_URL || undefined,
-              },
-            ].map((item) => {
-              const itemStyle = {
-                borderColor: "rgba(160,200,255,0.12)",
-                background: "rgba(255,255,255,0.04)",
-                color: "oklch(0.58 0.025 228)",
-                fontFamily: "'Barlow', sans-serif",
-                fontSize: "0.78rem",
-                textDecoration: "none",
-              };
-
-              if (item.href) {
-                return (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-lg px-3 py-2 border transition-colors duration-200 hover:text-white/90"
-                    style={itemStyle}
-                  >
-                    {item.icon}
-                    {item.label}
-                  </a>
-                );
-              }
-
-              return (
-                <span
-                  key={item.label}
-                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 border"
-                  style={itemStyle}
-                >
-                  {item.icon}
-                  {item.label}
-                </span>
-              );
-            })}
-          </div>
+          <SocialLinkButtons compact />
         </div>
 
-        <nav className="flex flex-wrap gap-x-8 gap-y-2">
+        <nav className="flex flex-wrap gap-x-8 gap-y-2 items-center">
           {footerLinks.map((l) => (
             <button
               key={l.label}
@@ -3234,6 +3232,24 @@ function Footer({
               {l.label}
             </button>
           ))}
+          <button
+            onClick={onToggleA11y}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300"
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.72rem",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              background: a11y ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.06)",
+              border: a11y ? "1px solid rgba(0,0,0,0.3)" : "1px solid rgba(160,200,255,0.14)",
+              color: a11y ? "#000" : "oklch(0.58 0.025 228)",
+            }}
+            aria-pressed={a11y}
+            aria-label="Toggle accessibility mode"
+          >
+            {a11y ? <EyeOff size={13} /> : <Eye size={13} />}
+            {a11y ? "Exit Accessibility" : "Accessibility"}
+          </button>
         </nav>
 
         <p
@@ -3250,138 +3266,6 @@ function Footer({
   );
 }
 
-/* ── Cookie Consent Banner ───────────────────────────────────────── */
-const CONSENT_KEY = "arktos-cookie-consent";
-
-function CookieBanner({ onPrivacy }: { onPrivacy: () => void }) {
-  const [visible, setVisible] = useState(false);
-  const [leaving, setLeaving] = useState(false);
-
-  useEffect(() => {
-    if (!localStorage.getItem(CONSENT_KEY)) {
-      const t = setTimeout(() => setVisible(true), 1200);
-      return () => clearTimeout(t);
-    }
-  }, []);
-
-  const dismiss = (choice: "accepted" | "declined") => {
-    localStorage.setItem(CONSENT_KEY, choice);
-    setLeaving(true);
-    setTimeout(() => setVisible(false), 420);
-  };
-
-  if (!visible) return null;
-
-  return (
-    <motion.div
-      initial={{ y: 120, opacity: 0 }}
-      animate={leaving ? { y: 120, opacity: 0 } : { y: 0, opacity: 1 }}
-      transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed bottom-5 left-1/2 z-[9999]"
-      style={{ transform: "translateX(-50%)", width: "min(680px, calc(100vw - 2rem))" }}
-    >
-      <div
-        style={{
-          background: "rgba(8, 16, 32, 0.82)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          borderRadius: "16px",
-          padding: "20px 24px",
-          display: "flex",
-          alignItems: "center",
-          gap: "20px",
-          flexWrap: "wrap",
-        }}
-      >
-        {/* Icon */}
-        <div style={{ flexShrink: 0, opacity: 0.6, fontSize: "22px" }}>🍪</div>
-
-        {/* Text */}
-        <p
-          style={{
-            flex: 1,
-            minWidth: "200px",
-            color: "rgba(200,215,240,0.85)",
-            fontSize: "13px",
-            lineHeight: 1.6,
-            margin: 0,
-            fontFamily: "'Barlow', sans-serif",
-          }}
-        >
-          We use cookies to improve your experience. By continuing you agree to our{" "}
-          <button
-            onClick={onPrivacy}
-            style={{
-              background: "none",
-              border: "none",
-              color: "rgba(120,200,255,0.9)",
-              cursor: "pointer",
-              padding: 0,
-              fontSize: "13px",
-              textDecoration: "underline",
-              fontFamily: "inherit",
-            }}
-          >
-            Privacy Policy
-          </button>
-          .
-        </p>
-
-        {/* Buttons */}
-        <div style={{ display: "flex", gap: "10px", flexShrink: 0 }}>
-          <button
-            onClick={() => dismiss("declined")}
-            style={{
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.14)",
-              color: "rgba(200,215,240,0.7)",
-              borderRadius: "8px",
-              padding: "8px 18px",
-              fontSize: "12px",
-              cursor: "pointer",
-              fontFamily: "'DM Mono', monospace",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              transition: "background 0.2s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.11)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
-          >
-            Decline
-          </button>
-          <button
-            onClick={() => dismiss("accepted")}
-            style={{
-              background: "linear-gradient(135deg, rgba(120,200,255,0.18) 0%, rgba(60,140,220,0.22) 100%)",
-              border: "1px solid rgba(120,200,255,0.3)",
-              color: "rgba(200,235,255,0.95)",
-              borderRadius: "8px",
-              padding: "8px 20px",
-              fontSize: "12px",
-              cursor: "pointer",
-              fontFamily: "'DM Mono', monospace",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              fontWeight: 600,
-              transition: "background 0.2s",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.background =
-                "linear-gradient(135deg, rgba(120,200,255,0.28) 0%, rgba(60,140,220,0.34) 100%)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.background =
-                "linear-gradient(135deg, rgba(120,200,255,0.18) 0%, rgba(60,140,220,0.22) 100%)")
-            }
-          >
-            Accept
-          </button>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
 
 /* ── Root ────────────────────────────────────────────────────────── */
 export default function App() {
@@ -3475,7 +3359,7 @@ export default function App() {
       />
       {page === "home" ? (
         <>
-          <Hero onCooling={goCooling} onKryos={goKryos} a11y={a11y} onToggleA11y={toggleA11y} />
+          <Hero onCooling={goCooling} onKryos={goKryos} />
           <Divisions onCooling={goCooling} onKryos={goKryos} />
           <Mission />
           <Platform />
@@ -3504,6 +3388,8 @@ export default function App() {
         onCareers={goCareers}
         onCooling={goCooling}
         onKryos={goKryos}
+        a11y={a11y}
+        onToggleA11y={toggleA11y}
       />
       <CookieBanner onPrivacy={() => goLegalPage("privacy")} />
     </div>
