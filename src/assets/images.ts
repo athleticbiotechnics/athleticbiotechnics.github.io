@@ -7,6 +7,8 @@ import glacierPrototype from "@/imports/glacier-prototype.jpg";
 import alpineBackground from "@/imports/alpine-background.avif";
 import mcdonaldLakeBackground from "@/imports/mcdonald-lake-background.jpg";
 import iceBeachBackground from "@/imports/ice-beach-background.png";
+import glacierBeachBackground from "@/imports/glacier-beach-background.png";
+import glacierHeatsinkRender from "@/imports/glacier-heatsink-render.png";
 import legalIceBackground from "@/imports/arctic-ice-real.jpg";
 import productSpecBackground from "@/imports/product-spec-background.jpg";
 import careersBackground from "@/imports/careers-background.jpg";
@@ -24,6 +26,8 @@ export const images = {
   alpineBackground,
   mcdonaldLakeBackground,
   iceBeachBackground,
+  glacierBeachBackground,
+  glacierHeatsinkRender,
   legalIceBackground,
   contactBackground: legalIceBackground,
   productSpecBackground,

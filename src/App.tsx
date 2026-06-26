@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import { CookieBanner } from "@/components/CookieBanner";
+import { PhotoBackdrop } from "@/components/PhotoBackdrop";
+import { ProductDescriptionPage } from "@/components/ProductDescriptionPage";
 import { images, HERO_IMG } from "@/assets/images";
 import {
   PRIVACY_POLICY_INTRO,
@@ -31,7 +33,13 @@ import {
   PRIVACY_POLICY_SECTIONS,
   PRIVACY_POLICY_SUMMARY,
 } from "@/content/privacy-policy";
+import {
+  ACCESSIBILITY_LAST_UPDATED,
+  ACCESSIBILITY_SECTIONS,
+} from "@/content/accessibility-statement";
 import { SOCIAL_LINKS } from "@/constants/social";
+import { PRODUCTS, COOLING_PRODUCT_IDS, KRYOS_PRODUCT_IDS, type ProductId } from "@/constants/products";
+import { submitToFormspree } from "@/lib/formspree";
 
 const {
   logoTaskbar,
@@ -52,7 +60,6 @@ const {
   kryosMotionBackground,
 } = images;
 
-const FORMSPREE_CONTACT_ENDPOINT = import.meta.env.VITE_FORMSPREE_CONTACT_ENDPOINT ?? "";
 const ARKTOS_EMAIL = "arktossystems@gmail.com";
 
 const SOCIAL_LINK_ICONS = {
@@ -125,41 +132,6 @@ function GlassPanel({
     >
       {children}
     </div>
-  );
-}
-
-function PhotoBackdrop({
-  image,
-  position = "center",
-  opacity = 0.9,
-}: {
-  image: string;
-  position?: string;
-  opacity?: number;
-}) {
-  return (
-    <>
-      <img
-        src={image}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-        style={{ objectPosition: position, opacity, filter: "brightness(0.78) saturate(1.02)" }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(3,8,18,0.58) 0%, rgba(5,14,30,0.46) 45%, rgba(3,8,18,0.76) 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 24%, rgba(255,255,255,0.08) 0%, transparent 55%)",
-        }}
-      />
-    </>
   );
 }
 
@@ -543,42 +515,11 @@ function Hero({
       <motion.div
         className="relative z-20 max-w-5xl mx-auto px-6 text-center flex flex-col items-center gap-7"
       >
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div
-            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs"
-            style={{
-              fontFamily: "'DM Mono', monospace",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              background: "rgba(80,140,255,0.1)",
-              border: "1px solid rgba(120,170,255,0.2)",
-              color: "oklch(0.78 0.1 216)",
-              backdropFilter: "blur(14px)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
-            }}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full"
-              style={{
-                background: "oklch(0.72 0.12 196)",
-                boxShadow: "0 0 6px oklch(0.72 0.12 196)",
-                animation: "pulse 2s infinite",
-              }}
-            />
-            Sustainable thermal & performance systems
-          </div>
-        </motion.div>
-
         {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.65, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.5, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           style={{
             fontFamily: "'Barlow Condensed', sans-serif",
             fontWeight: 300,
@@ -608,7 +549,7 @@ function Hero({
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.82, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.62, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           style={{
             fontFamily: "'Barlow', sans-serif",
             fontWeight: 400,
@@ -635,7 +576,7 @@ function Hero({
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.98, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.78, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-wrap gap-4 justify-center"
         >
           <PrimaryBtn onClick={onCooling}>
@@ -747,7 +688,7 @@ function Divisions({
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.082 0.024 244)" }}
     >
-      <PhotoBackdrop image={mcdonaldLakeBackground} position="center" opacity={0.88} />
+      <PhotoBackdrop image={mcdonaldLakeBackground} position="center center" opacity={0.9} brightness={0.9} overlay="light" />
       <div className="relative max-w-6xl mx-auto flex flex-col gap-14">
         <motion.div
           initial={{ opacity: 0, y: 22 }}
@@ -816,7 +757,7 @@ function Divisions({
                 src={division.image}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
-                style={{ filter: "brightness(0.62) saturate(0.95)" }}
+                style={{ objectPosition: "center center", filter: "brightness(0.68) saturate(0.98)" }}
               />
               <div
                 className="absolute inset-0"
@@ -920,7 +861,7 @@ function Mission() {
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.085 0.024 244)" }}
     >
-      <PhotoBackdrop image={alpineBackground} position="center" opacity={0.92} />
+      <PhotoBackdrop image={alpineBackground} position="center center" opacity={0.9} brightness={0.9} overlay="light" />
       {/* grid texture */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -1089,7 +1030,7 @@ function Platform() {
       className="relative py-28 px-6 overflow-hidden"
       style={{ background: "oklch(0.09 0.022 242)" }}
     >
-      <PhotoBackdrop image={mcdonaldLakeBackground} position="center" opacity={0.94} />
+      <PhotoBackdrop image={mcdonaldLakeBackground} position="center center" opacity={0.92} brightness={0.9} overlay="medium" />
       <div className="relative max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -1227,7 +1168,7 @@ function GlacierLine({ onPreorder }: { onPreorder: () => void }) {
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={glacierPrototype} position="center 38%" opacity={0.9} />
+      <PhotoBackdrop image={glacierPrototype} position="center 35%" opacity={0.85} brightness={0.9} overlay="medium" />
       <div
         className="absolute inset-0 pointer-events-none opacity-70"
         style={{
@@ -1293,7 +1234,7 @@ function GlacierLine({ onPreorder }: { onPreorder: () => void }) {
                 src={card.image}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
-                style={{ filter: "brightness(0.62) saturate(0.95)" }}
+                style={{ objectPosition: "center center", filter: "brightness(0.68) saturate(0.98)" }}
               />
               <div
                 className="absolute inset-0"
@@ -1384,7 +1325,7 @@ function Team() {
         background: "linear-gradient(160deg, oklch(0.082 0.028 246) 0%, oklch(0.09 0.02 238) 100%)",
       }}
     >
-      <PhotoBackdrop image={alpineBackground} position="center" opacity={0.9} />
+      <PhotoBackdrop image={alpineBackground} position="center center" opacity={0.88} brightness={0.92} overlay="light" />
       {/* glow */}
       <div
         className="absolute pointer-events-none inset-0 flex items-center justify-center"
@@ -1548,7 +1489,7 @@ function CTA({ onPreorder }: { onPreorder: () => void }) {
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.09 0.022 242)" }}
     >
-      <PhotoBackdrop image={mcdonaldLakeBackground} position="center" opacity={0.94} />
+      <PhotoBackdrop image={mcdonaldLakeBackground} position="center center" opacity={0.92} brightness={0.9} overlay="medium" />
       <div
         className="absolute inset-0 pointer-events-none flex items-center justify-center"
       >
@@ -1623,9 +1564,11 @@ function CTA({ onPreorder }: { onPreorder: () => void }) {
 function CoolingPage({
   onHome,
   onPreorder,
+  onProduct,
 }: {
   onHome: () => void;
   onPreorder: () => void;
+  onProduct: (id: ProductId) => void;
 }) {
   const highlights = [
     {
@@ -1650,7 +1593,7 @@ function CoolingPage({
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={iceBeachBackground} position="center" opacity={0.94} />
+      <PhotoBackdrop image={iceBeachBackground} position="center 40%" opacity={0.78} brightness={0.94} overlay="light" />
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4">
           <button
@@ -1764,13 +1707,80 @@ function CoolingPage({
             ))}
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-14"
+        >
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.7rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.68 0.1 204)",
+              display: "block",
+              marginBottom: "1rem",
+            }}
+          >
+            Products
+          </span>
+          <div className="grid md:grid-cols-2 gap-5">
+            {COOLING_PRODUCT_IDS.map((id) => {
+              const product = PRODUCTS[id];
+              return (
+                <GlassPanel
+                  key={id}
+                  className="p-6 flex flex-col gap-4 hover:bg-white/[0.07] transition-colors duration-500"
+                >
+                  <div>
+                    <h2
+                      style={{
+                        fontFamily: "'Barlow Condensed', sans-serif",
+                        fontWeight: 600,
+                        fontSize: "1.5rem",
+                        color: "rgba(255,255,255,0.95)",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
+                      {product.name}
+                    </h2>
+                    <p
+                      style={{
+                        fontFamily: "'Barlow', sans-serif",
+                        fontSize: "0.92rem",
+                        color: "oklch(0.72 0.02 228)",
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      {product.tagline}
+                    </p>
+                  </div>
+                  <PrimaryBtn onClick={() => onProduct(id)}>
+                    View product <ArrowRight size={14} />
+                  </PrimaryBtn>
+                </GlassPanel>
+              );
+            })}
+          </div>
+        </motion.div>
       </div>
     </main>
   );
 }
 
 /* ── Kryos Motion page ───────────────────────────────────────────── */
-function KryosPage({ onHome, onContact }: { onHome: () => void; onContact: () => void }) {
+function KryosPage({
+  onHome,
+  onContact,
+  onProduct,
+}: {
+  onHome: () => void;
+  onContact: () => void;
+  onProduct: (id: ProductId) => void;
+}) {
   const features = [
     {
       icon: <Timer size={20} />,
@@ -1794,7 +1804,7 @@ function KryosPage({ onHome, onContact }: { onHome: () => void; onContact: () =>
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={kryosMotionBackground} position="center" opacity={0.96} />
+      <PhotoBackdrop image={kryosMotionBackground} position="center center" opacity={0.88} brightness={0.92} overlay="light" />
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4">
           <button
@@ -1935,6 +1945,65 @@ function KryosPage({ onHome, onContact }: { onHome: () => void; onContact: () =>
             </GlassPanel>
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-14"
+        >
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.7rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.68 0.1 204)",
+              display: "block",
+              marginBottom: "1rem",
+            }}
+          >
+            Products
+          </span>
+          <div className="grid md:grid-cols-2 gap-5">
+            {KRYOS_PRODUCT_IDS.map((id) => {
+              const product = PRODUCTS[id];
+              return (
+                <GlassPanel
+                  key={id}
+                  className="p-6 flex flex-col gap-4 hover:bg-white/[0.07] transition-colors duration-500"
+                >
+                  <div>
+                    <h2
+                      style={{
+                        fontFamily: "'Barlow Condensed', sans-serif",
+                        fontWeight: 600,
+                        fontSize: "1.5rem",
+                        color: "rgba(255,255,255,0.95)",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
+                      {product.name}
+                    </h2>
+                    <p
+                      style={{
+                        fontFamily: "'Barlow', sans-serif",
+                        fontSize: "0.92rem",
+                        color: "oklch(0.72 0.02 228)",
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      {product.tagline}
+                    </p>
+                  </div>
+                  <PrimaryBtn onClick={() => onProduct(id)}>
+                    View product <ArrowRight size={14} />
+                  </PrimaryBtn>
+                </GlassPanel>
+              );
+            })}
+          </div>
+        </motion.div>
       </div>
     </main>
   );
@@ -1942,20 +2011,56 @@ function KryosPage({ onHome, onContact }: { onHome: () => void; onContact: () =>
 
 /* ── Preorder page ───────────────────────────────────────────────── */
 function PreorderPage({ onHome }: { onHome: () => void }) {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
   const preorderCount = 0;
+
+  const preorderFields = [
+    ["name", "Full name", "Your name", "text", true],
+    ["email", "Email", "you@example.com", "email", true],
+    ["phone", "Phone", "(555) 123-4567", "tel", false],
+    ["company", "Company / team", "Organization or build name", "text", false],
+    ["build_type", "Build type", "Gaming, workstation, studio...", "text", false],
+    ["region", "Shipping region", "Country or region", "text", false],
+    ["units", "Requested units", "1", "number", false],
+  ] as const;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setStatus("submitting");
+    setErrorMessage("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    formData.set("_subject", "[PREORDER] Glacier reserve list");
+    formData.set("form_type", "Glacier Preorder");
+    formData.set("_replyto", String(formData.get("email") ?? ""));
+
+    try {
+      await submitToFormspree(formData, "preorder");
+      setStatus("success");
+      form.reset();
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
+      );
+    }
+  };
 
   return (
     <main
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={iceBeachBackground} position="center" opacity={0.96} />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(5,12,26,0.72) 0%, rgba(4,9,20,0.95) 72%), radial-gradient(ellipse at 50% 20%, rgba(64,176,216,0.18) 0%, transparent 58%)",
-        }}
+      <PhotoBackdrop
+        image={iceBeachBackground}
+        position="center 40%"
+        opacity={0.62}
+        brightness={0.96}
+        overlay="light"
       />
 
       <div className="relative z-20 max-w-6xl mx-auto">
@@ -1972,7 +2077,7 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
             Back to Arktos
           </button>
 
-          <div className="flex items-center justify-center gap-4 justify-self-center">
+          <div className="flex flex-col items-center justify-center gap-2 justify-self-center text-center">
             <span
               className="w-2.5 h-2.5 rounded-full"
               style={{
@@ -1981,29 +2086,27 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
                 animation: "pulse 2s infinite",
               }}
             />
-            <div className="flex items-baseline gap-3">
-              <span
-                style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: "0.66rem",
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  color: "oklch(0.68 0.1 204)",
-                }}
-              >
-                Live preorders
-              </span>
-              <strong
-                style={{
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontSize: "2rem",
-                  lineHeight: 0.9,
-                  color: "rgba(255,255,255,0.96)",
-                }}
-              >
-                {preorderCount.toLocaleString()}
-              </strong>
-            </div>
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.66rem",
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "oklch(0.68 0.1 204)",
+              }}
+            >
+              Live preorders
+            </span>
+            <strong
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: "2rem",
+                lineHeight: 1,
+                color: "rgba(255,255,255,0.96)",
+              }}
+            >
+              {preorderCount.toLocaleString()}
+            </strong>
           </div>
 
           <div aria-hidden className="justify-self-end" />
@@ -2120,7 +2223,7 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         >
-          <GlassPanel className="p-7">
+          <GlassPanel className="p-7" style={CONTACT_PANEL_OUTLINE}>
             <span
               style={{
                 fontFamily: "'DM Mono', monospace",
@@ -2143,7 +2246,7 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
                 marginBottom: "0.9rem",
               }}
             >
-              Glacier preorder opening shortly
+              Join the Glacier preorder list
             </h2>
             <p
               style={{
@@ -2154,21 +2257,89 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
                 marginBottom: "1.2rem",
               }}
             >
-              The Glacier reserve flow is not live yet. Prototype in progress —
-              final specs, price, and ship window will be announced after
-              thermal and acoustic validation.
+              Reserve your spot for prototype access, launch updates, and founders
+              pricing. Joining the list is an expression of interest only — no
+              payment required.
             </p>
-            <p
-              style={{
-                fontFamily: "'Barlow', sans-serif",
-                fontSize: "0.82rem",
-                color: "oklch(0.58 0.02 228)",
-                lineHeight: 1.6,
-              }}
-            >
-              For early access questions, reach us through the Contact page at{" "}
-              {ARKTOS_EMAIL}.
-            </p>
+
+            <form className="grid gap-4" onSubmit={handleSubmit}>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {preorderFields.map(([name, label, placeholder, type, required]) => (
+                  <label
+                    key={name}
+                    className={`grid gap-2 ${name === "build_type" || name === "region" ? "sm:col-span-2" : ""}`}
+                  >
+                    <span style={FORM_LABEL_STYLE}>{label}</span>
+                    <input
+                      name={name}
+                      type={type}
+                      required={required}
+                      placeholder={placeholder}
+                      className={FORM_FIELD_CLASS}
+                      style={FORM_FIELD_STYLE}
+                    />
+                  </label>
+                ))}
+              </div>
+
+              <label className="grid gap-2">
+                <span style={FORM_LABEL_STYLE}>Prototype access notes</span>
+                <textarea
+                  name="notes"
+                  placeholder="Socket, case size, acoustic goals, timeline..."
+                  className={`${FORM_FIELD_CLASS} min-h-28 resize-none`}
+                  style={FORM_FIELD_STYLE}
+                />
+              </label>
+
+              <PrimaryBtn
+                type="submit"
+                disabled={status === "submitting"}
+                className="justify-center mt-2"
+              >
+                {status === "submitting" ? "Submitting..." : "Reserve Glacier"}{" "}
+                {status !== "submitting" && <ArrowRight size={14} />}
+              </PrimaryBtn>
+
+              {status === "success" && (
+                <div
+                  className="rounded-xl px-4 py-3 border"
+                  style={{
+                    background: "rgba(95,210,255,0.09)",
+                    borderColor: "rgba(130,220,255,0.22)",
+                    color: "oklch(0.82 0.07 204)",
+                    fontFamily: "'Barlow', sans-serif",
+                  }}
+                >
+                  You&apos;re on the list. We&apos;ll reach out with Glacier updates soon.
+                </div>
+              )}
+
+              {status === "error" && (
+                <div
+                  className="rounded-xl px-4 py-3 border"
+                  style={{
+                    background: "rgba(255,90,90,0.08)",
+                    borderColor: "rgba(255,120,120,0.22)",
+                    color: "oklch(0.82 0.08 20)",
+                    fontFamily: "'Barlow', sans-serif",
+                  }}
+                >
+                  {errorMessage}
+                </div>
+              )}
+
+              <p
+                style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: "0.78rem",
+                  color: "oklch(0.58 0.02 228)",
+                  lineHeight: 1.6,
+                }}
+              >
+                Submissions are delivered securely through Formspree to {ARKTOS_EMAIL}.
+              </p>
+            </form>
           </GlassPanel>
         </motion.div>
       </div>
@@ -2191,15 +2362,6 @@ function ContactPage({ onHome }: { onHome: () => void }) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!FORMSPREE_CONTACT_ENDPOINT) {
-      setStatus("error");
-      setErrorMessage(
-        "Formspree is not configured yet. Add VITE_FORMSPREE_CONTACT_ENDPOINT to your .env file."
-      );
-      return;
-    }
-
     setStatus("submitting");
     setErrorMessage("");
 
@@ -2210,20 +2372,7 @@ function ContactPage({ onHome }: { onHome: () => void }) {
     formData.set("_replyto", String(formData.get("email") ?? ""));
 
     try {
-      const response = await fetch(FORMSPREE_CONTACT_ENDPOINT, {
-        method: "POST",
-        body: formData,
-        headers: { Accept: "application/json" },
-      });
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        throw new Error(
-          (data as { error?: string } | null)?.error ??
-            "Something went wrong. Please try again or email arktossystems@gmail.com directly."
-        );
-      }
-
+      await submitToFormspree(formData, "contact");
       setStatus("success");
       form.reset();
     } catch (error) {
@@ -2241,29 +2390,12 @@ function ContactPage({ onHome }: { onHome: () => void }) {
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <img
-        src={contactBackground}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-        style={{
-          objectPosition: "center",
-          opacity: 1,
-          filter: "brightness(0.96) saturate(1.12) contrast(1.04)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(3,8,18,0.22) 0%, rgba(5,14,30,0.14) 42%, rgba(3,8,18,0.38) 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.1) 0%, transparent 62%)",
-        }}
+      <PhotoBackdrop
+        image={contactBackground}
+        position="center center"
+        opacity={0.98}
+        brightness={0.96}
+        overlay="light"
       />
 
       <div className="relative z-20 max-w-6xl mx-auto">
@@ -2488,15 +2620,6 @@ function CareersPage({ onHome }: { onHome: () => void }) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!FORMSPREE_CONTACT_ENDPOINT) {
-      setStatus("error");
-      setErrorMessage(
-        "Formspree is not configured yet. Add VITE_FORMSPREE_CONTACT_ENDPOINT to your .env file."
-      );
-      return;
-    }
-
     setStatus("submitting");
     setErrorMessage("");
 
@@ -2507,20 +2630,7 @@ function CareersPage({ onHome }: { onHome: () => void }) {
     formData.set("_replyto", String(formData.get("email") ?? ""));
 
     try {
-      const response = await fetch(FORMSPREE_CONTACT_ENDPOINT, {
-        method: "POST",
-        body: formData,
-        headers: { Accept: "application/json" },
-      });
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        throw new Error(
-          (data as { error?: string } | null)?.error ??
-            `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
-        );
-      }
-
+      await submitToFormspree(formData, "contact");
       setStatus("success");
       form.reset();
     } catch (error) {
@@ -2538,29 +2648,12 @@ function CareersPage({ onHome }: { onHome: () => void }) {
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <img
-        src={careersBackground}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-        style={{
-          objectPosition: "center",
-          opacity: 1,
-          filter: "brightness(0.96) saturate(1.08)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(3,8,18,0.22) 0%, rgba(5,14,30,0.14) 42%, rgba(3,8,18,0.38) 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.1) 0%, transparent 62%)",
-        }}
+      <PhotoBackdrop
+        image={careersBackground}
+        position="center center"
+        opacity={0.98}
+        brightness={0.96}
+        overlay="light"
       />
 
       <div className="relative z-20 max-w-6xl mx-auto">
@@ -2810,29 +2903,12 @@ function ProductSpecPage({
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <img
-        src={productSpecBackground}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-        style={{
-          objectPosition: "center",
-          opacity: 1,
-          filter: "brightness(0.96) saturate(1.08)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(3,8,18,0.22) 0%, rgba(5,14,30,0.14) 42%, rgba(3,8,18,0.38) 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.1) 0%, transparent 62%)",
-        }}
+      <PhotoBackdrop
+        image={productSpecBackground}
+        position="center center"
+        opacity={0.98}
+        brightness={0.96}
+        overlay="light"
       />
 
       <div className="relative z-20 max-w-6xl mx-auto">
@@ -2992,14 +3068,21 @@ function ProductSpecPage({
 function LegalPage({
   type,
   onHome,
+  a11y,
+  onToggleA11y,
 }: {
-  type: "privacy" | "terms";
+  type: "privacy" | "terms" | "accessibility";
   onHome: () => void;
+  a11y: boolean;
+  onToggleA11y: () => void;
 }) {
   const isPrivacy = type === "privacy";
+  const isAccessibility = type === "accessibility";
   const sections = isPrivacy
     ? PRIVACY_POLICY_SECTIONS
-    : [
+    : isAccessibility
+      ? ACCESSIBILITY_SECTIONS
+      : [
         {
           title: "Use of the site",
           body: "This site presents Arktos Systems concepts, prototype information, and early access opportunities. Product details may change as engineering validation continues.",
@@ -3023,18 +3106,12 @@ function LegalPage({
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <img
-        src={legalIceBackground}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-        style={{ objectPosition: "center", filter: "brightness(0.92) saturate(1.06)" }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(3,8,18,0.2) 0%, rgba(3,8,18,0.36) 48%, rgba(3,8,18,0.58) 100%)",
-        }}
+      <PhotoBackdrop
+        image={legalIceBackground}
+        position="center center"
+        opacity={0.95}
+        brightness={0.94}
+        overlay="light"
       />
 
       <div className="relative z-20 max-w-4xl mx-auto">
@@ -3074,7 +3151,7 @@ function LegalPage({
               marginBottom: "1rem",
             }}
           >
-            {isPrivacy ? "Privacy Policy" : "Terms of Service"}
+            {isPrivacy ? "Privacy Policy" : isAccessibility ? "Accessibility Statement" : "Terms of Service"}
           </h1>
           <p
             style={{
@@ -3086,11 +3163,71 @@ function LegalPage({
               marginBottom: "2rem",
             }}
           >
-            Last updated {PRIVACY_POLICY_LAST_UPDATED}.
+            Last updated{" "}
+            {isPrivacy
+              ? PRIVACY_POLICY_LAST_UPDATED
+              : isAccessibility
+                ? ACCESSIBILITY_LAST_UPDATED
+                : "June 24, 2026"}
+            .
             {isPrivacy
               ? ` ${PRIVACY_POLICY_INTRO}`
-              : " This page is written for the current Arktos Systems prototype website and Glacier preorder flow."}
+              : isAccessibility
+                ? " This statement describes how we approach accessibility on the Arktos Systems website."
+                : " This page is written for the current Arktos Systems prototype website and Glacier preorder flow."}
           </p>
+
+          {isAccessibility && (
+            <div
+              className="mb-8 p-5 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+              style={{
+                background: "rgba(90,150,255,0.06)",
+                border: "1px solid rgba(90,150,255,0.12)",
+              }}
+            >
+              <div>
+                <h2
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontWeight: 600,
+                    fontSize: "1.2rem",
+                    color: "rgba(255,255,255,0.94)",
+                    marginBottom: "0.35rem",
+                  }}
+                >
+                  Accessibility mode
+                </h2>
+                <p
+                  style={{
+                    fontFamily: "'Barlow', sans-serif",
+                    fontSize: "0.92rem",
+                    color: "oklch(0.76 0.02 228)",
+                    lineHeight: 1.65,
+                  }}
+                >
+                  Turn on high-contrast reading mode across the site.
+                </p>
+              </div>
+              <button
+                onClick={onToggleA11y}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-300"
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: "0.72rem",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  background: a11y ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.08)",
+                  border: a11y ? "1px solid rgba(0,0,0,0.3)" : "1px solid rgba(160,200,255,0.18)",
+                  color: a11y ? "#000" : "rgba(255,255,255,0.9)",
+                }}
+                aria-pressed={a11y}
+                aria-label="Toggle accessibility mode"
+              >
+                {a11y ? <EyeOff size={14} /> : <Eye size={14} />}
+                {a11y ? "Exit Accessibility Mode" : "Enable Accessibility Mode"}
+              </button>
+            </div>
+          )}
 
           {isPrivacy && (
             <div
@@ -3168,22 +3305,19 @@ function Footer({
   onCareers,
   onCooling,
   onKryos,
-  a11y,
-  onToggleA11y,
 }: {
-  onLegalPage: (page: "privacy" | "terms") => void;
+  onLegalPage: (page: "privacy" | "terms" | "accessibility") => void;
   onContact: () => void;
   onCareers: () => void;
   onCooling: () => void;
   onKryos: () => void;
-  a11y: boolean;
-  onToggleA11y: () => void;
 }) {
   const footerLinks = [
     { label: "Arktos Cooling", action: () => onCooling() },
     { label: "Kryos Motion", action: () => onKryos() },
     { label: "Privacy", action: () => onLegalPage("privacy") },
     { label: "Terms", action: () => onLegalPage("terms") },
+    { label: "Accessibility", action: () => onLegalPage("accessibility") },
     { label: "Careers", action: () => onCareers() },
     { label: "Contact", action: () => onContact() },
   ];
@@ -3232,24 +3366,6 @@ function Footer({
               {l.label}
             </button>
           ))}
-          <button
-            onClick={onToggleA11y}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300"
-            style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: "0.72rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              background: a11y ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.06)",
-              border: a11y ? "1px solid rgba(0,0,0,0.3)" : "1px solid rgba(160,200,255,0.14)",
-              color: a11y ? "#000" : "oklch(0.58 0.025 228)",
-            }}
-            aria-pressed={a11y}
-            aria-label="Toggle accessibility mode"
-          >
-            {a11y ? <EyeOff size={13} /> : <Eye size={13} />}
-            {a11y ? "Exit Accessibility" : "Accessibility"}
-          </button>
         </nav>
 
         <p
@@ -3271,7 +3387,17 @@ function Footer({
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [page, setPage] = useState<
-    "home" | "preorder" | "contact" | "docs" | "careers" | "privacy" | "terms" | "cooling" | "kryos"
+    | "home"
+    | "preorder"
+    | "contact"
+    | "docs"
+    | "careers"
+    | "privacy"
+    | "terms"
+    | "accessibility"
+    | "cooling"
+    | "kryos"
+    | ProductId
   >("home");
   const [a11y, setA11y] = useState(false);
 
@@ -3326,8 +3452,13 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   };
 
-  const goLegalPage = (nextPage: "privacy" | "terms") => {
+  const goLegalPage = (nextPage: "privacy" | "terms" | "accessibility") => {
     setPage(nextPage);
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
+  const goProduct = (id: ProductId) => {
+    setPage(id);
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   };
 
@@ -3370,17 +3501,35 @@ export default function App() {
       ) : page === "preorder" ? (
         <PreorderPage onHome={goHome} />
       ) : page === "cooling" ? (
-        <CoolingPage onHome={goHome} onPreorder={goPreorder} />
+        <CoolingPage onHome={goHome} onPreorder={goPreorder} onProduct={goProduct} />
       ) : page === "kryos" ? (
-        <KryosPage onHome={goHome} onContact={goContact} />
+        <KryosPage onHome={goHome} onContact={goContact} onProduct={goProduct} />
       ) : page === "contact" ? (
         <ContactPage onHome={goHome} />
       ) : page === "docs" ? (
         <ProductSpecPage onHome={goHome} onPreorder={goPreorder} />
       ) : page === "careers" ? (
         <CareersPage onHome={goHome} />
+      ) : page in PRODUCTS ? (
+        <ProductDescriptionPage
+          product={PRODUCTS[page as ProductId]}
+          onHome={goHome}
+          onBack={PRODUCTS[page as ProductId].division === "cooling" ? goCooling : goKryos}
+          backLabel={
+            PRODUCTS[page as ProductId].division === "cooling"
+              ? "Back to Arktos Cooling"
+              : "Back to Kryos Motion"
+          }
+          onReserve={goPreorder}
+          onContact={goContact}
+        />
       ) : (
-        <LegalPage type={page} onHome={goHome} />
+        <LegalPage
+          type={page as "privacy" | "terms" | "accessibility"}
+          onHome={goHome}
+          a11y={a11y}
+          onToggleA11y={toggleA11y}
+        />
       )}
       <Footer
         onLegalPage={goLegalPage}
@@ -3388,8 +3537,6 @@ export default function App() {
         onCareers={goCareers}
         onCooling={goCooling}
         onKryos={goKryos}
-        a11y={a11y}
-        onToggleA11y={toggleA11y}
       />
       <CookieBanner onPrivacy={() => goLegalPage("privacy")} />
     </div>

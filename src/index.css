@@ -59,3 +59,14 @@ html.a11y-mode button[aria-label="Toggle accessibility mode"] {
   border: 1.5px solid #000 !important;
   color: #000 !important;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
