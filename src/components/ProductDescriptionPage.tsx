@@ -1,10 +1,10 @@
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { PhotoBackdrop } from "@/components/PhotoBackdrop";
-import { ScrollRotatingHeatsink } from "@/components/ScrollRotatingHeatsink";
+import { DynamicHeatsinkViewer } from "@/components/DynamicHeatsinkViewer";
 import { FadeIn } from "@/components/FadeIn";
 import type { ProductSpec } from "@/constants/products";
-import glacierBeachBackground from "@/imports/glacier-beach-background.png";
+import { PAGE_BACKDROPS } from "@/constants/backgrounds";
 import glacierHeatsinkRender from "@/imports/glacier-heatsink-render.png";
 
 function GlassPanel({
@@ -79,13 +79,7 @@ export function ProductDescriptionPage({
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop
-        image={glacierBeachBackground}
-        position="center 42%"
-        opacity={0.82}
-        brightness={0.92}
-        overlay="light"
-      />
+      <PhotoBackdrop {...PAGE_BACKDROPS.product} />
 
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4">
@@ -252,7 +246,7 @@ export function ProductDescriptionPage({
           <FadeIn delay={0.1}>
             {product.showHeatsink ? (
               <GlassPanel className="p-6 lg:sticky lg:top-32">
-                <ScrollRotatingHeatsink
+                <DynamicHeatsinkViewer
                   src={glacierHeatsinkRender}
                   alt="ARKTOS Glacier dual-tower air cooler render"
                 />

@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import { CookieBanner } from "@/components/CookieBanner";
-import { PhotoBackdrop } from "@/components/PhotoBackdrop";
+import { PhotoBackdrop, PageBackdrop } from "@/components/PhotoBackdrop";
 import { ProductDescriptionPage } from "@/components/ProductDescriptionPage";
 import { images, HERO_IMG } from "@/assets/images";
 import {
@@ -40,6 +40,7 @@ import {
 import { SOCIAL_LINKS } from "@/constants/social";
 import { PRODUCTS, COOLING_PRODUCT_IDS, KRYOS_PRODUCT_IDS, type ProductId } from "@/constants/products";
 import { submitToFormspree } from "@/lib/formspree";
+import { PAGE_BACKDROPS } from "@/constants/backgrounds";
 
 const {
   logoTaskbar,
@@ -51,6 +52,7 @@ const {
   alpineBackground,
   mcdonaldLakeBackground,
   iceBeachBackground,
+  glacierHeatsinkRender,
   legalIceBackground,
   contactBackground,
   productSpecBackground,
@@ -688,7 +690,7 @@ function Divisions({
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.082 0.024 244)" }}
     >
-      <PhotoBackdrop image={mcdonaldLakeBackground} position="center center" opacity={0.9} brightness={0.9} overlay="light" />
+      <PageBackdrop preset={PAGE_BACKDROPS.divisions} />
       <div className="relative max-w-6xl mx-auto flex flex-col gap-14">
         <motion.div
           initial={{ opacity: 0, y: 22 }}
@@ -861,7 +863,7 @@ function Mission() {
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.085 0.024 244)" }}
     >
-      <PhotoBackdrop image={alpineBackground} position="center center" opacity={0.9} brightness={0.9} overlay="light" />
+      <PageBackdrop preset={PAGE_BACKDROPS.mission} />
       {/* grid texture */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -1030,7 +1032,7 @@ function Platform() {
       className="relative py-28 px-6 overflow-hidden"
       style={{ background: "oklch(0.09 0.022 242)" }}
     >
-      <PhotoBackdrop image={mcdonaldLakeBackground} position="center center" opacity={0.92} brightness={0.9} overlay="medium" />
+      <PageBackdrop preset={PAGE_BACKDROPS.platform} />
       <div className="relative max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -1168,7 +1170,7 @@ function GlacierLine({ onPreorder }: { onPreorder: () => void }) {
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={glacierPrototype} position="center 35%" opacity={0.85} brightness={0.9} overlay="medium" />
+      <PageBackdrop preset={PAGE_BACKDROPS.glacierLine} />
       <div
         className="absolute inset-0 pointer-events-none opacity-70"
         style={{
@@ -1325,7 +1327,7 @@ function Team() {
         background: "linear-gradient(160deg, oklch(0.082 0.028 246) 0%, oklch(0.09 0.02 238) 100%)",
       }}
     >
-      <PhotoBackdrop image={alpineBackground} position="center center" opacity={0.88} brightness={0.92} overlay="light" />
+      <PageBackdrop preset={PAGE_BACKDROPS.team} />
       {/* glow */}
       <div
         className="absolute pointer-events-none inset-0 flex items-center justify-center"
@@ -1489,10 +1491,9 @@ function CTA({ onPreorder }: { onPreorder: () => void }) {
       className="relative py-32 px-6 overflow-hidden"
       style={{ background: "oklch(0.09 0.022 242)" }}
     >
-      <PhotoBackdrop image={mcdonaldLakeBackground} position="center center" opacity={0.92} brightness={0.9} overlay="medium" />
-      <div
-        className="absolute inset-0 pointer-events-none flex items-center justify-center"
-      >
+      <PageBackdrop preset={PAGE_BACKDROPS.cta} />
+
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
         <div
           style={{
             width: "900px",
@@ -1593,7 +1594,7 @@ function CoolingPage({
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={iceBeachBackground} position="center 40%" opacity={0.78} brightness={0.94} overlay="light" />
+      <PageBackdrop preset={PAGE_BACKDROPS.cooling} />
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4">
           <button
@@ -1804,7 +1805,7 @@ function KryosPage({
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop image={kryosMotionBackground} position="center center" opacity={0.88} brightness={0.92} overlay="light" />
+      <PageBackdrop preset={PAGE_BACKDROPS.kryos} />
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4">
           <button
@@ -2055,13 +2056,7 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop
-        image={iceBeachBackground}
-        position="center 40%"
-        opacity={0.62}
-        brightness={0.96}
-        overlay="light"
-      />
+      <PageBackdrop preset={PAGE_BACKDROPS.preorder} />
 
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
@@ -2184,9 +2179,10 @@ function PreorderPage({ onHome }: { onHome: () => void }) {
             <div className="grid sm:grid-cols-[0.9fr_1.1fr] items-center">
               <div className="h-44 sm:h-full min-h-44 overflow-hidden">
                 <img
-                  src={iceBeachBackground}
-                  alt="Glacial ice on black sand beach at sunset"
+                  src={glacierHeatsinkRender}
+                  alt="Glacier air cooler prototype"
                   className="w-full h-full object-cover"
+                  style={{ objectPosition: "center center" }}
                 />
               </div>
               <div className="p-6">
@@ -2390,13 +2386,7 @@ function ContactPage({ onHome }: { onHome: () => void }) {
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop
-        image={contactBackground}
-        position="center center"
-        opacity={0.98}
-        brightness={0.96}
-        overlay="light"
-      />
+      <PageBackdrop preset={PAGE_BACKDROPS.contact} />
 
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4" style={CONTACT_PANEL_OUTLINE}>
@@ -2648,13 +2638,7 @@ function CareersPage({ onHome }: { onHome: () => void }) {
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop
-        image={careersBackground}
-        position="center center"
-        opacity={0.98}
-        brightness={0.96}
-        overlay="light"
-      />
+      <PageBackdrop preset={PAGE_BACKDROPS.careers} />
 
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4" style={CONTACT_PANEL_OUTLINE}>
@@ -2903,13 +2887,7 @@ function ProductSpecPage({
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop
-        image={productSpecBackground}
-        position="center center"
-        opacity={0.98}
-        brightness={0.96}
-        overlay="light"
-      />
+      <PageBackdrop preset={PAGE_BACKDROPS.docs} />
 
       <div className="relative z-20 max-w-6xl mx-auto">
         <GlassPanel className="mb-8 px-5 py-4" style={CONTACT_PANEL_OUTLINE}>
@@ -3106,12 +3084,14 @@ function LegalPage({
       className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
       style={{ background: "oklch(0.064 0.026 246)" }}
     >
-      <PhotoBackdrop
-        image={legalIceBackground}
-        position="center center"
-        opacity={0.95}
-        brightness={0.94}
-        overlay="light"
+      <PageBackdrop
+        preset={
+          isAccessibility
+            ? PAGE_BACKDROPS.accessibility
+            : isPrivacy
+              ? PAGE_BACKDROPS.privacy
+              : PAGE_BACKDROPS.terms
+        }
       />
 
       <div className="relative z-20 max-w-4xl mx-auto">
