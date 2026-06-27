@@ -16,7 +16,7 @@ import glacierBeachBackground from "@/imports/glacier-beach-background.png";
 
 export type BackdropPreset = ComponentProps<typeof PhotoBackdrop>;
 
-/** Full-resolution sources with tuned crop — avoids upscaling low-res PNGs on full pages. */
+/** Full-resolution sources — images fit the viewport without cropping or upscaling. */
 export const PAGE_BACKDROPS = {
   hero: null,
   divisions: {
@@ -25,7 +25,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.92,
     brightness: 0.96,
     overlay: "light",
-    scale: 1.02,
   },
   mission: {
     image: alpineBackground,
@@ -33,7 +32,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.92,
     brightness: 0.96,
     overlay: "light",
-    scale: 1.02,
   },
   platform: {
     image: mcdonaldLakeBackground,
@@ -41,7 +39,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.9,
     brightness: 0.96,
     overlay: "medium",
-    scale: 1.02,
   },
   glacierLine: {
     image: glacierPrototype,
@@ -49,7 +46,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.88,
     brightness: 0.97,
     overlay: "medium",
-    scale: 1.04,
   },
   team: {
     image: alpineBackground,
@@ -57,7 +53,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.9,
     brightness: 0.97,
     overlay: "light",
-    scale: 1.02,
   },
   cta: {
     image: mcdonaldLakeBackground,
@@ -65,7 +60,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.9,
     brightness: 0.96,
     overlay: "medium",
-    scale: 1.02,
   },
   cooling: {
     image: glacierField,
@@ -73,7 +67,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.82,
     brightness: 0.98,
     overlay: "light",
-    scale: 1.05,
   },
   kryos: {
     image: kryosContactBackground,
@@ -81,7 +74,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.88,
     brightness: 1,
     overlay: "minimal",
-    scale: 1.08,
   },
   preorder: {
     image: glacierCave,
@@ -89,7 +81,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.78,
     brightness: 1,
     overlay: "minimal",
-    scale: 1.06,
   },
   contact: {
     image: kryosContactBackground,
@@ -97,7 +88,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.88,
     brightness: 1,
     overlay: "minimal",
-    scale: 1.08,
   },
   careers: {
     image: careersBackground,
@@ -105,7 +95,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.92,
     brightness: 0.98,
     overlay: "light",
-    scale: 1.03,
   },
   docs: {
     image: productSpecBackground,
@@ -113,7 +102,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.92,
     brightness: 0.98,
     overlay: "light",
-    scale: 1.03,
   },
   privacy: {
     image: privacyBackground,
@@ -121,7 +109,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.92,
     brightness: 1,
     overlay: "minimal",
-    scale: 1.18,
   },
   terms: {
     image: arcticIceBackground,
@@ -129,7 +116,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.9,
     brightness: 0.99,
     overlay: "minimal",
-    scale: 1.05,
   },
   accessibility: {
     image: accessibilityBackground,
@@ -137,7 +123,6 @@ export const PAGE_BACKDROPS = {
     opacity: 0.92,
     brightness: 1,
     overlay: "minimal",
-    scale: 1.2,
   },
   product: {
     image: glacierBeachBackground,
@@ -145,6 +130,5 @@ export const PAGE_BACKDROPS = {
     opacity: 0.84,
     brightness: 1,
     overlay: "light",
-    scale: 1.12,
   },
 } as const satisfies Record<string, BackdropPreset | null>;

@@ -1,27 +1,10 @@
-const CONTACT_ENDPOINT = import.meta.env.VITE_FORMSPREE_CONTACT_ENDPOINT ?? "";
-const PREORDER_ENDPOINT =
-  import.meta.env.VITE_FORMSPREE_PREORDER_ENDPOINT ?? CONTACT_ENDPOINT;
-
-export function getFormspreeEndpoints() {
-  return { contact: CONTACT_ENDPOINT, preorder: PREORDER_ENDPOINT };
-}
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/mykqjzbq";
 
 export async function submitToFormspree(
   formData: FormData,
-  kind: "contact" | "preorder" | "careers" = "contact"
+  _kind: "contact" | "preorder" | "careers" = "contact"
 ) {
-  const endpoint =
-    kind === "preorder"
-      ? PREORDER_ENDPOINT
-      : CONTACT_ENDPOINT;
-
-  if (!endpoint) {
-    throw new Error(
-      "Formspree is not configured yet. Add VITE_FORMSPREE_CONTACT_ENDPOINT to your .env file."
-    );
-  }
-
-  const response = await fetch(endpoint, {
+  const response = await fetch(FORMSPREE_ENDPOINT, {
     method: "POST",
     body: formData,
     headers: { Accept: "application/json" },

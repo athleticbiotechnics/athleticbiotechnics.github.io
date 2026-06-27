@@ -486,14 +486,14 @@ function Hero({
       {/* Background image — entrance animation on load, fully static after */}
       <motion.div
         className="absolute inset-0 z-0"
-        initial={{ y: "6%", scale: 1.06 }}
-        animate={{ y: "0%", scale: 1 }}
+        initial={{ y: "6%" }}
+        animate={{ y: "0%" }}
         transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <img
           src={HERO_IMG}
           alt="Snow-covered Glacier National Park mountains reflected in Lake McDonald"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-contain object-center"
           style={{ filter: "brightness(0.74) saturate(1.04)" }}
         />
         {/* Atmospheric overlays */}
