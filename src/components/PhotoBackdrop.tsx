@@ -5,6 +5,7 @@ type PhotoBackdropProps = {
   brightness?: number;
   saturation?: number;
   overlay?: "minimal" | "light" | "medium" | "heavy";
+  scale?: number;
 };
 
 const OVERLAY_STYLES: Record<NonNullable<PhotoBackdropProps["overlay"]>, string> = {
@@ -25,6 +26,7 @@ export function PhotoBackdrop({
   brightness = 0.96,
   saturation = 1.04,
   overlay = "medium",
+  scale = 1,
 }: PhotoBackdropProps) {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" aria-hidden>
@@ -33,12 +35,15 @@ export function PhotoBackdrop({
         alt=""
         decoding="async"
         fetchPriority="high"
-        className="absolute inset-0 w-full h-full"
+        className="absolute left-1/2 top-1/2 min-w-full min-h-full max-w-none"
         style={{
-          objectFit: "contain",
+          width: `${scale * 100}%`,
+          height: `${scale * 100}%`,
+          objectFit: "cover",
           objectPosition: position,
           opacity,
           filter: `brightness(${brightness}) saturate(${saturation})`,
+          transform: "translate(-50%, -50%)",
           imageRendering: "auto",
         }}
       />
