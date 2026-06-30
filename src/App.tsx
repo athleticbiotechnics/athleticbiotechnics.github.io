@@ -3278,84 +3278,164 @@ function LegalPage({
 }
 
 /* ── Footer ──────────────────────────────────────────────────────── */
+type FooterLinkItem = {
+  label: string;
+  action: () => void;
+};
+
+type FooterColumn = {
+  title: string;
+  links: FooterLinkItem[];
+};
+
+function FooterLink({ label, action }: FooterLinkItem) {
+  return (
+    <button
+      type="button"
+      onClick={action}
+      className="text-left transition-colors duration-200 hover:text-white/78"
+      style={{
+        fontFamily: "'Barlow', sans-serif",
+        fontSize: "0.84rem",
+        fontWeight: 400,
+        color: "oklch(0.52 0.02 228)",
+        letterSpacing: "0.01em",
+      }}
+    >
+      {label}
+    </button>
+  );
+}
+
+function FooterColumnBlock({ title, links }: FooterColumn) {
+  return (
+    <div className="min-w-0">
+      <p
+        className="mb-4"
+        style={{
+          fontFamily: "'Barlow', sans-serif",
+          fontSize: "0.68rem",
+          fontWeight: 600,
+          letterSpacing: "0.16em",
+          textTransform: "uppercase",
+          color: "oklch(0.44 0.02 230)",
+        }}
+      >
+        {title}
+      </p>
+      <div className="flex flex-col gap-2.5">
+        {links.map((link) => (
+          <FooterLink key={link.label} {...link} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Footer({
   onLegalPage,
   onContact,
   onCareers,
   onCooling,
   onKryos,
+  onDocs,
+  onPreorder,
+  onNavigateSection,
 }: {
   onLegalPage: (page: "privacy" | "terms" | "accessibility") => void;
   onContact: () => void;
   onCareers: () => void;
   onCooling: () => void;
   onKryos: () => void;
+  onDocs: () => void;
+  onPreorder: () => void;
+  onNavigateSection: (section: string) => void;
 }) {
-  const footerLinks = [
-    { label: "Arktos Cooling", action: () => onCooling() },
-    { label: "Kryos Motion", action: () => onKryos() },
-    { label: "Privacy", action: () => onLegalPage("privacy") },
-    { label: "Terms", action: () => onLegalPage("terms") },
-    { label: "Accessibility", action: () => onLegalPage("accessibility") },
-    { label: "Careers", action: () => onCareers() },
-    { label: "Contact", action: () => onContact() },
+  const footerColumns: FooterColumn[] = [
+    {
+      title: "Product",
+      links: [
+        { label: "Arktos Cooling", action: onCooling },
+        { label: "Kryos Motion", action: onKryos },
+        { label: "Preorder", action: onPreorder },
+      ],
+    },
+    {
+      title: "Explore",
+      links: [
+        { label: "Documentation", action: onDocs },
+        { label: "Mission", action: () => onNavigateSection("mission") },
+        { label: "Team", action: () => onNavigateSection("team") },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "Contact", action: onContact },
+        { label: "Careers", action: onCareers },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Privacy", action: () => onLegalPage("privacy") },
+        { label: "Terms", action: () => onLegalPage("terms") },
+        { label: "Accessibility", action: () => onLegalPage("accessibility") },
+      ],
+    },
   ];
 
   return (
     <footer
-      className="py-12 px-6 border-t"
+      className="px-6 pt-14 pb-8 border-t"
       style={{
         background: "oklch(0.072 0.022 244)",
         borderColor: "rgba(160,200,255,0.07)",
       }}
     >
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-8 items-start md:items-center">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-          <ImageWithFallback
-            src={logoPanoramic}
-            alt="Arktos Systems — panoramic mountain logo"
-            className="h-14 w-auto max-w-[280px] object-contain"
-            style={{ ...LOGO_SHARP, opacity: 0.72 }}
-          />
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,2fr)] gap-12 lg:gap-16 items-start">
+          <div className="flex flex-col gap-5 max-w-sm">
+            <ImageWithFallback
+              src={logoPanoramic}
+              alt="Arktos Systems — panoramic mountain logo"
+              className="h-14 w-auto max-w-[280px] object-contain"
+              style={{ ...LOGO_SHARP, opacity: 0.72 }}
+            />
+            <SocialLinkButtons compact />
+          </div>
 
-          <SocialLinkButtons compact />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10 sm:gap-y-8">
+            {footerColumns.map((column) => (
+              <FooterColumnBlock key={column.title} {...column} />
+            ))}
+          </div>
         </div>
 
-        <nav className="flex flex-wrap gap-x-8 gap-y-2 items-center">
-          {footerLinks.map((l) => (
-            <button
-              key={l.label}
-              type="button"
-              onClick={l.action}
-              style={{
-                fontFamily: "'Barlow', sans-serif",
-                fontSize: "0.8rem",
-                color: "oklch(0.42 0.02 230)",
-                letterSpacing: "0.04em",
-                textDecoration: "none",
-                transition: "color 0.2s",
-              }}
-              onMouseEnter={(e) =>
-                ((e.target as HTMLButtonElement).style.color = "oklch(0.64 0.02 225)")
-              }
-              onMouseLeave={(e) =>
-                ((e.target as HTMLButtonElement).style.color = "oklch(0.42 0.02 230)")
-              }
-            >
-              {l.label}
-            </button>
-          ))}
-        </nav>
-
-        <p
-          style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: "0.72rem",
-            color: "oklch(0.36 0.02 230)",
-          }}
+        <div
+          className="mt-12 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+          style={{ borderTop: "1px solid rgba(160,200,255,0.07)" }}
         >
-          © 2026 Arktos Systems, Inc.
-        </p>
+          <p
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.72rem",
+              color: "oklch(0.38 0.02 230)",
+            }}
+          >
+            © 2026 Arktos Systems, Inc.
+          </p>
+          <p
+            style={{
+              fontFamily: "'Barlow', sans-serif",
+              fontSize: "0.76rem",
+              color: "oklch(0.4 0.02 230)",
+              letterSpacing: "0.04em",
+            }}
+          >
+             
+          </p>
+        </div>
       </div>
     </footer>
   );
@@ -3516,6 +3596,9 @@ export default function App() {
         onCareers={goCareers}
         onCooling={goCooling}
         onKryos={goKryos}
+        onDocs={goDocs}
+        onPreorder={goPreorder}
+        onNavigateSection={goSection}
       />
       <CookieBanner onPrivacy={() => goLegalPage("privacy")} />
     </div>
