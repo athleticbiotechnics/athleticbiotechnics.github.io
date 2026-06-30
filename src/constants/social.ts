@@ -1,5 +1,6 @@
-export const DISCORD_INVITE_URL =
-  import.meta.env.VITE_DISCORD_INVITE_URL ?? "https://discord.gg/U9GSFVrhkk";
+import { DISCORD_INVITE_URL } from "@/config/env";
+
+export { DISCORD_INVITE_URL };
 
 export const SOCIAL_LINKS = [
   {

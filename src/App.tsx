@@ -39,6 +39,7 @@ import {
 } from "@/content/accessibility-statement";
 import { SOCIAL_LINKS } from "@/constants/social";
 import { PRODUCTS, COOLING_PRODUCT_IDS, KRYOS_PRODUCT_IDS, type ProductId } from "@/constants/products";
+import { ARKTOS_EMAIL } from "@/config/env";
 import { submitToFormspree } from "@/lib/formspree";
 import { PAGE_BACKDROPS } from "@/constants/backgrounds";
 
@@ -61,8 +62,6 @@ const {
   sidakProfile,
   kryosMotionBackground,
 } = images;
-
-const ARKTOS_EMAIL = "arktossystems@gmail.com";
 
 const SOCIAL_LINK_ICONS = {
   youtube: <Youtube size={15} />,
@@ -2376,7 +2375,7 @@ function ContactPage({ onHome }: { onHome: () => void }) {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "Something went wrong. Please try again or email arktossystems@gmail.com directly."
+          : `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
       );
     }
   };
@@ -2579,8 +2578,8 @@ function ContactPage({ onHome }: { onHome: () => void }) {
                   lineHeight: 1.6,
                 }}
               >
-                Submissions are delivered securely through Formspree to
-                arktossystems@gmail.com.
+                Submissions are delivered securely through Formspree to{" "}
+                {ARKTOS_EMAIL}.
               </p>
             </form>
           </GlassPanel>

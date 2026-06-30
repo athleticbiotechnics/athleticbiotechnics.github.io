@@ -1,4 +1,4 @@
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/mykqjzbq";
+import { ARKTOS_EMAIL, FORMSPREE_ENDPOINT } from "@/config/env";
 
 export async function submitToFormspree(
   formData: FormData,
@@ -14,7 +14,7 @@ export async function submitToFormspree(
     const data = await response.json().catch(() => null);
     throw new Error(
       (data as { error?: string } | null)?.error ??
-        "Something went wrong. Please try again or email arktossystems@gmail.com directly."
+        `Something went wrong. Please try again or email ${ARKTOS_EMAIL} directly.`
     );
   }
 }

@@ -1,3 +1,5 @@
+import { ARKTOS_EMAIL } from "@/config/env";
+
 export const PRIVACY_POLICY_LAST_UPDATED = "June 26, 2026";
 
 export type PrivacySection = {
@@ -6,7 +8,7 @@ export type PrivacySection = {
 };
 
 export const PRIVACY_POLICY_INTRO =
-  'This Privacy Notice for Arktos Systems ("we," "us," or "our") describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services ("Services"), including when you visit our website at arktossystems.com or any website of ours that links to this Privacy Notice, or engage with us in other related ways, including any marketing or events. If you have questions or concerns, contact us at arktossystems@gmail.com.';
+  `This Privacy Notice for Arktos Systems ("we," "us," or "our") describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services ("Services"), including when you visit our website at arktossystems.com or any website of ours that links to this Privacy Notice, or engage with us in other related ways, including any marketing or events. If you have questions or concerns, contact us at ${ARKTOS_EMAIL}.`;
 
 export const PRIVACY_POLICY_SUMMARY = [
   "What personal information do we process? When you visit, use, or navigate our Services, we may process personal information depending on how you interact with us and the Services, the choices you make, and the products and features you use.",
@@ -15,7 +17,7 @@ export const PRIVACY_POLICY_SUMMARY = [
   "How do we process your information? We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent.",
   "In what situations and with which parties do we share personal information? We may share information in specific situations and with specific third parties.",
   "What are your rights? Depending on where you are located geographically, the applicable privacy law may mean you have certain rights regarding your personal information.",
-  "How do you exercise your rights? The easiest way to exercise your rights is by submitting a data subject access request, or by contacting us at arktossystems@gmail.com.",
+  `How do you exercise your rights? The easiest way to exercise your rights is by submitting a data subject access request, or by contacting us at ${ARKTOS_EMAIL}.`,
 ];
 
 export const PRIVACY_POLICY_SECTIONS: PrivacySection[] = [
@@ -49,7 +51,7 @@ Information automatically collected. Some information — such as your Internet 
   },
   {
     title: "7. Do We Collect Information From Minors?",
-    body: `We do not knowingly collect, solicit data from, or market to children under 18 years of age or the equivalent age as specified by law in your jurisdiction. By using the Services, you represent that you are at least 18 or the equivalent age as specified by law in your jurisdiction, or that you are the parent or guardian of such a minor and consent to such minor dependent's use of the Services. If we learn that personal information from users less than 18 has been collected, we will deactivate the account and take reasonable measures to promptly delete such data. Contact us at arktossystems@gmail.com if you become aware of any such data.`,
+    body: `We do not knowingly collect, solicit data from, or market to children under 18 years of age or the equivalent age as specified by law in your jurisdiction. By using the Services, you represent that you are at least 18 or the equivalent age as specified by law in your jurisdiction, or that you are the parent or guardian of such a minor and consent to such minor dependent's use of the Services. If we learn that personal information from users less than 18 has been collected, we will deactivate the account and take reasonable measures to promptly delete such data. Contact us at ${ARKTOS_EMAIL} if you become aware of any such data.`,
   },
   {
     title: "8. What Are Your Privacy Rights?",
@@ -65,7 +67,7 @@ Information automatically collected. Some information — such as your Internet 
 
 Categories of personal information we have collected in the past twelve (12) months include identifiers, California Customer Records personal information, protected classification characteristics, commercial information, biometric information, internet or similar network activity, geolocation data, audio/electronic/sensory information, professional or employment-related information, education information, inferences, and sensitive personal information — illustrative examples are listed in our full notice; we have not disclosed, sold, or shared personal information to third parties for a business or commercial purpose in the preceding twelve (12) months.
 
-Your rights may include the right to know whether we are processing your personal data, access your personal data, correct inaccuracies, request deletion, obtain a copy, non-discrimination for exercising your rights, and opt out of targeted advertising, sale, or profiling. To exercise these rights, contact us by submitting a data subject access request or emailing arktossystems@gmail.com. California residents may also exercise rights under the "Shine The Light" law (California Civil Code Section 1798.83).`,
+Your rights may include the right to know whether we are processing your personal data, access your personal data, correct inaccuracies, request deletion, obtain a copy, non-discrimination for exercising your rights, and opt out of targeted advertising, sale, or profiling. To exercise these rights, contact us by submitting a data subject access request or emailing ${ARKTOS_EMAIL}. California residents may also exercise rights under the "Shine The Light" law (California Civil Code Section 1798.83).`,
   },
   {
     title: "11. Do We Make Updates to This Notice?",
@@ -73,7 +75,7 @@ Your rights may include the right to know whether we are processing your persona
   },
   {
     title: "12. How Can You Contact Us About This Notice?",
-    body: `If you have questions or comments about this notice, you may email us at arktossystems@gmail.com or contact us by post at: Arktos Systems, 6101 N 2nd Pl, 8705 E Remuda Dr, Scottsdale, AZ 85255, United States.`,
+    body: `If you have questions or comments about this notice, you may email us at ${ARKTOS_EMAIL} or contact us by post at: Arktos Systems, 6101 N 2nd Pl, 8705 E Remuda Dr, Scottsdale, AZ 85255, United States.`,
   },
   {
     title: "13. How Can You Review, Update, or Delete the Data We Collect From You?",

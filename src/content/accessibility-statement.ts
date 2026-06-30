@@ -1,3 +1,5 @@
+import { ARKTOS_EMAIL } from "@/config/env";
+
 export const ACCESSIBILITY_LAST_UPDATED = "June 26, 2026";
 
 export const ACCESSIBILITY_SECTIONS = [
@@ -19,6 +21,6 @@ export const ACCESSIBILITY_SECTIONS = [
   },
   {
     title: "Feedback",
-    body: "If you encounter a barrier on this site or need content in another format, email arktossystems@gmail.com with the page URL and a short description of the issue. We will do our best to respond promptly.",
+    body: `If you encounter a barrier on this site or need content in another format, email ${ARKTOS_EMAIL} with the page URL and a short description of the issue. We will do our best to respond promptly.`,
   },
 ] as const;
