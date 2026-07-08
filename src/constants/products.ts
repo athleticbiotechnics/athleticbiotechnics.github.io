@@ -1,8 +1,8 @@
-export type ProductId = "glacier" | "phase-change" | "kryos-pulse";
+export type ProductId = "glacier" | "phase-change";
 
 export type ProductSpec = {
   id: ProductId;
-  division: "cooling" | "kryos";
+  division: "cooling";
   name: string;
   tagline: string;
   summary: string;
@@ -16,15 +16,15 @@ export const PRODUCTS: Record<ProductId, ProductSpec> = {
     id: "glacier",
     division: "cooling",
     name: "Glacier Air Cooler",
-    tagline: "High-pressure tower airflow carved from ice-cave geometry.",
+    tagline: "A tower cooler shaped by ice-cave airflow.",
     summary:
-      "Glacier is Arktos Cooling's flagship air platform: a dual-tower heatsink with frosted shroud language, calm acoustics, and a broad contact plate built for everyday performance rigs and sustained thermal loads.",
+      "Glacier is our flagship air cooler: a dual-tower heatsink with a frosted shroud, a quieter fan curve, and a wide contact plate for rigs that run hot for hours at a time.",
     features: [
-      "Ice-cave inspired fin stack for dense, directed airflow",
-      "Dual-tower layout with faceted top plates and exposed heat pipes",
-      "Calmer fan curve tuned for sustained gaming and creator workloads",
-      "Frosted exterior treatment drawn from the Arktos mountain visual system",
-      "Prototype-stage hardware — specs may evolve before launch",
+      "Fin stack modeled on ice-cave airflow for a tighter, more directed draft",
+      "Dual towers with faceted top plates and exposed heat pipes",
+      "Tuned fan curve that stays quiet under sustained gaming or creative loads",
+      "Frosted finish that matches the rest of the Arktos lineup",
+      "Still in prototype — expect small changes before launch",
     ],
     specs: [
       { label: "Platform", value: "Tower air cooler" },
@@ -39,15 +39,15 @@ export const PRODUCTS: Record<ProductId, ProductSpec> = {
     id: "phase-change",
     division: "cooling",
     name: "Phase-Change Chamber",
-    tagline: "Chip-level heat capture without legacy air limits.",
+    tagline: "Pulls heat off the chip without the limits of air.",
     summary:
-      "Arktos phase-change chambers use two-phase immersion principles to pull heat directly off silicon. Dielectric fluid is recovered, filtered, and recirculated — a circular thermal cycle with zero evaporative loss.",
+      "Our phase-change chambers use two-phase immersion to draw heat straight off the silicon. The dielectric fluid is recovered, filtered, and put back into the loop, so nothing evaporates and nothing gets thrown away.",
     features: [
-      "Two-phase immersion for high-density compute and enthusiast builds",
-      "Tri-layer hermetic manifolds keep dielectric fluid off PCB surfaces",
-      "CFD-validated flow paths and CAD-modeled cold plates",
-      "100% fluid recovery, filtration, and recirculation",
-      "Pilot deployments for studios and performance labs",
+      "Two-phase immersion built for dense compute and serious enthusiast rigs",
+      "Tri-layer hermetic manifolds so dielectric fluid never touches the PCB",
+      "Flow paths validated with CFD, cold plates modeled in CAD",
+      "Closed-loop fluid recovery — nothing lost, nothing discharged",
+      "Now running pilot deployments with studios and performance labs",
     ],
     specs: [
       { label: "Platform", value: "Phase-change chamber" },
@@ -57,29 +57,6 @@ export const PRODUCTS: Record<ProductId, ProductSpec> = {
       { label: "Validation", value: "CFD + prototype testing" },
     ],
   },
-  "kryos-pulse": {
-    id: "kryos-pulse",
-    division: "kryos",
-    name: "Kryos Pulse",
-    tagline: "Portable athlete metronome for honest cadence.",
-    summary:
-      "Kryos Pulse is a wearable rhythm tool that keeps tempo locked during sprints, lifts, and recovery — tactile cues without pulling out a phone mid-set. Built for training floors, tracks, and travel.",
-    features: [
-      "Wearable pacing hardware with tactile tempo cues",
-      "Performance-first controls for coaches and athletes",
-      "Travel-ready enclosure sized for gym bags",
-      "Session profiles for sprint, lift, and recovery blocks",
-      "Preorder list opening shortly",
-    ],
-    specs: [
-      { label: "Platform", value: "Wearable metronome" },
-      { label: "Status", value: "Preorder opening shortly" },
-      { label: "Use cases", value: "Track, gym, travel" },
-      { label: "Feedback", value: "Tactile tempo cues" },
-      { label: "Division", value: "Kryos Motion" },
-    ],
-  },
 };
 
 export const COOLING_PRODUCT_IDS: ProductId[] = ["glacier", "phase-change"];
-export const KRYOS_PRODUCT_IDS: ProductId[] = ["kryos-pulse"];

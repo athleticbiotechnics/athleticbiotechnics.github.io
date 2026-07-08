@@ -156,14 +156,9 @@ export function ProductDescriptionPage({
             </p>
 
             <div className="flex flex-wrap gap-3 mb-8">
-              {product.division === "cooling" && onReserve && (
+              {onReserve && (
                 <PrimaryBtn onClick={onReserve}>
                   Reserve Glacier <ArrowRight size={14} />
-                </PrimaryBtn>
-              )}
-              {product.division === "kryos" && onContact && (
-                <PrimaryBtn onClick={onContact}>
-                  Join preorder list <ArrowRight size={14} />
                 </PrimaryBtn>
               )}
             </div>

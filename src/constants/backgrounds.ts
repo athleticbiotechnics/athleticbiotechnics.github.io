@@ -9,7 +9,7 @@ import arcticIceBackground from "@/imports/arctic-ice-real.jpg";
 import legalIceBackground from "@/imports/legal-ice-background.webp";
 import careersBackground from "@/imports/careers-background.jpg";
 import productSpecBackground from "@/imports/product-spec-background.jpg";
-import kryosContactBackground from "@/imports/kryos-contact-background.png";
+import contactPageBackground from "@/imports/contact-page-background.png";
 import privacyBackground from "@/imports/privacy-background.png";
 import accessibilityBackground from "@/imports/accessibility-background.png";
 import glacierBeachBackground from "@/imports/glacier-beach-background.png";
@@ -75,14 +75,6 @@ export const PAGE_BACKDROPS = {
     overlay: "light",
     scale: 1.05,
   },
-  kryos: {
-    image: kryosContactBackground,
-    position: "center 42%",
-    opacity: 0.88,
-    brightness: 1,
-    overlay: "minimal",
-    scale: 1.08,
-  },
   preorder: {
     image: glacierCave,
     position: "center 45%",
@@ -92,7 +84,7 @@ export const PAGE_BACKDROPS = {
     scale: 1.06,
   },
   contact: {
-    image: kryosContactBackground,
+    image: contactPageBackground,
     position: "center 42%",
     opacity: 0.88,
     brightness: 1,

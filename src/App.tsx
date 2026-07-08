@@ -8,8 +8,6 @@ import {
   ChevronDown,
   Menu,
   X,
-  Activity,
-  Layers,
   Lock,
   Thermometer,
   Leaf,
@@ -18,7 +16,6 @@ import {
   Instagram,
   Youtube,
   MessageCircle,
-  Timer,
   Eye,
   EyeOff,
 } from "lucide-react";
@@ -38,7 +35,7 @@ import {
   ACCESSIBILITY_SECTIONS,
 } from "@/content/accessibility-statement";
 import { SOCIAL_LINKS } from "@/constants/social";
-import { PRODUCTS, COOLING_PRODUCT_IDS, KRYOS_PRODUCT_IDS, type ProductId } from "@/constants/products";
+import { PRODUCTS, COOLING_PRODUCT_IDS, type ProductId } from "@/constants/products";
 import { ARKTOS_EMAIL } from "@/config/env";
 import { submitToFormspree } from "@/lib/formspree";
 import { PAGE_BACKDROPS } from "@/constants/backgrounds";
@@ -60,7 +57,6 @@ const {
   careersBackground,
   kenzoTree,
   sidakProfile,
-  kryosMotionBackground,
 } = images;
 
 const SOCIAL_LINK_ICONS = {
@@ -277,12 +273,11 @@ function Snow() {
 /* ── Navbar ──────────────────────────────────────────────────────── */
 type NavItem =
   | { label: string; kind: "section"; section: string }
-  | { label: string; kind: "page"; page: "docs" | "cooling" | "kryos" };
+  | { label: string; kind: "page"; page: "docs" | "cooling" };
 
 const NAV_LINKS: NavItem[] = [
-  { label: "Divisions", kind: "section", section: "divisions" },
-  { label: "Arktos", kind: "page", page: "cooling" },
-  { label: "Kryos", kind: "page", page: "kryos" },
+  { label: "Products", kind: "section", section: "divisions" },
+  { label: "Cooling", kind: "page", page: "cooling" },
   { label: "Mission", kind: "section", section: "mission" },
   { label: "Team", kind: "section", section: "team" },
   { label: "Docs", kind: "page", page: "docs" },
@@ -295,7 +290,6 @@ function Navbar({
   onContact,
   onDocs,
   onCooling,
-  onKryos,
   onNavigateSection,
 }: {
   scrolled: boolean;
@@ -304,7 +298,6 @@ function Navbar({
   onContact: () => void;
   onDocs: () => void;
   onCooling: () => void;
-  onKryos: () => void;
   onNavigateSection: (section: string) => void;
 }) {
   const handleNav = (link: NavItem) => {
@@ -314,7 +307,6 @@ function Navbar({
     }
     if (link.page === "docs") onDocs();
     if (link.page === "cooling") onCooling();
-    if (link.page === "kryos") onKryos();
   };
   const [open, setOpen] = useState(false);
 
@@ -469,10 +461,8 @@ function Navbar({
 /* ── Hero ────────────────────────────────────────────────────────── */
 function Hero({
   onCooling,
-  onKryos,
 }: {
   onCooling: () => void;
-  onKryos: () => void;
 }) {
   const heroRef = useRef<HTMLElement>(null);
 
@@ -531,7 +521,7 @@ function Hero({
             textShadow: "0 4px 48px rgba(0,0,0,0.6)",
           }}
         >
-          Two divisions.
+          Cold air,
           <br />
           <span
             style={{
@@ -542,7 +532,7 @@ function Hero({
               WebkitTextFillColor: "transparent",
             }}
           >
-            One Arktos.
+            engineered honestly.
           </span>
         </motion.h1>
 
@@ -562,15 +552,11 @@ function Hero({
             textShadow: "0 1px 12px rgba(0,0,0,0.45)",
           }}
         >
-          Arktos Systems is the parent company behind{" "}
+          We're{" "}
           <strong style={{ color: "rgba(255,255,255,0.98)", fontWeight: 600 }}>
             Arktos Cooling
           </strong>{" "}
-          — PC performance and phase-change cooling chambers — and{" "}
-          <strong style={{ color: "rgba(255,255,255,0.98)", fontWeight: 600 }}>
-            Kryos Motion
-          </strong>{" "}
-          — portable athlete metronomes built for peak performance.
+          — Glacier air coolers and phase-change chambers, built by two engineers who got tired of watching good hardware throttle.
         </motion.p>
 
         {/* CTAs */}
@@ -581,10 +567,7 @@ function Hero({
           className="flex flex-wrap gap-4 justify-center"
         >
           <PrimaryBtn onClick={onCooling}>
-            Arktos Cooling <ArrowRight size={15} />
-          </PrimaryBtn>
-          <PrimaryBtn onClick={onKryos}>
-            Kryos Motion <ArrowRight size={15} />
+            Explore Arktos Cooling <ArrowRight size={15} />
           </PrimaryBtn>
         </motion.div>
 
@@ -598,9 +581,9 @@ function Hero({
           <GlassPanel className="px-8 py-5">
             <div className="grid grid-cols-3 divide-x divide-white/[0.07]">
               {[
-                { value: "Arktos", label: "Phase-change PC thermal" },
-                { value: "Kryos", label: "Athlete metronomes" },
-                { value: "Systems", label: "Shared Arktos engineering" },
+                { value: "Glacier", label: "Tower air coolers" },
+                { value: "Phase-change", label: "Immersion chambers" },
+                { value: "Arktos", label: "Built by two engineers" },
               ].map(({ value, label }) => (
                 <div key={label} className="px-6 text-center first:pl-0 last:pr-0">
                   <div
@@ -653,32 +636,30 @@ function Hero({
 /* ── Divisions ───────────────────────────────────────────────────── */
 function Divisions({
   onCooling,
-  onKryos,
 }: {
   onCooling: () => void;
-  onKryos: () => void;
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   const divisions = [
     {
-      eyebrow: "Arktos Cooling",
-      title: "PC performance & phase-change cooling",
-      body: "From Glacier air coolers to phase-change cooling chambers, Arktos Cooling engineers thermal systems for builders, studios, and high-performance compute.",
+      eyebrow: "Glacier",
+      title: "Air coolers with ice-cave airflow",
+      body: "Our tower coolers channel dense, directed airflow through a fin stack inspired by frozen cavern geometry — quiet, high-pressure, and built for builds that run hard.",
       image: legalIceBackground,
-      icon: <Thermometer size={20} />,
-      cta: "Explore Cooling",
+      icon: <Wind size={20} />,
+      cta: "Explore Glacier",
       onClick: onCooling,
     },
     {
-      eyebrow: "Kryos Motion",
-      title: "Portable athlete metronomes",
-      body: "Kryos Motion builds wearable rhythm tools that help athletes lock cadence, pace, and recovery — engineered for training floors, tracks, and travel.",
-      image: kryosMotionBackground,
-      icon: <Timer size={20} />,
-      cta: "Explore Kryos",
-      onClick: onKryos,
+      eyebrow: "Phase-Change Chambers",
+      title: "Chip-level heat capture",
+      body: "For rigs and small deployments that need more than air can give, our phase-change chambers pull heat straight off the silicon in a closed fluid loop.",
+      image: productSpecBackground,
+      icon: <Thermometer size={20} />,
+      cta: "Explore Cooling",
+      onClick: onCooling,
     },
   ];
 
@@ -708,7 +689,7 @@ function Divisions({
               marginBottom: "1.2rem",
             }}
           >
-            Arktos Systems
+            Arktos Cooling
           </span>
           <h2
             style={{
@@ -721,9 +702,9 @@ function Divisions({
               marginBottom: "1.2rem",
             }}
           >
-            A parent company for
+            One company,
             <br />
-            <span style={{ fontWeight: 700 }}>two product lines.</span>
+            <span style={{ fontWeight: 700 }}>two ways to cool.</span>
           </h2>
           <p
             style={{
@@ -735,9 +716,9 @@ function Divisions({
               maxWidth: "38rem",
             }}
           >
-            Arktos Systems is the shell — shared engineering, brand, and mission —
-            while Arktos Cooling and Kryos Motion each ship focused hardware for
-            thermal performance and athlete rhythm.
+            Glacier handles the everyday build. Our phase-change chambers pick up
+            where air runs out of headroom. Same engineering team, same obsession
+            with getting heat out of the way.
           </p>
         </motion.div>
 
@@ -836,22 +817,22 @@ function Mission() {
     {
       icon: <Thermometer size={20} />,
       title: "Phase-change cooling",
-      body: "Our proprietary two-phase immersion system absorbs thermal energy at the chip level, achieving up to 68% lower power consumption versus air-cooled alternatives.",
+      body: "Our two-phase immersion system pulls heat straight off the chip. In testing it's cut power draw by roughly 68% compared to air cooling.",
     },
     {
       icon: <Leaf size={20} />,
       title: "Closed-loop fluids",
-      body: "100% of our dielectric cooling fluid is recovered, filtered, and recirculated. Zero evaporative loss, zero chemical discharge — a fully circular thermal cycle.",
+      body: "Every drop of dielectric fluid gets recovered, filtered, and reused. Nothing evaporates, nothing gets dumped — the loop just keeps running.",
     },
     {
       icon: <Cpu size={20} />,
       title: "Precision CAD design",
-      body: "Every cold plate and manifold is modeled to sub-millimeter tolerances using computational fluid dynamics, maximising heat transfer with minimal material waste.",
+      body: "We model every cold plate and manifold to sub-millimeter tolerances with CFD, so heat transfer goes up without wasting material.",
     },
     {
       icon: <Wind size={20} />,
       title: "Waste heat recovery",
-      body: "Captured thermal energy is routed to building heating systems, reducing total facility emissions and creating measurable Scope 2 carbon offsets.",
+      body: "The heat we capture gets routed back into building heating systems, which cuts facility emissions and adds up to real Scope 2 offsets.",
     },
   ];
 
@@ -933,11 +914,10 @@ function Mission() {
               maxWidth: "36rem",
             }}
           >
-            Global data centers consume more electricity than entire nations.
-            Arktos Systems is the parent company behind Arktos Cooling and Kryos
-            Motion — united by a conviction that performance hardware should be
-            engineered responsibly, from phase-change thermal systems to athlete
-            rhythm tools.
+            Data centers already burn through more electricity than most
+            countries. We started Arktos Cooling because we think performance
+            hardware can be engineered responsibly instead of just engineered
+            fast — from air coolers to phase-change thermal systems.
           </p>
         </motion.div>
 
@@ -1007,19 +987,19 @@ function Platform() {
     {
       icon: <Zap size={22} />,
       title: "Thermal velocity",
-      body: "Chip-level heat capture in under 4μs. Phase-change absorption eliminates the lag of conventional heatsink propagation.",
+      body: "Heat capture at the chip level in under 4μs — no waiting on the lag that comes with a conventional heatsink.",
       tag: "PERFORMANCE",
     },
     {
       icon: <Shield size={22} />,
       title: "Zero-contamination seals",
-      body: "Tri-layer hermetic manifolds ensure dielectric fluid never contacts PCB surfaces. Fully compatible with existing server architectures.",
+      body: "Tri-layer hermetic manifolds keep dielectric fluid off the PCB entirely, and everything still fits existing server racks.",
       tag: "RELIABILITY",
     },
     {
       icon: <Globe size={22} />,
       title: "Datacenter-scale",
-      body: "Modular rack units slot into standard 42U enclosures. No facility rebuild — retrofit existing infrastructure in under a working day.",
+      body: "Rack units slot straight into standard 42U enclosures, so you can retrofit in a single working day instead of rebuilding the facility.",
       tag: "INTEGRATION",
     },
   ];
@@ -1146,19 +1126,19 @@ function GlacierLine({ onPreorder }: { onPreorder: () => void }) {
       image: glacierCave,
       eyebrow: "GLACIER CORE",
       title: "Cold air shaped by ice-cave geometry",
-      body: "Our Glacier air cooler line channels dense intake paths through a fin stack inspired by frozen cavern flow: quiet, direct, and built for high thermal pressure.",
+      body: "We modeled the fin stack after frozen cavern flow, so intake air moves in dense, direct paths — quiet, and built to handle real thermal pressure.",
     },
     {
       image: glacierField,
       eyebrow: "AIRFLOW FIELD",
       title: "Wide-surface cooling for everyday builds",
-      body: "A broad contact plate, calmer fan curve, and frosted shroud language bring the Arktos mountain theme into a practical air-cooling platform.",
+      body: "A wide contact plate, a calmer fan curve, and the same frosted look as the rest of the lineup, packaged into a practical air cooler.",
     },
     {
       image: glacierPrototype,
       eyebrow: "PROTOTYPE IN PROGRESS",
       title: "Glacier white sample under development",
-      body: "This early white-ice concept is being refined now: blade shape, heat pipe routing, acoustic profile, and final finish are still moving through prototype testing.",
+      body: "The white-ice sample is still on the bench — we're dialing in blade shape, heat pipe routing, acoustics, and finish before this ships.",
     },
   ];
 
@@ -1294,7 +1274,7 @@ const TEAM = [
   {
     name: "Sidak Mann",
     title: "Co-founder & Software Engineer",
-    bio: "Sidak architects the embedded systems and thermal control software that drive Arktos cooling units. With a background in distributed systems and real-time firmware, he ensures every cold plate and manifold responds to load in microseconds.",
+    bio: "Sidak builds the embedded systems and thermal control software behind every Arktos cooling unit. He came from distributed systems and real-time firmware work, and cares most about getting a cold plate to respond to load in microseconds, not seconds.",
     initials: "SM",
     gradient: "linear-gradient(135deg, oklch(0.68 0.14 220), oklch(0.52 0.16 244))",
     accent: "oklch(0.74 0.11 216)",
@@ -1304,7 +1284,7 @@ const TEAM = [
   {
     name: "Kenzo Liddle",
     title: "Co-founder & CAD Engineer",
-    bio: "Kenzo designs the physical architecture of every Arktos cooling module — from initial CFD simulations to precision-machined cold plates. His work bridges materials science, thermodynamics, and zero-waste manufacturing principles.",
+    bio: "Kenzo takes each cooling module from a first CFD simulation to a precision-machined cold plate. He splits his time between materials science and thermodynamics, and pushes hard on manufacturing that doesn't waste stock.",
     initials: "KL",
     gradient: "linear-gradient(135deg, oklch(0.58 0.14 196), oklch(0.48 0.14 220))",
     accent: "oklch(0.68 0.13 196)",
@@ -1544,9 +1524,9 @@ function CTA({ onPreorder }: { onPreorder: () => void }) {
                 fontSize: "0.97rem",
               }}
             >
-              Whether you run three racks or three hundred, we&apos;re
-              accepting pilot partners for our first commercial deployment.
-              No obligation — just real engineering conversations.
+              Run three racks or three hundred — we&apos;re taking on pilot
+              partners for our first commercial deployment. No pressure, just
+              a real conversation about your setup.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <PrimaryBtn onClick={onPreorder}>
@@ -1574,17 +1554,17 @@ function CoolingPage({
     {
       icon: <Thermometer size={20} />,
       title: "Phase-change chambers",
-      body: "Two-phase immersion and chamber cooling for PC builds that need chip-level heat capture without legacy air limits.",
+      body: "Two-phase immersion cooling for builds that have already outgrown what air can pull off the chip.",
     },
     {
       icon: <Wind size={20} />,
       title: "Glacier air coolers",
-      body: "High-pressure tower airflow, ice-cave fin geometry, and calm acoustics for everyday performance builds.",
+      body: "High-pressure tower airflow with ice-cave fin geometry, tuned to stay quiet under everyday loads.",
     },
     {
       icon: <Cpu size={20} />,
       title: "PC performance focus",
-      body: "CAD-modeled cold plates, CFD-validated manifolds, and builder-first specs from prototype through launch.",
+      body: "Cold plates modeled in CAD, manifolds validated with CFD, and specs written for builders from prototype through launch.",
     },
   ];
 
@@ -1653,9 +1633,9 @@ function CoolingPage({
                 marginBottom: "2rem",
               }}
             >
-              Arktos Cooling is the PC performance division of Arktos Systems —
-              phase-change cooling chambers, Glacier air coolers, and thermal
-              infrastructure for builders who refuse to trade speed for heat.
+              Arktos Cooling makes phase-change cooling chambers, Glacier air
+              coolers, and the thermal infrastructure behind them, for builders
+              who don't want to choose between speed and heat.
             </p>
             <PrimaryBtn onClick={onPreorder}>
               Reserve Glacier <ArrowRight size={14} />
@@ -1729,244 +1709,6 @@ function CoolingPage({
           </span>
           <div className="grid md:grid-cols-2 gap-5">
             {COOLING_PRODUCT_IDS.map((id) => {
-              const product = PRODUCTS[id];
-              return (
-                <GlassPanel
-                  key={id}
-                  className="p-6 flex flex-col gap-4 hover:bg-white/[0.07] transition-colors duration-500"
-                >
-                  <div>
-                    <h2
-                      style={{
-                        fontFamily: "'Barlow Condensed', sans-serif",
-                        fontWeight: 600,
-                        fontSize: "1.5rem",
-                        color: "rgba(255,255,255,0.95)",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      {product.name}
-                    </h2>
-                    <p
-                      style={{
-                        fontFamily: "'Barlow', sans-serif",
-                        fontSize: "0.92rem",
-                        color: "oklch(0.72 0.02 228)",
-                        lineHeight: 1.7,
-                      }}
-                    >
-                      {product.tagline}
-                    </p>
-                  </div>
-                  <PrimaryBtn onClick={() => onProduct(id)}>
-                    View product <ArrowRight size={14} />
-                  </PrimaryBtn>
-                </GlassPanel>
-              );
-            })}
-          </div>
-        </motion.div>
-      </div>
-    </main>
-  );
-}
-
-/* ── Kryos Motion page ───────────────────────────────────────────── */
-function KryosPage({
-  onHome,
-  onContact,
-  onProduct,
-}: {
-  onHome: () => void;
-  onContact: () => void;
-  onProduct: (id: ProductId) => void;
-}) {
-  const features = [
-    {
-      icon: <Timer size={20} />,
-      title: "Portable athlete metronomes",
-      body: "Wearable rhythm hardware that keeps cadence honest across sprints, lifts, and recovery sessions.",
-    },
-    {
-      icon: <Activity size={20} />,
-      title: "Performance-first pacing",
-      body: "Built for coaches and athletes who need tactile tempo cues without pulling out a phone mid-set.",
-    },
-    {
-      icon: <Layers size={20} />,
-      title: "Travel-ready design",
-      body: "Compact enough for gym bags, durable enough for daily training blocks and competition travel.",
-    },
-  ];
-
-  return (
-    <main
-      className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
-      style={{ background: "oklch(0.064 0.026 246)" }}
-    >
-      <PageBackdrop preset={PAGE_BACKDROPS.kryos} />
-      <div className="relative z-20 max-w-6xl mx-auto">
-        <GlassPanel className="mb-8 px-5 py-4">
-          <button
-            onClick={onHome}
-            className="inline-flex items-center gap-2 text-sm"
-            style={{
-              fontFamily: "'Barlow', sans-serif",
-              color: "oklch(0.78 0.05 218)",
-            }}
-          >
-            <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
-            Back to Arktos
-          </button>
-        </GlassPanel>
-
-        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span
-              style={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: "0.72rem",
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                color: "oklch(0.72 0.11 204)",
-                display: "block",
-                marginBottom: "1.2rem",
-              }}
-            >
-              Kryos Motion
-            </span>
-            <h1
-              style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontWeight: 300,
-                fontSize: "clamp(3.3rem, 8vw, 7rem)",
-                lineHeight: 0.92,
-                color: "rgba(255,255,255,0.97)",
-                marginBottom: "1.5rem",
-              }}
-            >
-              Lock the
-              <br />
-              <span style={{ fontWeight: 700 }}>tempo.</span>
-            </h1>
-            <p
-              style={{
-                fontFamily: "'Barlow', sans-serif",
-                fontWeight: 300,
-                fontSize: "1.05rem",
-                color: "oklch(0.73 0.02 228)",
-                lineHeight: 1.8,
-                maxWidth: "39rem",
-                marginBottom: "2rem",
-              }}
-            >
-              Kryos Motion is the athlete performance division of Arktos Systems —
-              portable metronomes engineered to keep training rhythm consistent
-              from warmup through final rep.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <GhostBtn onClick={onContact}>Contact for early access</GhostBtn>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            className="grid gap-4"
-          >
-            {features.map((item) => (
-              <GlassPanel key={item.title} className="p-6 flex gap-4">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{
-                    background: "rgba(90,150,255,0.1)",
-                    border: "1px solid rgba(90,150,255,0.18)",
-                    color: "oklch(0.74 0.11 216)",
-                  }}
-                >
-                  {item.icon}
-                </div>
-                <div>
-                  <h2
-                    style={{
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      fontWeight: 500,
-                      fontSize: "1.15rem",
-                      color: "rgba(255,255,255,0.92)",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    {item.title}
-                  </h2>
-                  <p
-                    style={{
-                      fontFamily: "'Barlow', sans-serif",
-                      fontSize: "0.9rem",
-                      color: "oklch(0.68 0.02 228)",
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    {item.body}
-                  </p>
-                </div>
-              </GlassPanel>
-            ))}
-
-            <GlassPanel className="p-7 text-center">
-              <span
-                style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: "0.68rem",
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  color: "oklch(0.72 0.1 204)",
-                  display: "block",
-                  marginBottom: "0.8rem",
-                }}
-              >
-                Preorder
-              </span>
-              <p
-                style={{
-                  fontFamily: "'Barlow', sans-serif",
-                  fontSize: "1rem",
-                  color: "oklch(0.78 0.02 228)",
-                  lineHeight: 1.7,
-                }}
-              >
-                Kryos athlete metronome preorders are opening shortly. Reach out
-                through contact if you want to be first on the list.
-              </p>
-            </GlassPanel>
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-14"
-        >
-          <span
-            style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: "0.7rem",
-              letterSpacing: "0.22em",
-              textTransform: "uppercase",
-              color: "oklch(0.68 0.1 204)",
-              display: "block",
-              marginBottom: "1rem",
-            }}
-          >
-            Products
-          </span>
-          <div className="grid md:grid-cols-2 gap-5">
-            {KRYOS_PRODUCT_IDS.map((id) => {
               const product = PRODUCTS[id];
               return (
                 <GlassPanel
@@ -3337,7 +3079,6 @@ function Footer({
   onContact,
   onCareers,
   onCooling,
-  onKryos,
   onDocs,
   onPreorder,
   onNavigateSection,
@@ -3346,7 +3087,6 @@ function Footer({
   onContact: () => void;
   onCareers: () => void;
   onCooling: () => void;
-  onKryos: () => void;
   onDocs: () => void;
   onPreorder: () => void;
   onNavigateSection: (section: string) => void;
@@ -3356,7 +3096,6 @@ function Footer({
       title: "Product",
       links: [
         { label: "Arktos Cooling", action: onCooling },
-        { label: "Kryos Motion", action: onKryos },
         { label: "Preorder", action: onPreorder },
       ],
     },
@@ -3455,7 +3194,6 @@ export default function App() {
     | "terms"
     | "accessibility"
     | "cooling"
-    | "kryos"
     | ProductId
   >("home");
   const [a11y, setA11y] = useState(false);
@@ -3526,11 +3264,6 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   };
 
-  const goKryos = () => {
-    setPage("kryos");
-    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
-  };
-
   return (
     <div
       className="relative"
@@ -3544,13 +3277,12 @@ export default function App() {
         onContact={goContact}
         onDocs={goDocs}
         onCooling={goCooling}
-        onKryos={goKryos}
         onNavigateSection={goSection}
       />
       {page === "home" ? (
         <>
-          <Hero onCooling={goCooling} onKryos={goKryos} />
-          <Divisions onCooling={goCooling} onKryos={goKryos} />
+          <Hero onCooling={goCooling} />
+          <Divisions onCooling={goCooling} />
           <Mission />
           <Platform />
           <GlacierLine onPreorder={goPreorder} />
@@ -3561,8 +3293,6 @@ export default function App() {
         <PreorderPage onHome={goHome} />
       ) : page === "cooling" ? (
         <CoolingPage onHome={goHome} onPreorder={goPreorder} onProduct={goProduct} />
-      ) : page === "kryos" ? (
-        <KryosPage onHome={goHome} onContact={goContact} onProduct={goProduct} />
       ) : page === "contact" ? (
         <ContactPage onHome={goHome} />
       ) : page === "docs" ? (
@@ -3573,12 +3303,8 @@ export default function App() {
         <ProductDescriptionPage
           product={PRODUCTS[page as ProductId]}
           onHome={goHome}
-          onBack={PRODUCTS[page as ProductId].division === "cooling" ? goCooling : goKryos}
-          backLabel={
-            PRODUCTS[page as ProductId].division === "cooling"
-              ? "Back to Arktos Cooling"
-              : "Back to Kryos Motion"
-          }
+          onBack={goCooling}
+          backLabel="Back to Arktos Cooling"
           onReserve={goPreorder}
           onContact={goContact}
         />
@@ -3595,7 +3321,6 @@ export default function App() {
         onContact={goContact}
         onCareers={goCareers}
         onCooling={goCooling}
-        onKryos={goKryos}
         onDocs={goDocs}
         onPreorder={goPreorder}
         onNavigateSection={goSection}

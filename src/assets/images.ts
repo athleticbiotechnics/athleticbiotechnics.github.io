@@ -14,7 +14,6 @@ import productSpecBackground from "@/imports/product-spec-background.jpg";
 import careersBackground from "@/imports/careers-background.jpg";
 import kenzoTree from "@/imports/kenzo-tree.jpg";
 import sidakProfile from "@/imports/sidak-profile.jpg";
-import kryosMotionBackground from "@/imports/kryos-motion-background.jpg";
 
 export const images = {
   logoTaskbar,
@@ -34,7 +33,6 @@ export const images = {
   careersBackground,
   kenzoTree,
   sidakProfile,
-  kryosMotionBackground,
 } as const;
 
 export const HERO_IMG =
