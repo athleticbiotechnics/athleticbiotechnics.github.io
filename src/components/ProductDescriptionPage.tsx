@@ -18,12 +18,9 @@ function GlassPanel({
 }) {
   return (
     <div
-      className={`backdrop-blur-[10px] bg-slate-950/[0.5] border border-white/[0.16] rounded-2xl ${className}`}
+      className={`bg-[#0a1220] border border-white/[0.09] rounded-lg ${className}`}
       style={{
-        backdropFilter: "blur(6px) saturate(1.08)",
-        background: "rgba(5,12,26,0.58)",
-        boxShadow:
-          "inset 0 1.5px 0 rgba(200,230,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.22), 0 24px 64px rgba(0,0,0,0.56)",
+        boxShadow: "0 1px 0 rgba(255,255,255,0.03) inset, 0 12px 32px rgba(0,0,0,0.4)",
         ...style,
       }}
     >
@@ -43,18 +40,16 @@ function PrimaryBtn({
     <button
       type="button"
       onClick={onClick}
-      className="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-sm font-medium tracking-wide overflow-hidden transition-all duration-300"
+      className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-md text-sm font-medium tracking-wide transition-all duration-200 hover:brightness-110 active:brightness-95"
       style={{
-        background: "rgba(255, 255, 255, 0.09)",
-        backdropFilter: "blur(14px) saturate(1.3)",
-        border: "1px solid rgba(255, 255, 255, 0.17)",
-        color: "rgba(255, 255, 255, 0.92)",
-        boxShadow:
-          "inset 0 1.5px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.12), 0 4px 20px rgba(0,0,0,0.28)",
+        background: "linear-gradient(180deg, oklch(0.7 0.13 214) 0%, oklch(0.58 0.14 220) 100%)",
+        color: "oklch(0.08 0.02 240)",
+        boxShadow: "0 1px 0 rgba(255,255,255,0.25) inset, 0 6px 16px rgba(60,130,220,0.28)",
         fontFamily: "'Barlow', sans-serif",
+        fontWeight: 600,
       }}
     >
-      <span className="relative z-10 flex items-center gap-2.5">{children}</span>
+      <span className="relative flex items-center gap-2.5">{children}</span>
     </button>
   );
 }

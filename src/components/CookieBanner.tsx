@@ -33,14 +33,11 @@ export function CookieBanner({ onPrivacy }: { onPrivacy: () => void }) {
           className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[9999] w-full max-w-3xl px-4"
         >
           <div
-            className="relative rounded-2xl"
+            className="relative rounded-lg"
             style={{
-              backdropFilter: "blur(20px) saturate(1.3)",
-              WebkitBackdropFilter: "blur(20px) saturate(1.3)",
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.14)",
-              boxShadow:
-                "inset 0 1.5px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.1), 0 24px 64px rgba(0,0,0,0.4)",
+              background: "#0a1220",
+              border: "1px solid rgba(255,255,255,0.1)",
+              boxShadow: "0 12px 32px rgba(0,0,0,0.45)",
             }}
           >
             <button
@@ -114,38 +111,29 @@ export function CookieBanner({ onPrivacy }: { onPrivacy: () => void }) {
               <div className="flex items-center gap-2.5 flex-shrink-0">
                 <button
                   onClick={() => dismiss("declined")}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm transition-all duration-200 hover:bg-white/[0.07] border"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm transition-all duration-200 hover:bg-white/[0.05] border"
                   style={{
                     fontFamily: "'Barlow', sans-serif",
                     fontWeight: 400,
-                    background: "rgba(160,200,255,0.05)",
-                    borderColor: "rgba(160,200,255,0.13)",
+                    background: "transparent",
+                    borderColor: "rgba(255,255,255,0.14)",
                     color: "oklch(0.62 0.025 228)",
-                    backdropFilter: "blur(4px)",
-                    boxShadow: "inset 0 1px 0 rgba(200,230,255,0.06)",
                   }}
                 >
                   Decline
                 </button>
                 <button
                   onClick={() => dismiss("accepted")}
-                  className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm overflow-hidden transition-all duration-200"
+                  className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm transition-all duration-200 hover:brightness-110"
                   style={{
                     fontFamily: "'Barlow', sans-serif",
-                    fontWeight: 500,
-                    background: "rgba(255,255,255,0.1)",
-                    backdropFilter: "blur(14px) saturate(1.3)",
-                    border: "1px solid rgba(255,255,255,0.18)",
-                    color: "rgba(255,255,255,0.92)",
-                    boxShadow:
-                      "inset 0 1.5px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.12), 0 4px 20px rgba(0,0,0,0.28)",
+                    fontWeight: 600,
+                    background: "linear-gradient(180deg, oklch(0.7 0.13 214) 0%, oklch(0.58 0.14 220) 100%)",
+                    color: "oklch(0.08 0.02 240)",
+                    boxShadow: "0 1px 0 rgba(255,255,255,0.25) inset",
                   }}
                 >
-                  <span
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                    style={{ background: "rgba(255,255,255,0.07)" }}
-                  />
-                  <span className="relative z-10">Accept All</span>
+                  <span className="relative">Accept All</span>
                 </button>
               </div>
             </div>

@@ -106,7 +106,7 @@ const LOGO_SHARP: React.CSSProperties = {
 };
 
 
-/* ── Reusable glass panel ─────────────────────────────────────────── */
+/* ── Reusable panel — solid surface, crisp edge, no glass blur ──────── */
 function GlassPanel({
   className = "",
   children,
@@ -118,12 +118,9 @@ function GlassPanel({
 }) {
   return (
     <div
-      className={`backdrop-blur-[10px] bg-slate-950/[0.5] border border-white/[0.16] rounded-2xl ${className}`}
+      className={`bg-[#0a1220] border border-white/[0.09] rounded-lg ${className}`}
       style={{
-        backdropFilter: "blur(6px) saturate(1.08)",
-        background: "rgba(5,12,26,0.58)",
-        boxShadow:
-          "inset 0 1.5px 0 rgba(200,230,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.22), 0 24px 64px rgba(0,0,0,0.56)",
+        boxShadow: "0 1px 0 rgba(255,255,255,0.03) inset, 0 12px 32px rgba(0,0,0,0.4)",
         ...style,
       }}
     >
@@ -174,24 +171,16 @@ function PrimaryBtn({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-sm font-medium tracking-wide overflow-hidden transition-all duration-300 ${className}`}
+      className={`group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-md text-sm font-medium tracking-wide transition-all duration-200 hover:brightness-110 active:brightness-95 disabled:opacity-50 ${className}`}
       style={{
-        background: "rgba(255, 255, 255, 0.09)",
-        backdropFilter: "blur(14px) saturate(1.3)",
-        border: "1px solid rgba(255, 255, 255, 0.17)",
-        color: "rgba(255, 255, 255, 0.92)",
-        boxShadow:
-          "inset 0 1.5px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.12), 0 4px 20px rgba(0,0,0,0.28)",
+        background: "linear-gradient(180deg, oklch(0.7 0.13 214) 0%, oklch(0.58 0.14 220) 100%)",
+        color: "oklch(0.08 0.02 240)",
+        boxShadow: "0 1px 0 rgba(255,255,255,0.25) inset, 0 6px 16px rgba(60,130,220,0.28)",
         fontFamily: "'Barlow', sans-serif",
+        fontWeight: 600,
       }}
     >
-      <span
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{
-          background: "rgba(255, 255, 255, 0.08)",
-        }}
-      />
-      <span className="relative z-10 flex items-center gap-2.5">{children}</span>
+      <span className="relative flex items-center gap-2.5">{children}</span>
     </button>
   );
 }
@@ -208,14 +197,12 @@ function GhostBtn({
   return (
     <button
       onClick={onClick}
-      className={`group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-sm font-medium tracking-wide border transition-all duration-300 hover:bg-white/[0.1] hover:border-white/[0.2] ${className}`}
+      className={`group inline-flex items-center gap-2.5 px-6 py-3 rounded-md text-sm font-medium tracking-wide border transition-all duration-200 hover:bg-white/[0.05] hover:border-white/[0.24] ${className}`}
       style={{
-        background: "rgba(160,200,255,0.06)",
-        borderColor: "rgba(160,200,255,0.14)",
-        color: "oklch(0.82 0.015 222)",
-        boxShadow: "inset 0 1px 0 rgba(200,230,255,0.08)",
+        background: "transparent",
+        borderColor: "rgba(255,255,255,0.14)",
+        color: "rgba(235,242,252,0.86)",
         fontFamily: "'Barlow', sans-serif",
-        backdropFilter: "blur(4px)",
       }}
     >
       {children}
@@ -273,11 +260,11 @@ function Snow() {
 /* ── Navbar ──────────────────────────────────────────────────────── */
 type NavItem =
   | { label: string; kind: "section"; section: string }
-  | { label: string; kind: "page"; page: "docs" | "cooling" };
+  | { label: string; kind: "page"; page: "docs" | "cooling" | "blackbox" };
 
 const NAV_LINKS: NavItem[] = [
-  { label: "Products", kind: "section", section: "divisions" },
   { label: "Cooling", kind: "page", page: "cooling" },
+  { label: "BlackBox", kind: "page", page: "blackbox" },
   { label: "Mission", kind: "section", section: "mission" },
   { label: "Team", kind: "section", section: "team" },
   { label: "Docs", kind: "page", page: "docs" },
@@ -290,6 +277,7 @@ function Navbar({
   onContact,
   onDocs,
   onCooling,
+  onBlackBox,
   onNavigateSection,
 }: {
   scrolled: boolean;
@@ -298,6 +286,7 @@ function Navbar({
   onContact: () => void;
   onDocs: () => void;
   onCooling: () => void;
+  onBlackBox: () => void;
   onNavigateSection: (section: string) => void;
 }) {
   const handleNav = (link: NavItem) => {
@@ -307,25 +296,22 @@ function Navbar({
     }
     if (link.page === "docs") onDocs();
     if (link.page === "cooling") onCooling();
+    if (link.page === "blackbox") onBlackBox();
   };
   const [open, setOpen] = useState(false);
 
   return (
     <motion.nav
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 left-0 right-0 z-50 px-6 pt-5"
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed top-0 left-0 right-0 z-50"
     >
       <div
-        className="max-w-6xl mx-auto flex items-center justify-between rounded-2xl px-5 py-3 transition-all duration-700"
+        className="w-full flex items-center justify-between px-6 lg:px-10 py-4 transition-all duration-300 border-b"
         style={{
-          backdropFilter: scrolled ? "blur(8px) saturate(1.2)" : "blur(4px)",
-          background: scrolled ? "rgba(6,12,26,0.82)" : "rgba(6,12,26,0.48)",
-          border: `1px solid ${scrolled ? "rgba(160,200,255,0.12)" : "rgba(160,200,255,0.07)"}`,
-          boxShadow: scrolled
-            ? "inset 0 1.5px 0 rgba(200,230,255,0.09), 0 8px 40px rgba(0,0,0,0.5)"
-            : "none",
+          background: scrolled ? "rgba(7,13,24,0.97)" : "rgba(7,13,24,0.72)",
+          borderColor: scrolled ? "rgba(255,255,255,0.08)" : "transparent",
         }}
       >
         {/* Logo + wordmark */}
@@ -408,11 +394,10 @@ function Navbar({
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="md:hidden max-w-6xl mx-auto mt-2 rounded-2xl p-6"
+          className="md:hidden p-6 border-b"
           style={{
-            background: "rgba(6,12,26,0.9)",
-            backdropFilter: "blur(8px)",
-            border: "1px solid rgba(160,200,255,0.12)",
+            background: "rgba(7,13,24,0.99)",
+            borderColor: "rgba(255,255,255,0.08)",
           }}
         >
           <div className="mb-5 pb-5 border-b border-white/[0.08]">
@@ -461,8 +446,10 @@ function Navbar({
 /* ── Hero ────────────────────────────────────────────────────────── */
 function Hero({
   onCooling,
+  onBlackBox,
 }: {
   onCooling: () => void;
+  onBlackBox: () => void;
 }) {
   const heroRef = useRef<HTMLElement>(null);
 
@@ -554,9 +541,9 @@ function Hero({
         >
           We're{" "}
           <strong style={{ color: "rgba(255,255,255,0.98)", fontWeight: 600 }}>
-            Arktos Cooling
+            Arktos Systems
           </strong>{" "}
-          — Glacier air coolers and phase-change chambers, built by two engineers who got tired of watching good hardware throttle.
+          — Glacier air coolers, phase-change chambers, and BlackBox, a hardware flight recorder for boards that fail before you can catch why.
         </motion.p>
 
         {/* CTAs */}
@@ -569,6 +556,9 @@ function Hero({
           <PrimaryBtn onClick={onCooling}>
             Explore Arktos Cooling <ArrowRight size={15} />
           </PrimaryBtn>
+          <GhostBtn onClick={onBlackBox}>
+            See BlackBox <ArrowRight size={15} />
+          </GhostBtn>
         </motion.div>
 
         {/* Stat strip */}
@@ -582,7 +572,7 @@ function Hero({
             <div className="grid grid-cols-3 divide-x divide-white/[0.07]">
               {[
                 { value: "Glacier", label: "Tower air coolers" },
-                { value: "Phase-change", label: "Immersion chambers" },
+                { value: "BlackBox", label: "PCB flight recorder" },
                 { value: "Arktos", label: "Built by two engineers" },
               ].map(({ value, label }) => (
                 <div key={label} className="px-6 text-center first:pl-0 last:pr-0">
@@ -636,8 +626,10 @@ function Hero({
 /* ── Divisions ───────────────────────────────────────────────────── */
 function Divisions({
   onCooling,
+  onBlackBox,
 }: {
   onCooling: () => void;
+  onBlackBox: () => void;
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
@@ -660,6 +652,15 @@ function Divisions({
       icon: <Thermometer size={20} />,
       cta: "Explore Cooling",
       onClick: onCooling,
+    },
+    {
+      eyebrow: "BlackBox",
+      title: "A flight recorder for your PCB",
+      body: "Plug BlackBox into a breadboard, a Raspberry Pi, or a custom board and it continuously logs voltage, current, UART, resets, and GPIO — so you rewind to the failure instead of trying to reproduce it.",
+      image: glacierPrototype,
+      icon: <Cpu size={20} />,
+      cta: "Explore BlackBox",
+      onClick: onBlackBox,
     },
   ];
 
@@ -689,7 +690,7 @@ function Divisions({
               marginBottom: "1.2rem",
             }}
           >
-            Arktos Cooling
+            Arktos Systems
           </span>
           <h2
             style={{
@@ -702,9 +703,9 @@ function Divisions({
               marginBottom: "1.2rem",
             }}
           >
-            One company,
+            One team,
             <br />
-            <span style={{ fontWeight: 700 }}>two ways to cool.</span>
+            <span style={{ fontWeight: 700 }}>three ways to work colder.</span>
           </h2>
           <p
             style={{
@@ -717,12 +718,13 @@ function Divisions({
             }}
           >
             Glacier handles the everyday build. Our phase-change chambers pick up
-            where air runs out of headroom. Same engineering team, same obsession
-            with getting heat out of the way.
+            where air runs out of headroom. And BlackBox watches the board itself,
+            so a failure at 2 a.m. doesn't stay a mystery. Same engineering team,
+            same obsession with knowing exactly what's happening under load.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6">
           {divisions.map((division, i) => (
             <motion.article
               key={division.eyebrow}
@@ -1746,6 +1748,334 @@ function CoolingPage({
             })}
           </div>
         </motion.div>
+      </div>
+    </main>
+  );
+}
+
+/* ── BlackBox page ───────────────────────────────────────────────── */
+function BlackBoxPage({
+  onHome,
+  onContact,
+}: {
+  onHome: () => void;
+  onContact: () => void;
+}) {
+  const signals = [
+    { label: "Power rail voltage", detail: "Up to 2 rails, brownout and startup-dip detection, every change timestamped." },
+    { label: "Current consumption", detail: "Continuous board current with spike and abnormal-mode detection." },
+    { label: "UART", detail: "Full serial capture — boot logs, firmware debug output, all timestamped." },
+    { label: "Reset line", detail: "Watchdog, brownout, and manual resets, caught the moment they happen." },
+    { label: "GPIO inputs", detail: "4 configurable channels — name them Motor Enable, Fault Pin, whatever you're chasing." },
+    { label: "Analog input", detail: "One configurable channel for battery voltage, a thermistor, a sensor output." },
+  ];
+
+  const harness = [
+    "Breadboard-friendly pins — push directly into breadboard rows",
+    "Raspberry Pi jumper sockets — connect straight onto the Pi's GPIO header",
+    "Bare, tinned leads — solder directly to PCB test points or header pads",
+  ];
+
+  const roadmap = [
+    { phase: "Phase 1", detail: "Custom PCB with universal pin header. Voltage, current, and UART recording to SD card." },
+    { phase: "Phase 2", detail: "Desktop viewer over the USB-C link — timeline, graphs, event markers, zoom, search." },
+    { phase: "Phase 3", detail: "GPIO recording, reset detection, trigger events, refined wiring harness." },
+    { phase: "Phase 4", detail: "Improved enclosure, expanded harness kit, field testing across breadboard, Pi, and custom PCB setups." },
+  ];
+
+  return (
+    <main
+      className="relative min-h-screen overflow-hidden px-6 pt-32 pb-24"
+      style={{ background: "oklch(0.064 0.026 246)" }}
+    >
+      <PageBackdrop preset={PAGE_BACKDROPS.product} />
+      <div className="relative z-20 max-w-6xl mx-auto">
+        <GlassPanel className="mb-8 px-5 py-4 inline-block">
+          <button
+            onClick={onHome}
+            className="inline-flex items-center gap-2 text-sm"
+            style={{ fontFamily: "'Barlow', sans-serif", color: "oklch(0.78 0.05 218)" }}
+          >
+            <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
+            Back to Arktos
+          </button>
+        </GlassPanel>
+
+        {/* Hero */}
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.72rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "oklch(0.72 0.11 204)",
+                display: "block",
+                marginBottom: "1.2rem",
+              }}
+            >
+              Arktos BlackBox — V1 Prototype
+            </span>
+            <h1
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 300,
+                fontSize: "clamp(3rem, 7vw, 6rem)",
+                lineHeight: 0.94,
+                color: "rgba(255,255,255,0.97)",
+                marginBottom: "1.5rem",
+              }}
+            >
+              What happened right
+              <br />
+              <span style={{ fontWeight: 700 }}>before your board failed?</span>
+            </h1>
+            <p
+              style={{
+                fontFamily: "'Barlow', sans-serif",
+                fontWeight: 300,
+                fontSize: "1.05rem",
+                color: "oklch(0.73 0.02 228)",
+                lineHeight: 1.8,
+                maxWidth: "38rem",
+                marginBottom: "1.6rem",
+              }}
+            >
+              BlackBox is a small hardware module that plugs into almost any embedded
+              system — a breadboard, a Raspberry Pi, or a custom PCB — and continuously
+              records the signals engineers check first when something dies. Instead of
+              trying to reproduce a crash, you rewind the timeline and watch it happen.
+            </p>
+            <p
+              style={{
+                fontFamily: "'Barlow', sans-serif",
+                fontWeight: 300,
+                fontSize: "0.92rem",
+                color: "oklch(0.55 0.02 225)",
+                lineHeight: 1.7,
+                maxWidth: "36rem",
+                marginBottom: "2rem",
+              }}
+            >
+              We're not trying to replace an oscilloscope or a logic analyzer. BlackBox
+              answers one question, every time, without you having to set it up first.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <PrimaryBtn onClick={onContact}>
+                Get in touch <ArrowRight size={14} />
+              </PrimaryBtn>
+              <GhostBtn onClick={onHome}>Back to Arktos</GhostBtn>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <GlassPanel className="p-7">
+              <span
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: "0.68rem",
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                  color: "oklch(0.68 0.1 204)",
+                  display: "block",
+                  marginBottom: "1rem",
+                }}
+              >
+                Example timeline
+              </span>
+              <div className="flex flex-col gap-3" style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.8rem" }}>
+                {[
+                  { t: "12:03:10", e: "Board boot — 3.30V, 180mA", ok: true },
+                  { t: "12:03:11", e: "UART: Initialization complete", ok: true },
+                  { t: "12:03:14", e: "GPIO: Motor Enable HIGH — 720mA", ok: true },
+                  { t: "12:03:14", e: "Voltage drops to 2.91V", ok: false },
+                  { t: "12:03:14", e: "UART: Watchdog timeout", ok: false },
+                  { t: "12:03:15", e: "Reset detected — board reboots", ok: false },
+                ].map((row, i) => (
+                  <div key={i} className="flex items-start gap-3 pb-3 border-b border-white/[0.06] last:border-0 last:pb-0">
+                    <span style={{ color: "oklch(0.5 0.02 228)", flexShrink: 0 }}>{row.t}</span>
+                    <span style={{ color: row.ok ? "oklch(0.72 0.02 225)" : "oklch(0.72 0.16 30)" }}>{row.e}</span>
+                  </div>
+                ))}
+              </div>
+            </GlassPanel>
+          </motion.div>
+        </div>
+
+        {/* Signals */}
+        <div className="mb-20">
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.7rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.68 0.1 204)",
+              display: "block",
+              marginBottom: "1rem",
+            }}
+          >
+            V1 signal set
+          </span>
+          <h2
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 300,
+              fontSize: "clamp(2rem, 4vw, 2.8rem)",
+              color: "rgba(255,255,255,0.96)",
+              marginBottom: "1.6rem",
+            }}
+          >
+            The signals engineers check <span style={{ fontWeight: 700 }}>first.</span>
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {signals.map((s) => (
+              <GlassPanel key={s.label} className="p-6">
+                <h3
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontWeight: 600,
+                    fontSize: "1.1rem",
+                    color: "rgba(255,255,255,0.92)",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  {s.label}
+                </h3>
+                <p style={{ fontFamily: "'Barlow', sans-serif", fontSize: "0.88rem", color: "oklch(0.65 0.02 228)", lineHeight: 1.7 }}>
+                  {s.detail}
+                </p>
+              </GlassPanel>
+            ))}
+          </div>
+        </div>
+
+        {/* Universal connectivity */}
+        <div className="grid lg:grid-cols-2 gap-10 mb-20 items-start">
+          <div>
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.7rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "oklch(0.68 0.1 204)",
+                display: "block",
+                marginBottom: "1rem",
+              }}
+            >
+              Universal connectivity
+            </span>
+            <h2
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontWeight: 300,
+                fontSize: "clamp(2rem, 4vw, 2.8rem)",
+                color: "rgba(255,255,255,0.96)",
+                marginBottom: "1.2rem",
+              }}
+            >
+              One board, <span style={{ fontWeight: 700 }}>whatever you're on.</span>
+            </h2>
+            <p style={{ fontFamily: "'Barlow', sans-serif", fontSize: "0.95rem", color: "oklch(0.65 0.02 228)", lineHeight: 1.8, marginBottom: "1.4rem" }}>
+              A labeled multi-pin header and a color-coded wiring harness mean the same
+              unit works across your whole bench. Viewing a recording is one USB-C to
+              USB-C cable to the desktop app — no breakout board, no adapters.
+            </p>
+            <ul className="flex flex-col gap-3">
+              {harness.map((h) => (
+                <li key={h} className="flex items-start gap-3">
+                  <span
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-2"
+                    style={{ background: "oklch(0.74 0.11 216)" }}
+                  />
+                  <span style={{ fontFamily: "'Barlow', sans-serif", fontSize: "0.9rem", color: "oklch(0.7 0.02 225)", lineHeight: 1.7 }}>
+                    {h}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <GlassPanel className="p-7">
+            <span
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "0.68rem",
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "oklch(0.68 0.1 204)",
+                display: "block",
+                marginBottom: "1rem",
+              }}
+            >
+              Recommended core
+            </span>
+            <div className="flex flex-col gap-4">
+              {[
+                { part: "STM32H743ZI2", role: "Main processor — ADC sampling, UART capture, GPIO interrupts, SD logging" },
+                { part: "TI INA228", role: "High-side current sensor for accurate load logging" },
+                { part: "microSD (32GB)", role: "Continuous recording, circular buffer storage" },
+                { part: "USB-C", role: "Power, data, and firmware updates over a single cable" },
+              ].map((item) => (
+                <div key={item.part} className="flex justify-between gap-4 pb-4 border-b border-white/[0.06] last:border-0 last:pb-0">
+                  <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 600, fontSize: "0.98rem", color: "rgba(255,255,255,0.9)" }}>
+                    {item.part}
+                  </span>
+                  <span style={{ fontFamily: "'Barlow', sans-serif", fontSize: "0.82rem", color: "oklch(0.6 0.02 228)", textAlign: "right", maxWidth: "60%" }}>
+                    {item.role}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </GlassPanel>
+        </div>
+
+        {/* Roadmap */}
+        <div>
+          <span
+            style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "0.7rem",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "oklch(0.68 0.1 204)",
+              display: "block",
+              marginBottom: "1rem",
+            }}
+          >
+            Development roadmap
+          </span>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {roadmap.map((r) => (
+              <GlassPanel key={r.phase} className="p-6">
+                <h3
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontWeight: 600,
+                    fontSize: "1.05rem",
+                    color: "oklch(0.74 0.11 216)",
+                    marginBottom: "0.6rem",
+                  }}
+                >
+                  {r.phase}
+                </h3>
+                <p style={{ fontFamily: "'Barlow', sans-serif", fontSize: "0.85rem", color: "oklch(0.62 0.02 228)", lineHeight: 1.7 }}>
+                  {r.detail}
+                </p>
+              </GlassPanel>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   );
@@ -3079,6 +3409,7 @@ function Footer({
   onContact,
   onCareers,
   onCooling,
+  onBlackBox,
   onDocs,
   onPreorder,
   onNavigateSection,
@@ -3087,6 +3418,7 @@ function Footer({
   onContact: () => void;
   onCareers: () => void;
   onCooling: () => void;
+  onBlackBox: () => void;
   onDocs: () => void;
   onPreorder: () => void;
   onNavigateSection: (section: string) => void;
@@ -3096,6 +3428,7 @@ function Footer({
       title: "Product",
       links: [
         { label: "Arktos Cooling", action: onCooling },
+        { label: "BlackBox", action: onBlackBox },
         { label: "Preorder", action: onPreorder },
       ],
     },
@@ -3194,6 +3527,7 @@ export default function App() {
     | "terms"
     | "accessibility"
     | "cooling"
+    | "blackbox"
     | ProductId
   >("home");
   const [a11y, setA11y] = useState(false);
@@ -3264,6 +3598,11 @@ export default function App() {
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   };
 
+  const goBlackBox = () => {
+    setPage("blackbox");
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
   return (
     <div
       className="relative"
@@ -3277,12 +3616,13 @@ export default function App() {
         onContact={goContact}
         onDocs={goDocs}
         onCooling={goCooling}
+        onBlackBox={goBlackBox}
         onNavigateSection={goSection}
       />
       {page === "home" ? (
         <>
-          <Hero onCooling={goCooling} />
-          <Divisions onCooling={goCooling} />
+          <Hero onCooling={goCooling} onBlackBox={goBlackBox} />
+          <Divisions onCooling={goCooling} onBlackBox={goBlackBox} />
           <Mission />
           <Platform />
           <GlacierLine onPreorder={goPreorder} />
@@ -3293,6 +3633,8 @@ export default function App() {
         <PreorderPage onHome={goHome} />
       ) : page === "cooling" ? (
         <CoolingPage onHome={goHome} onPreorder={goPreorder} onProduct={goProduct} />
+      ) : page === "blackbox" ? (
+        <BlackBoxPage onHome={goHome} onContact={goContact} />
       ) : page === "contact" ? (
         <ContactPage onHome={goHome} />
       ) : page === "docs" ? (
@@ -3321,6 +3663,7 @@ export default function App() {
         onContact={goContact}
         onCareers={goCareers}
         onCooling={goCooling}
+        onBlackBox={goBlackBox}
         onDocs={goDocs}
         onPreorder={goPreorder}
         onNavigateSection={goSection}
