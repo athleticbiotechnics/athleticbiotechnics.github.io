@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Snowflake, X } from "lucide-react";
+import { CircuitBoard, X } from "lucide-react";
 
 const CONSENT_KEY = "arktos-cookie-consent";
 
@@ -35,8 +35,8 @@ export function CookieBanner({ onPrivacy }: { onPrivacy: () => void }) {
           <div
             className="relative rounded-lg"
             style={{
-              background: "#0a1220",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "var(--ark-panel)",
+              border: "1px solid var(--ark-line)",
               boxShadow: "0 12px 32px rgba(0,0,0,0.45)",
             }}
           >
@@ -53,14 +53,14 @@ export function CookieBanner({ onPrivacy }: { onPrivacy: () => void }) {
               <div
                 className="flex-shrink-0 flex items-center justify-center rounded-xl w-11 h-11"
                 style={{
-                  background: "rgba(80,140,255,0.1)",
-                  border: "1px solid rgba(120,170,255,0.18)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+                  background: "rgba(168,203,232,0.08)",
+                  border: "1px solid rgba(168,203,232,0.18)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)",
                 }}
               >
-                <Snowflake
+                <CircuitBoard
                   size={20}
-                  style={{ color: "oklch(0.72 0.1 212)" }}
+                  style={{ color: "var(--ark-signal)" }}
                   strokeWidth={1.5}
                 />
               </div>
@@ -68,11 +68,11 @@ export function CookieBanner({ onPrivacy }: { onPrivacy: () => void }) {
               <div className="flex-1 min-w-0">
                 <p
                   style={{
-                    fontFamily: "'DM Mono', monospace",
+                    fontFamily: "var(--ark-mono)",
                     fontSize: "0.64rem",
                     letterSpacing: "0.18em",
                     textTransform: "uppercase",
-                    color: "oklch(0.58 0.055 216)",
+                    color: "var(--ark-muted)",
                     marginBottom: "4px",
                   }}
                 >
@@ -80,10 +80,10 @@ export function CookieBanner({ onPrivacy }: { onPrivacy: () => void }) {
                 </p>
                 <p
                   style={{
-                    fontFamily: "'Barlow', sans-serif",
-                    fontWeight: 300,
+                    fontFamily: "var(--ark-body)",
+                    fontWeight: 400,
                     fontSize: "0.875rem",
-                    color: "oklch(0.68 0.02 228)",
+                    color: "var(--ark-ink-dim)",
                     lineHeight: 1.6,
                   }}
                 >
@@ -91,7 +91,7 @@ export function CookieBanner({ onPrivacy }: { onPrivacy: () => void }) {
                   <button
                     onClick={onPrivacy}
                     style={{
-                      color: "oklch(0.72 0.09 214)",
+                      color: "var(--ark-signal)",
                       textDecoration: "underline",
                       textUnderlineOffset: "2px",
                       fontFamily: "inherit",
@@ -113,24 +113,23 @@ export function CookieBanner({ onPrivacy }: { onPrivacy: () => void }) {
                   onClick={() => dismiss("declined")}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm transition-all duration-200 hover:bg-white/[0.05] border"
                   style={{
-                    fontFamily: "'Barlow', sans-serif",
+                    fontFamily: "var(--ark-body)",
                     fontWeight: 400,
                     background: "transparent",
-                    borderColor: "rgba(255,255,255,0.14)",
-                    color: "oklch(0.62 0.025 228)",
+                    borderColor: "var(--ark-line)",
+                    color: "var(--ark-muted)",
                   }}
                 >
                   Decline
                 </button>
                 <button
                   onClick={() => dismiss("accepted")}
-                  className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm transition-all duration-200 hover:brightness-110"
+                  className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-sm text-sm transition-colors duration-150 hover:bg-white"
                   style={{
-                    fontFamily: "'Barlow', sans-serif",
+                    fontFamily: "var(--ark-body)",
                     fontWeight: 600,
-                    background: "linear-gradient(180deg, oklch(0.7 0.13 214) 0%, oklch(0.58 0.14 220) 100%)",
-                    color: "oklch(0.08 0.02 240)",
-                    boxShadow: "0 1px 0 rgba(255,255,255,0.25) inset",
+                    background: "var(--ark-signal)",
+                    color: "#06080c",
                   }}
                 >
                   <span className="relative">Accept All</span>

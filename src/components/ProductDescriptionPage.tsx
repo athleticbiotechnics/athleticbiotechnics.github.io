@@ -1,13 +1,13 @@
-import { motion } from "motion/react";
-import { ArrowRight } from "lucide-react";
-import { PhotoBackdrop } from "@/components/PhotoBackdrop";
-import { DynamicHeatsinkViewer } from "@/components/DynamicHeatsinkViewer";
-import { FadeIn } from "@/components/FadeIn";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { CircuitBackdrop } from "@/components/CircuitBackdrop";
+import { DeviceMockup } from "@/components/DeviceMockup";
+import { Reveal } from "@/components/Reveal";
 import type { ProductSpec } from "@/constants/products";
-import { PAGE_BACKDROPS } from "@/constants/backgrounds";
-import glacierHeatsinkRender from "@/imports/glacier-heatsink-render.png";
+import { images } from "@/assets/images";
 
-function GlassPanel({
+const { glacierField, glacierBeachBackground } = images;
+
+function Panel({
   className = "",
   children,
   style,
@@ -18,9 +18,12 @@ function GlassPanel({
 }) {
   return (
     <div
-      className={`bg-[#0a1220] border border-white/[0.09] rounded-lg ${className}`}
+      className={`rounded-lg ${className}`}
       style={{
-        boxShadow: "0 1px 0 rgba(255,255,255,0.03) inset, 0 12px 32px rgba(0,0,0,0.4)",
+        background: "var(--ark-panel)",
+        backdropFilter: "blur(14px)",
+        WebkitBackdropFilter: "blur(14px)",
+        border: "1px solid var(--ark-line)",
         ...style,
       }}
     >
@@ -40,16 +43,15 @@ function PrimaryBtn({
     <button
       type="button"
       onClick={onClick}
-      className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-md text-sm font-medium tracking-wide transition-all duration-200 hover:brightness-110 active:brightness-95"
+      className="ark-focus group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-sm text-sm transition-colors duration-150 hover:bg-white"
       style={{
-        background: "linear-gradient(180deg, oklch(0.7 0.13 214) 0%, oklch(0.58 0.14 220) 100%)",
-        color: "oklch(0.08 0.02 240)",
-        boxShadow: "0 1px 0 rgba(255,255,255,0.25) inset, 0 6px 16px rgba(60,130,220,0.28)",
-        fontFamily: "'Barlow', sans-serif",
+        background: "var(--ark-signal)",
+        color: "#06080c",
+        fontFamily: "var(--ark-body)",
         fontWeight: 600,
       }}
     >
-      <span className="relative flex items-center gap-2.5">{children}</span>
+      {children}
     </button>
   );
 }
@@ -71,207 +73,101 @@ export function ProductDescriptionPage({
 }) {
   return (
     <main
-      className="relative min-h-screen overflow-hidden px-6 pt-36 pb-24"
-      style={{ background: "oklch(0.064 0.026 246)" }}
+      className="relative min-h-screen overflow-hidden px-6 pt-32 pb-24"
+      style={{ background: "var(--ark-bg)" }}
     >
-      <PhotoBackdrop {...PAGE_BACKDROPS.product} />
+      <CircuitBackdrop
+        tint={product.id === "blackbox" ? "signal" : "deep"}
+        image={product.id === "blackbox" ? glacierField : glacierBeachBackground}
+      />
 
       <div className="relative z-20 max-w-6xl mx-auto">
-        <GlassPanel className="mb-8 px-5 py-4">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <button
-              onClick={onHome}
-              className="inline-flex items-center gap-2 text-sm"
-              style={{ fontFamily: "'Barlow', sans-serif", color: "oklch(0.78 0.05 218)" }}
-            >
-              <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
-              Home
-            </button>
-            <button
-              onClick={onBack}
-              className="inline-flex items-center gap-2 text-sm"
-              style={{ fontFamily: "'Barlow', sans-serif", color: "oklch(0.78 0.05 218)" }}
-            >
-              <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} />
-              {backLabel}
-            </button>
-          </div>
-        </GlassPanel>
+        <div className="mb-8 flex flex-wrap items-center gap-6">
+          <button onClick={onHome} className="ark-focus inline-flex items-center gap-2 text-sm" style={{ fontFamily: "var(--ark-body)", color: "var(--ark-ink-dim)" }}>
+            <ArrowLeft size={14} /> Home
+          </button>
+          <button onClick={onBack} className="ark-focus inline-flex items-center gap-2 text-sm" style={{ fontFamily: "var(--ark-body)", color: "var(--ark-ink-dim)" }}>
+            <ArrowLeft size={14} /> {backLabel}
+          </button>
+        </div>
 
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-start">
-          <FadeIn>
+          <Reveal>
             <span
               style={{
-                fontFamily: "'DM Mono', monospace",
+                fontFamily: "var(--ark-mono)",
                 fontSize: "0.72rem",
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
-                color: "oklch(0.72 0.11 204)",
+                color: "var(--ark-signal)",
                 display: "block",
                 marginBottom: "1rem",
               }}
             >
-              Product description
+              {product.code} · {product.kind}
             </span>
             <h1
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontWeight: 300,
-                fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
-                lineHeight: 0.95,
-                color: "rgba(255,255,255,0.97)",
+                fontFamily: "var(--ark-display)",
+                fontWeight: 600,
+                fontSize: "clamp(2.3rem, 4.4vw, 3.8rem)",
+                lineHeight: 0.98,
+                letterSpacing: "0",
+                color: "var(--ark-ink)",
                 marginBottom: "1rem",
               }}
             >
               {product.name}
             </h1>
-            <p
-              style={{
-                fontFamily: "'Barlow', sans-serif",
-                fontSize: "1.05rem",
-                color: "rgba(255,255,255,0.88)",
-                lineHeight: 1.78,
-                maxWidth: "38rem",
-                marginBottom: "1.5rem",
-              }}
-            >
-              {product.summary}
-            </p>
-            <p
-              style={{
-                fontFamily: "'Barlow', sans-serif",
-                fontSize: "0.95rem",
-                color: "oklch(0.72 0.06 210)",
-                lineHeight: 1.7,
-                maxWidth: "34rem",
-                marginBottom: "1.75rem",
-              }}
-            >
+            <p style={{ fontFamily: "var(--ark-body)", fontSize: "1.18rem", color: "var(--ark-signal)", lineHeight: 1.4, marginBottom: "1.4rem" }}>
               {product.tagline}
             </p>
+            <p style={{ fontFamily: "var(--ark-body)", fontSize: "1.02rem", color: "var(--ark-ink-dim)", lineHeight: 1.8, maxWidth: "38rem", marginBottom: "1.75rem" }}>
+              {product.summary}
+            </p>
 
-            <div className="flex flex-wrap gap-3 mb-8">
-              {onReserve && (
-                <PrimaryBtn onClick={onReserve}>
-                  Reserve Glacier <ArrowRight size={14} />
-                </PrimaryBtn>
+            <div className="flex flex-wrap gap-3 mb-9">
+              {onReserve && <PrimaryBtn onClick={onReserve}>{product.reserveLabel} <ArrowRight size={14} /></PrimaryBtn>}
+              {onContact && (
+                <button onClick={onContact} className="ark-focus inline-flex items-center gap-2 px-7 py-3.5 rounded-sm text-sm border transition-colors duration-150 hover:border-white/45" style={{ fontFamily: "var(--ark-body)", borderColor: "rgba(255,255,255,0.24)", color: "var(--ark-ink)" }}>
+                  Talk to us
+                </button>
               )}
             </div>
 
-            <GlassPanel className="p-6 mb-6">
-              <h2
-                style={{
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontWeight: 600,
-                  fontSize: "1.35rem",
-                  color: "rgba(255,255,255,0.94)",
-                  marginBottom: "0.85rem",
-                }}
-              >
-                Highlights
-              </h2>
+            <Panel className="p-6 mb-6">
+              <h2 style={{ fontFamily: "var(--ark-display)", fontWeight: 600, fontSize: "1.25rem", color: "var(--ark-ink)", marginBottom: "1rem" }}>What it does</h2>
               <ul className="grid gap-3">
                 {product.features.map((feature) => (
-                  <li
-                    key={feature}
-                    style={{
-                      fontFamily: "'Barlow', sans-serif",
-                      fontSize: "0.95rem",
-                      color: "oklch(0.76 0.02 228)",
-                      lineHeight: 1.65,
-                      paddingLeft: "1rem",
-                      borderLeft: "2px solid rgba(120,180,255,0.25)",
-                    }}
-                  >
+                  <li key={feature} style={{ fontFamily: "var(--ark-body)", fontSize: "0.95rem", color: "var(--ark-ink-dim)", lineHeight: 1.65, paddingLeft: "0.9rem", borderLeft: "2px solid var(--ark-signal-deep)" }}>
                     {feature}
                   </li>
                 ))}
               </ul>
-            </GlassPanel>
+            </Panel>
 
-            <GlassPanel className="p-6">
-              <h2
-                style={{
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontWeight: 600,
-                  fontSize: "1.35rem",
-                  color: "rgba(255,255,255,0.94)",
-                  marginBottom: "0.85rem",
-                }}
-              >
-                Specifications
-              </h2>
-              <dl className="grid gap-3">
+            <Panel className="p-6">
+              <h2 style={{ fontFamily: "var(--ark-display)", fontWeight: 600, fontSize: "1.25rem", color: "var(--ark-ink)", marginBottom: "1rem" }}>Specifications</h2>
+              <dl className="grid gap-0 divide-y" style={{ borderColor: "var(--ark-line-soft)" }}>
                 {product.specs.map((spec) => (
-                  <div
-                    key={spec.label}
-                    className="flex flex-col sm:flex-row sm:justify-between gap-1 border-b border-white/[0.06] pb-3"
-                  >
-                    <dt
-                      style={{
-                        fontFamily: "'DM Mono', monospace",
-                        fontSize: "0.68rem",
-                        letterSpacing: "0.12em",
-                        textTransform: "uppercase",
-                        color: "oklch(0.62 0.055 216)",
-                      }}
-                    >
-                      {spec.label}
-                    </dt>
-                    <dd
-                      style={{
-                        fontFamily: "'Barlow', sans-serif",
-                        fontSize: "0.95rem",
-                        color: "rgba(255,255,255,0.9)",
-                      }}
-                    >
-                      {spec.value}
-                    </dd>
+                  <div key={spec.label} className="flex flex-col sm:flex-row sm:justify-between gap-1 py-3 first:pt-0 last:pb-0" style={{ borderColor: "var(--ark-line-soft)" }}>
+                    <dt style={{ fontFamily: "var(--ark-mono)", fontSize: "0.68rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ark-muted)" }}>{spec.label}</dt>
+                    <dd style={{ fontFamily: "var(--ark-body)", fontSize: "0.95rem", color: "var(--ark-ink)" }}>{spec.value}</dd>
                   </div>
                 ))}
               </dl>
-            </GlassPanel>
-          </FadeIn>
+            </Panel>
+          </Reveal>
 
-          <FadeIn delay={0.1}>
-            {product.showHeatsink ? (
-              <GlassPanel className="p-6 lg:sticky lg:top-32">
-                <DynamicHeatsinkViewer
-                  src={glacierHeatsinkRender}
-                  alt="ARKTOS Glacier dual-tower air cooler render"
-                />
-              </GlassPanel>
-            ) : (
-              <GlassPanel className="p-8 min-h-[320px] flex items-center justify-center">
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-                  className="text-center"
-                >
-                  <p
-                    style={{
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      fontWeight: 600,
-                      fontSize: "2rem",
-                      color: "rgba(255,255,255,0.92)",
-                    }}
-                  >
-                    {product.name}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "'Barlow', sans-serif",
-                      fontSize: "0.92rem",
-                      color: "oklch(0.68 0.02 228)",
-                      marginTop: "0.75rem",
-                    }}
-                  >
-                    Visual prototype coming soon
-                  </p>
-                </motion.div>
-              </GlassPanel>
-            )}
-          </FadeIn>
+          <Reveal delay={0.1} variant="scale">
+            <Panel className="p-6 lg:sticky lg:top-28">
+              <DeviceMockup kind={product.mockup} className="w-full h-auto" />
+              <div className="mt-4 flex items-center justify-between">
+                <span style={{ fontFamily: "var(--ark-mono)", fontSize: "0.66rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ark-muted)" }}>{product.code}</span>
+                <span style={{ fontFamily: "var(--ark-mono)", fontSize: "0.66rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ark-signal)" }}>{product.status}</span>
+              </div>
+            </Panel>
+          </Reveal>
         </div>
       </div>
     </main>

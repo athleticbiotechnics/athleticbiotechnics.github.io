@@ -1,6 +1,7 @@
 @import './styles/fonts.css';
 @import './styles/tailwind.css';
 @import './styles/theme.css';
+@import './styles/arktos.css';
 
 /* ── Accessibility Mode ────────────────────────────────────────────
    Applied by toggling class="a11y-mode" on <html>.

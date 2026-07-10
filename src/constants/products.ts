@@ -1,62 +1,79 @@
-export type ProductId = "glacier" | "phase-change";
+export type ProductId = "blackbox" | "draft";
 
 export type ProductSpec = {
   id: ProductId;
-  division: "cooling";
+  code: string;
+  division: "instruments";
   name: string;
+  kind: string;
   tagline: string;
   summary: string;
   features: string[];
   specs: { label: string; value: string }[];
-  showHeatsink?: boolean;
+  status: string;
+  mockup: "blackbox" | "draft";
+  reserveLabel: string;
 };
 
 export const PRODUCTS: Record<ProductId, ProductSpec> = {
-  glacier: {
-    id: "glacier",
-    division: "cooling",
-    name: "Glacier Air Cooler",
-    tagline: "A tower cooler shaped by ice-cave airflow.",
+  blackbox: {
+    id: "blackbox",
+    code: "AX-BB1",
+    division: "instruments",
+    name: "BlackBox",
+    kind: "Hardware flight recorder",
+    tagline: "Rewind the moment your board died.",
     summary:
-      "Glacier is our flagship air cooler: a dual-tower heatsink with a frosted shroud, a quieter fan curve, and a wide contact plate for rigs that run hot for hours at a time.",
+      "BlackBox is a small module that plugs into almost any embedded system — a breadboard, a Raspberry Pi, or a custom PCB — and continuously records the signals engineers check first when something fails. Instead of trying to reproduce a crash, you rewind the timeline and watch it happen.",
     features: [
-      "Fin stack modeled on ice-cave airflow for a tighter, more directed draft",
-      "Dual towers with faceted top plates and exposed heat pipes",
-      "Tuned fan curve that stays quiet under sustained gaming or creative loads",
-      "Frosted finish that matches the rest of the Arktos lineup",
-      "Still in prototype — expect small changes before launch",
+      "Records power-rail voltage on up to 2 rails, with brownout and startup-dip detection",
+      "Continuous board current from an INA228 high-side sensor — spikes and abnormal modes flagged",
+      "Full UART capture: boot logs and firmware debug output, every line timestamped",
+      "Reset-line watch that catches watchdog, brownout, and manual resets the moment they happen",
+      "4 named GPIO inputs plus one configurable analog channel",
+      "One color-coded harness for breadboards, Pi headers, and PCB test points; one USB-C cable to the desktop app",
     ],
     specs: [
-      { label: "Platform", value: "Tower air cooler" },
-      { label: "Status", value: "Prototype in progress" },
-      { label: "Acoustics", value: "Calm curve target" },
-      { label: "Compatibility", value: "Modern desktop sockets (TBD)" },
-      { label: "Finish", value: "Frosted white concept" },
+      { label: "Processor", value: "STM32H743ZI2" },
+      { label: "Current sensor", value: "TI INA228, high-side" },
+      { label: "Storage", value: "microSD, circular buffer" },
+      { label: "Link", value: "USB-C to USB-C, power + data" },
+      { label: "Targets", value: "Breadboard / Raspberry Pi / custom PCB" },
+      { label: "Status", value: "V1 prototype" },
     ],
-    showHeatsink: true,
+    status: "V1 prototype",
+    mockup: "blackbox",
+    reserveLabel: "Reserve a BlackBox",
   },
-  "phase-change": {
-    id: "phase-change",
-    division: "cooling",
-    name: "Phase-Change Chamber",
-    tagline: "Pulls heat off the chip without the limits of air.",
+  draft: {
+    id: "draft",
+    code: "AX-DR1",
+    division: "instruments",
+    name: "Draft",
+    kind: "Solder fume extractor",
+    tagline: "Solder without the smoke.",
     summary:
-      "Our phase-change chambers use two-phase immersion to draw heat straight off the silicon. The dielectric fluid is recovered, filtered, and put back into the loop, so nothing evaporates and nothing gets thrown away.",
+      "Draft is a light collar that slips over the barrel of your soldering iron and draws fumes away right at the tip. A flexible hose carries the smoke back to an inline brushless fan and an activated-carbon filter — so the plume is caught where it starts, before it ever reaches your face.",
     features: [
-      "Two-phase immersion built for dense compute and serious enthusiast rigs",
-      "Tri-layer hermetic manifolds so dielectric fluid never touches the PCB",
-      "Flow paths validated with CFD, cold plates modeled in CAD",
-      "Closed-loop fluid recovery — nothing lost, nothing discharged",
-      "Now running pilot deployments with studios and performance labs",
+      "Capture at the source: the collar sits millimetres from the tip, not across the bench",
+      "Fits standard iron barrels with an adjustable, heat-resistant silicone gland",
+      "Quiet inline brushless fan with a variable-speed dial",
+      "Replaceable activated-carbon filter cartridge for rosin and flux fumes",
+      "Bench-clamp mount and a flexible hose that stays where you bend it",
+      "Runs off the same USB-C supply as the rest of the bench",
     ],
     specs: [
-      { label: "Platform", value: "Phase-change chamber" },
-      { label: "Status", value: "Pilot partner program" },
-      { label: "Fluid cycle", value: "Closed-loop recovery" },
-      { label: "Target", value: "PC & compact compute" },
-      { label: "Validation", value: "CFD + prototype testing" },
+      { label: "Capture", value: "At the tip, collar-mounted" },
+      { label: "Airflow", value: "Variable-speed brushless" },
+      { label: "Filter", value: "Activated-carbon cartridge" },
+      { label: "Fit", value: "Adjustable silicone gland" },
+      { label: "Power", value: "USB-C, 5V" },
+      { label: "Status", value: "In development" },
     ],
+    status: "In development",
+    mockup: "draft",
+    reserveLabel: "Reserve a Draft",
   },
 };
 
-export const COOLING_PRODUCT_IDS: ProductId[] = ["glacier", "phase-change"];
+export const PRODUCT_IDS: ProductId[] = ["blackbox", "draft"];
