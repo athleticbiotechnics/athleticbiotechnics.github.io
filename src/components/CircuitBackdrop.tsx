@@ -41,8 +41,9 @@ export function CircuitBackdrop({
             src={image}
             alt=""
             decoding="async"
+            fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: position, filter: "brightness(0.95) contrast(1.02)" }}
+            style={{ objectPosition: position, filter: "contrast(1.03) saturate(1.03)", imageRendering: "auto" }}
           />
 
           {scrim === "left" && (

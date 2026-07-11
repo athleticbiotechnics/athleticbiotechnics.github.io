@@ -152,7 +152,7 @@ export function RewindTimeline() {
       >
         <div className="flex items-center gap-2.5">
           <span
-            className="w-2 h-2 rounded-full ark-led"
+            className="w-2 h-2 rounded-full"
             style={{ background: inFault ? "var(--ark-fault)" : "var(--ark-signal)" }}
           />
           <span

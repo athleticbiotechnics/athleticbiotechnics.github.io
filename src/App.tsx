@@ -21,11 +21,14 @@ import {
   MessageCircle,
   Eye,
   EyeOff,
+  Lock,
+  CreditCard,
 } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import { CookieBanner } from "@/components/CookieBanner";
 import { CircuitBackdrop } from "@/components/CircuitBackdrop";
 import { DeviceMockup } from "@/components/DeviceMockup";
+import { BlackBoxExploded } from "@/components/BlackBoxExploded";
 import { RewindTimeline } from "@/components/RewindTimeline";
 import { Reveal } from "@/components/Reveal";
 import { ProductDescriptionPage } from "@/components/ProductDescriptionPage";
@@ -65,6 +68,10 @@ const {
 const DISPLAY = "var(--ark-display)";
 const BODY = "var(--ark-body)";
 const MONO = "var(--ark-mono)";
+/* Nordic/Poiret accent face used for small uppercase labels. */
+const NORDIC = "var(--ark-nordic)";
+/* Original Aquire wordmark for the Arktos taskbar logo. */
+const WORDMARK = "var(--ark-wordmark)";
 
 const LOGO_STYLE: React.CSSProperties = {
   filter: "invert(1) brightness(1.12) contrast(1.05)",
@@ -115,10 +122,11 @@ function PrimaryBtn({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`ark-focus group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-sm text-sm transition-colors duration-150 hover:bg-white disabled:opacity-50 ${className}`}
+      className={`ark-focus ark-btn-primary group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-sm text-sm transition-colors duration-150 disabled:opacity-50 ${className}`}
       style={{
-        background: "var(--ark-signal)",
-        color: "#06080c",
+        background: "var(--ark-btn)",
+        backgroundImage: "none",
+        color: "var(--ark-btn-ink)",
         fontFamily: BODY,
         fontWeight: 600,
         letterSpacing: "0.01em",
@@ -151,7 +159,7 @@ function GhostBtn({
 
 function Eyebrow({ children, color = "var(--ark-signal)" }: { children: React.ReactNode; color?: string }) {
   return (
-    <span style={{ fontFamily: MONO, fontSize: "0.7rem", letterSpacing: "0.22em", textTransform: "uppercase", color, display: "block", marginBottom: "1.1rem" }}>
+    <span style={{ fontFamily: NORDIC, fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color, display: "block", marginBottom: "1.1rem" }}>
       {children}
     </span>
   );
@@ -224,12 +232,31 @@ function Snow() {
 function AnnouncementBar({ onReserve, onClose }: { onReserve: () => void; onClose: () => void }) {
   return (
     <div
-      className="w-full flex items-center justify-center gap-3 px-4 py-2 text-center relative"
-      style={{ background: "#06080c", borderBottom: "1px solid var(--ark-line-soft)" }}
+      className="w-full flex items-center justify-center gap-3 px-10 py-2.5 text-center relative"
+      style={{ background: "linear-gradient(180deg, #0a0d13 0%, #06080c 100%)", borderBottom: "1px solid var(--ark-line-soft)" }}
     >
-      <span style={{ fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "0.04em", color: "var(--ark-ink-dim)" }}>
-        <span style={{ color: "var(--ark-signal)" }}>New</span> — BlackBox V1 prototype units are on the reserve list.{" "}
-        <button onClick={onReserve} className="ark-focus underline underline-offset-2 hover:text-white" style={{ color: "var(--ark-ink)", fontFamily: MONO }}>
+      <span className="inline-flex items-center justify-center gap-2.5 flex-wrap" style={{ fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "0.04em", color: "var(--ark-muted)" }}>
+        <span
+          style={{
+            fontFamily: NORDIC,
+            fontSize: "0.58rem",
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "var(--ark-ink-dim)",
+            padding: "2px 9px",
+            borderRadius: "999px",
+            border: "1px solid var(--ark-line)",
+            background: "rgba(255,255,255,0.04)",
+          }}
+        >
+          New
+        </span>
+        <span>BlackBox V1 prototype units are on the reserve list.</span>
+        <button
+          onClick={onReserve}
+          className="ark-focus inline-flex items-center gap-1.5 rounded-full px-3 py-1 transition-colors hover:text-white"
+          style={{ color: "var(--ark-ink)", fontFamily: MONO, fontSize: "0.68rem", border: "1px solid rgba(255,255,255,0.28)", background: "rgba(255,255,255,0.04)" }}
+        >
           Reserve yours →
         </button>
       </span>
@@ -302,7 +329,7 @@ function Navbar({
           <div className="h-9 w-9 rounded-lg overflow-hidden flex items-center justify-center ring-1 ring-white/10" style={{ background: "rgba(8,16,32,0.5)" }}>
             <ImageWithFallback src={logoTaskbar} alt="Arktos Systems" className="h-[76%] w-[76%] object-contain" style={LOGO_STYLE} />
           </div>
-          <span style={{ fontFamily: DISPLAY, fontSize: "0.98rem", fontWeight: 600, letterSpacing: "0.02em", color: "var(--ark-ink)" }}>
+          <span style={{ fontFamily: WORDMARK, fontSize: "0.98rem", fontWeight: 600, letterSpacing: "0.02em", color: "var(--ark-ink)" }}>
             Arktos<span style={{ color: "var(--ark-muted)", fontWeight: 400 }}> Systems</span>
           </span>
         </button>
@@ -378,8 +405,7 @@ function Hero({ onBlackBox, onDraft, onReserve }: { onBlackBox: () => void; onDr
       <div className="relative z-20 max-w-6xl mx-auto w-full grid lg:grid-cols-[1.04fr_0.96fr] gap-14 lg:gap-10 items-start">
         {/* copy column sits high */}
         <div className="lg:pt-6">
-          <span className="inline-flex items-center gap-2.5 mb-8">
-            <span className="w-1.5 h-1.5 rounded-full ark-led" style={{ background: "var(--ark-signal)" }} />
+          <span className="inline-flex items-center mb-8">
             <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--ark-ink-dim)" }}>
               Arktos Systems · bench instruments
             </span>
@@ -609,13 +635,6 @@ function Mission() {
     { icon: <Plug size={20} />, title: "Fits the bench you have", body: "Breadboards, a Raspberry Pi, a custom PCB, a soldering iron you already own. One harness, one USB-C cable." },
     { icon: <Cpu size={20} />, title: "Built by two engineers", body: "A small team that states prototype status plainly and publishes honest specs, not aspirational ones." },
   ];
-  /* Each principle sits at its own width and height on a 12-col field. */
-  const placement = [
-    "lg:col-span-6 lg:col-start-1",
-    "lg:col-span-4 lg:col-start-9 lg:mt-24",
-    "lg:col-span-5 lg:col-start-2 lg:mt-6",
-    "lg:col-span-5 lg:col-start-8",
-  ];
 
   return (
     <section id="mission" className="relative py-36 px-6 overflow-hidden" style={{ background: "var(--ark-bg-2)" }}>
@@ -631,9 +650,9 @@ function Mission() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-x-8 gap-y-14">
+        <div className="grid sm:grid-cols-2 gap-x-10 gap-y-12">
           {pillars.map((p, i) => (
-            <div key={p.title} className={`ark-on-photo ${placement[i]}`}>
+            <div key={p.title} className="ark-on-photo">
               <div className="flex items-center gap-3 pb-4 mb-4 border-b" style={{ borderColor: "var(--ark-line)" }}>
                 <span style={{ color: "var(--ark-signal)" }}>{p.icon}</span>
                 <span style={{ fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "0.16em", color: "var(--ark-muted)" }}>
@@ -742,109 +761,122 @@ function BackBar({ onHome, label = "Back to Arktos" }: { onHome: () => void; lab
   );
 }
 
-function ReservePage({ onHome, initialProduct }: { onHome: () => void; initialProduct: ProductId }) {
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("");
+/* Stripe checkout — visual placeholder until Stripe is configured. Replace the
+   body of this component with the real Stripe Embedded Checkout / Payment
+   Element once keys and a backend session are wired up. */
+function StripeCheckoutPlaceholder() {
+  return (
+    <Panel className="p-7">
+      <div className="flex items-center justify-between mb-5">
+        <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "1.25rem", color: "var(--ark-ink)" }}>Payment</span>
+        <span className="inline-flex items-center gap-1.5" style={{ fontFamily: MONO, fontSize: "0.62rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ark-muted)" }}>
+          <Lock size={12} /> Stripe
+        </span>
+      </div>
 
-  const fields = [
-    ["name", "Full name", "Your name", "text", true],
-    ["email", "Email", "you@example.com", "email", true],
-    ["company", "Company / team", "Organization or handle", "text", false],
-    ["region", "Shipping region", "Country or region", "text", false],
-  ] as const;
+      <div className="mb-6 rounded-lg px-4 py-3 flex items-start gap-3" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.14)" }}>
+        <Lock size={15} style={{ color: "var(--ark-muted)", marginTop: "2px", flexShrink: 0 }} />
+        <p style={{ fontFamily: BODY, fontSize: "0.85rem", color: "var(--ark-ink-dim)", lineHeight: 1.6 }}>
+          <strong style={{ color: "var(--ark-ink)", fontWeight: 600 }}>Checkout isn't live yet.</strong> The Stripe payment form will load here once configured — this is a placeholder and no card is charged.
+        </p>
+      </div>
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setStatus("submitting");
-    setErrorMessage("");
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    formData.set("_subject", "[RESERVE] Arktos reserve list");
-    formData.set("form_type", "Reserve");
-    formData.set("_replyto", String(formData.get("email") ?? ""));
-    try {
-      await submitToFormspree(formData, "preorder");
-      setStatus("success");
-      form.reset();
-    } catch (error) {
-      setStatus("error");
-      setErrorMessage(error instanceof Error ? error.message : `Something went wrong. Email ${ARKTOS_EMAIL} directly.`);
-    }
-  };
+      <div className="grid gap-4 select-none" aria-hidden="true">
+        <label className="grid gap-2">
+          <span style={FORM_LABEL_STYLE}>Email</span>
+          <div className={FORM_FIELD_CLASS} style={{ ...FORM_FIELD_STYLE, color: "var(--ark-faint)" }}>you@example.com</div>
+        </label>
+        <label className="grid gap-2">
+          <span style={FORM_LABEL_STYLE}>Card information</span>
+          <div className="rounded-lg overflow-hidden border" style={{ borderColor: "var(--ark-line)" }}>
+            <div className="px-4 py-3 flex items-center justify-between" style={{ background: "rgba(255,255,255,0.04)" }}>
+              <span style={{ fontFamily: MONO, fontSize: "0.85rem", color: "var(--ark-faint)" }}>1234 1234 1234 1234</span>
+              <CreditCard size={16} style={{ color: "var(--ark-faint)" }} />
+            </div>
+            <div className="grid grid-cols-2 border-t" style={{ borderColor: "var(--ark-line)" }}>
+              <span className="px-4 py-3 border-r" style={{ borderColor: "var(--ark-line)", fontFamily: MONO, fontSize: "0.85rem", color: "var(--ark-faint)", background: "rgba(255,255,255,0.04)" }}>MM / YY</span>
+              <span className="px-4 py-3" style={{ fontFamily: MONO, fontSize: "0.85rem", color: "var(--ark-faint)", background: "rgba(255,255,255,0.04)" }}>CVC</span>
+            </div>
+          </div>
+        </label>
+        <label className="grid gap-2">
+          <span style={FORM_LABEL_STYLE}>Name on card</span>
+          <div className={FORM_FIELD_CLASS} style={{ ...FORM_FIELD_STYLE, color: "var(--ark-faint)" }}>Full name</div>
+        </label>
+      </div>
+
+      <button
+        type="button"
+        disabled
+        className="inline-flex w-full items-center justify-center gap-2 px-7 py-3.5 rounded-sm text-sm mt-6 cursor-not-allowed"
+        style={{ background: "var(--ark-btn)", color: "var(--ark-btn-ink)", fontFamily: BODY, fontWeight: 600, opacity: 0.55 }}
+      >
+        <Lock size={14} /> Pay — awaiting Stripe setup
+      </button>
+
+      <p className="mt-4 text-center" style={{ fontFamily: MONO, fontSize: "0.64rem", letterSpacing: "0.1em", color: "var(--ark-faint)" }}>
+        Secured by Stripe · placeholder
+      </p>
+    </Panel>
+  );
+}
+
+function ReservePage({ onHome }: { onHome: () => void; initialProduct?: ProductId }) {
+  const product = PRODUCTS.blackbox;
+  const editionName = "BlackBox: Founder's Edition";
 
   return (
     <main className="relative min-h-screen overflow-hidden px-6 pt-32 pb-24" style={{ background: "var(--ark-bg)" }}>
       <CircuitBackdrop tint="signal" image={glacierCave} />
+      {/* Gray theme layer — a soft gray wash plus a fine gray dot grid that
+          fades down the page, tying the checkout to the gray button palette. */}
+      <div aria-hidden className="absolute inset-0 z-10 pointer-events-none">
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(180deg, rgba(72,77,86,0.42) 0%, rgba(72,77,86,0.16) 30%, rgba(72,77,86,0.04) 55%, transparent 72%)" }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "radial-gradient(circle at 1px 1px, rgba(180,188,200,0.16) 1px, transparent 0)",
+            backgroundSize: "24px 24px",
+            maskImage: "linear-gradient(180deg, #000 0%, rgba(0,0,0,0.35) 46%, transparent 82%)",
+            WebkitMaskImage: "linear-gradient(180deg, #000 0%, rgba(0,0,0,0.35) 46%, transparent 82%)",
+          }}
+        />
+      </div>
       <div className="relative z-20 max-w-6xl mx-auto">
         <BackBar onHome={onHome} />
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-start">
           <Reveal>
-            <Eyebrow>Reserve list</Eyebrow>
+            <Eyebrow>Checkout</Eyebrow>
             <h1 style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "clamp(2.2rem, 4.3vw, 3.6rem)", lineHeight: 0.98, letterSpacing: "0", color: "var(--ark-ink)", marginBottom: "1.3rem" }}>
-              Reserve a prototype unit.
+              {editionName}
             </h1>
             <p style={{ fontFamily: BODY, fontSize: "1.05rem", color: "var(--ark-ink-dim)", lineHeight: 1.8, maxWidth: "36rem" }}>
-              Join the early list for BlackBox and Draft. You'll get prototype access, build updates, and founders pricing. Reserving is an expression of interest only — no payment required.
+              The first production run of BlackBox, reserved for early supporters. Founders get prototype access, build updates, and founders pricing.
             </p>
-            <div className="grid sm:grid-cols-3 gap-3 mt-8 max-w-lg">
-              {["Prototype access", "Build updates", "Founders pricing"].map((t) => (
-                <Panel key={t} className="px-4 py-4 text-center">
-                  <span style={{ fontFamily: MONO, fontSize: "0.66rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ark-signal)" }}>{t}</span>
-                </Panel>
-              ))}
-            </div>
-            <div className="mt-8 grid sm:grid-cols-2 gap-4 max-w-lg">
-              {PRODUCT_IDS.map((id) => (
-                <Panel key={id} className="p-5">
-                  <DeviceMockup kind={PRODUCTS[id].mockup} className="w-full h-auto mb-3" />
-                  <div style={{ fontFamily: DISPLAY, fontWeight: 600, color: "var(--ark-ink)" }}>{PRODUCTS[id].name}</div>
-                  <div style={{ fontFamily: MONO, fontSize: "0.64rem", letterSpacing: "0.1em", color: "var(--ark-muted)", marginTop: "2px" }}>{PRODUCTS[id].status}</div>
-                </Panel>
-              ))}
-            </div>
+
+            <Panel className="mt-8 p-6 max-w-lg">
+              <div className="flex items-center gap-5">
+                <div className="w-28 flex-shrink-0 rounded-lg overflow-hidden" style={{ border: "1px solid var(--ark-line)" }}>
+                  <DeviceMockup kind="blackbox" className="w-full h-auto" />
+                </div>
+                <div className="min-w-0">
+                  <div style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "1.05rem", color: "var(--ark-ink)" }}>{editionName}</div>
+                  <div style={{ fontFamily: MONO, fontSize: "0.62rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--ark-muted)", marginTop: "3px" }}>{product.code} · {product.status}</div>
+                  <div style={{ fontFamily: BODY, fontSize: "0.85rem", color: "var(--ark-ink-dim)", lineHeight: 1.55, marginTop: "0.6rem" }}>{product.tagline}</div>
+                </div>
+              </div>
+              <div className="mt-5 pt-4 flex items-baseline justify-between" style={{ borderTop: "1px solid var(--ark-line-soft)" }}>
+                <span style={{ fontFamily: BODY, fontSize: "0.9rem", color: "var(--ark-muted)" }}>Founders pricing</span>
+                <span style={{ fontFamily: MONO, fontSize: "0.85rem", color: "var(--ark-ink-dim)" }}>Set at launch</span>
+              </div>
+            </Panel>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <Panel className="p-7">
-              <h2 style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "1.5rem", color: "var(--ark-ink)", marginBottom: "1.2rem" }}>Join the reserve list</h2>
-              <form className="grid gap-4" onSubmit={handleSubmit}>
-                <label className="grid gap-2">
-                  <span style={FORM_LABEL_STYLE}>Which unit?</span>
-                  <select name="product" defaultValue={initialProduct} className={FORM_FIELD_CLASS} style={FORM_FIELD_STYLE}>
-                    {PRODUCT_IDS.map((id) => (
-                      <option key={id} value={id} style={{ background: "#0b0f17" }}>{PRODUCTS[id].name} — {PRODUCTS[id].kind}</option>
-                    ))}
-                    <option value="both" style={{ background: "#0b0f17" }}>Both</option>
-                  </select>
-                </label>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {fields.map(([name, label, placeholder, type, required]) => (
-                    <label key={name} className="grid gap-2">
-                      <span style={FORM_LABEL_STYLE}>{label}</span>
-                      <input name={name} type={type} required={required} placeholder={placeholder} className={FORM_FIELD_CLASS} style={FORM_FIELD_STYLE} />
-                    </label>
-                  ))}
-                </div>
-                <label className="grid gap-2">
-                  <span style={FORM_LABEL_STYLE}>What are you building?</span>
-                  <textarea name="notes" placeholder="Target boards, what usually fails, your timeline..." className={`${FORM_FIELD_CLASS} min-h-28 resize-none`} style={FORM_FIELD_STYLE} />
-                </label>
-                <PrimaryBtn type="submit" disabled={status === "submitting"} className="justify-center mt-2">
-                  {status === "submitting" ? "Submitting..." : "Reserve a unit"} {status !== "submitting" && <ArrowRight size={14} />}
-                </PrimaryBtn>
-                {status === "success" && (
-                  <div className="rounded-lg px-4 py-3 border" style={{ background: "rgba(168,203,232,0.08)", borderColor: "rgba(168,203,232,0.24)", color: "var(--ark-signal)", fontFamily: BODY }}>
-                    You're on the list. We'll reach out with build updates soon.
-                  </div>
-                )}
-                {status === "error" && (
-                  <div className="rounded-lg px-4 py-3 border" style={{ background: "rgba(255,255,255,0.08)", borderColor: "rgba(255,255,255,0.24)", color: "var(--ark-fault-2)", fontFamily: BODY }}>{errorMessage}</div>
-                )}
-                <p style={{ fontFamily: BODY, fontSize: "0.78rem", color: "var(--ark-faint)", lineHeight: 1.6 }}>
-                  Submissions are delivered securely through Formspree to {ARKTOS_EMAIL}.
-                </p>
-              </form>
-            </Panel>
+            <StripeCheckoutPlaceholder />
           </Reveal>
         </div>
       </div>
@@ -1259,7 +1291,7 @@ function Footer({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10">
             {columns.map((col) => (
               <div key={col.title} className="min-w-0">
-                <p className="mb-4" style={{ fontFamily: MONO, fontSize: "0.64rem", fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--ark-faint)" }}>{col.title}</p>
+                <p className="mb-4" style={{ fontFamily: NORDIC, fontSize: "0.66rem", fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--ark-faint)" }}>{col.title}</p>
                 <div className="flex flex-col gap-2.5">
                   {col.links.map((link) => (
                     <button key={link.label} type="button" onClick={link.action} className="ark-focus text-left transition-colors duration-200 hover:text-white" style={{ fontFamily: BODY, fontSize: "0.85rem", color: "var(--ark-muted)", background: "none", border: "none", cursor: "pointer", padding: 0 }}>
@@ -1346,6 +1378,11 @@ export default function App() {
           <ToolMarquee />
           <Products onProduct={goProduct} onReserve={() => goReserve()} />
           <SignalChain />
+          <BlackBoxExploded
+            eyebrow="Inside BlackBox"
+            title="Every layer, accounted for."
+            subtitle="Scroll — the V1 comes apart the way it goes together: printed shell, radio module, carrier PCB, bottom plate."
+          />
           <Signals />
           <Mission />
           <Team />

@@ -5,12 +5,45 @@
    through to Hanken Grotesk, which shares Magisans' humanist proportions. */
 @import url('https://fonts.cdnfonts.com/css/aquire');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+/* Poiret One — geometric display face used as a visible stand-in for Nordic
+   until the real Nordic file is added to /public/fonts/ (see @font-face below). */
+@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
+/* Bricolage Grotesque — contemporary grotesque with more character, used for
+   headings (variable optical size + weight). */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap');
+
+/* Arkhip — self-hosted display face used for all headings. */
+@font-face {
+  font-family: 'Arkhip';
+  src: local('Arkhip'),
+       url('/fonts/Arkhip-Regular.woff2') format('woff2'),
+       url('/fonts/Arkhip-Regular.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 @font-face {
   font-family: 'MagiSans';
   src: local('MagiSans'), local('Magi Sans'), local('Magisans'),
        url('/fonts/MagiSans.woff2') format('woff2'),
        url('/fonts/MagiSans.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Nordic — decorative display face used for the wordmark and small labels.
+   Drop the font file into /public/fonts/ as Nordic.woff2 (or .woff / .otf /
+   .ttf). Any of the formats below will be picked up automatically; until a
+   file is present the stack falls through to IBM Plex Mono. */
+@font-face {
+  font-family: 'Nordic';
+  src: local('Nordic'),
+       url('/fonts/Nordic.woff2') format('woff2'),
+       url('/fonts/Nordic.woff') format('woff'),
+       url('/fonts/Nordic.otf') format('opentype'),
+       url('/fonts/Nordic.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;

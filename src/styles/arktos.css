@@ -17,13 +17,26 @@
   --ark-signal: #a8cbe8;
   --ark-signal-2: #8fb8dd;
   --ark-signal-deep: #6a9bcb;
+
+  /* Neutral action buttons — flat matte gray (no gradient), replaces blue CTAs */
+  --ark-btn: #5c6167;
+  --ark-btn-hover: #6d7278;
+  --ark-btn-ink: #f6f9fc;
+
   --ark-fault: #ffffff;
   --ark-fault-2: #dde8f3;
   --ark-amber: #e9f1f9;
 
-  --ark-display: "Aquire", "Hanken Grotesk", sans-serif;
+  /* Headings use Arkhip (self-hosted display face);
+     the original Aquire face is kept as --ark-wordmark for the taskbar logo. */
+  --ark-display: "Arkhip", "Bricolage Grotesque", "Hanken Grotesk", sans-serif;
+  --ark-wordmark: "Aquire", "Hanken Grotesk", sans-serif;
   --ark-body: "MagiSans", "Hanken Grotesk", sans-serif;
   --ark-mono: "IBM Plex Mono", ui-monospace, monospace;
+  /* Decorative accent face for the wordmark + small uppercase labels.
+     "Nordic" (self-hosted) wins when present; "Poiret One" is a visible
+     geometric stand-in loaded from Google Fonts; mono is the final fallback. */
+  --ark-nordic: "Nordic", "Poiret One", "IBM Plex Mono", ui-monospace, monospace;
 }
 
 /* Selection + base rendering polish */
@@ -150,6 +163,12 @@
   outline: 2px solid var(--ark-signal);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* Neutral primary button. Background is set inline via --ark-btn; the hover
+   uses !important so it wins over the inline background. */
+.ark-btn-primary:hover {
+  background: var(--ark-btn-hover) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
