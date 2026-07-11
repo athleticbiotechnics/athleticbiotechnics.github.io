@@ -1,19 +1,16 @@
-/* Product renders. BlackBox uses the real V1 render; Draft still ships
-   placeholder art — drop a replacement at src/imports/draft-render.* (or
-   repoint the import in src/assets/images.ts). Any image aspect ratio works. */
+/* Product render. BlackBox uses the real V1 render. */
 
 import { images } from "@/assets/images";
 
-const RENDERS: Record<"blackbox" | "draft", { src: string; alt: string }> = {
+const RENDERS: Record<"blackbox", { src: string; alt: string }> = {
   blackbox: { src: images.blackbox1, alt: "BlackBox V1 recorder on a workbench — USB-C, trigger button, and universal interface header visible" },
-  draft: { src: images.draftRender, alt: "Draft solder fume extractor — product render" },
 };
 
 export function DeviceMockup({
   kind,
   className = "",
 }: {
-  kind: "blackbox" | "draft";
+  kind: "blackbox";
   className?: string;
 }) {
   const render = RENDERS[kind];

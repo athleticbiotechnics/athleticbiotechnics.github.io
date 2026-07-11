@@ -55,6 +55,9 @@ export function scrollToId(id: string, offset = 84) {
     return;
   }
   if (window.__lenis) {
+    // Recompute scroll bounds first — after a page switch the document height
+    // has changed, and a stale max-scroll would clamp us short of the target.
+    window.__lenis.resize();
     window.__lenis.scrollTo(el, { offset: -offset });
   } else {
     const y = el.getBoundingClientRect().top + window.scrollY - offset;

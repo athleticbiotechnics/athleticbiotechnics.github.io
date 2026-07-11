@@ -3,7 +3,6 @@ import { motion, useScroll, useTransform } from "motion/react";
 import {
   ArrowRight,
   ArrowLeft,
-  ArrowUpRight,
   Rewind,
   Radio,
   Plug,
@@ -15,7 +14,6 @@ import {
   Terminal,
   Zap,
   CircuitBoard,
-  Wind,
   Youtube,
   Instagram,
   MessageCircle,
@@ -275,7 +273,6 @@ type NavItem =
 
 const NAV_LINKS: NavItem[] = [
   { label: "BlackBox", kind: "product", id: "blackbox" },
-  { label: "Draft", kind: "product", id: "draft" },
   { label: "Mission", kind: "section", section: "mission" },
   { label: "Team", kind: "section", section: "team" },
   { label: "Specs", kind: "page", page: "specs" },
@@ -351,8 +348,8 @@ function Navbar({
           ))}
         </ul>
 
-        <div className="hidden md:flex items-center gap-3">
-          <button onClick={onContact} className="ark-focus text-sm transition-colors hover:text-white" style={{ fontFamily: BODY, color: "var(--ark-ink-dim)", background: "none", border: "none", cursor: "pointer" }}>
+        <div className="hidden md:flex items-center gap-6 lg:gap-7">
+          <button onClick={onContact} className="ark-focus text-sm transition-colors hover:text-white px-1" style={{ fontFamily: BODY, color: "var(--ark-ink-dim)", background: "none", border: "none", cursor: "pointer" }}>
             Contact
           </button>
           <PrimaryBtn className="!px-5 !py-2.5" onClick={onReserve}>
@@ -390,7 +387,7 @@ function Navbar({
 }
 
 /* ── Hero ─────────────────────────────────────────────────────────── */
-function Hero({ onBlackBox, onDraft, onReserve }: { onBlackBox: () => void; onDraft: () => void; onReserve: () => void }) {
+function Hero({ onBlackBox }: { onBlackBox: () => void }) {
   const chips = [
     { k: "RAIL", v: "3.30 V" },
     { k: "CURRENT", v: "180 mA" },
@@ -424,14 +421,12 @@ function Hero({ onBlackBox, onDraft, onReserve }: { onBlackBox: () => void; onDr
             className="ark-on-photo"
             style={{ fontFamily: BODY, fontSize: "1.1rem", color: "var(--ark-ink-dim)", lineHeight: 1.72, maxWidth: "33rem", marginTop: "1.8rem" }}
           >
-            Arktos builds precision instruments for people who build circuit boards.{" "}
-            <strong style={{ color: "#fff", fontWeight: 600 }}>BlackBox</strong> records the signals your board checks first, so you replay the failure instead of chasing it — and{" "}
-            <strong style={{ color: "#fff", fontWeight: 600 }}>Draft</strong> pulls solder fumes away at the tip.
+            We build bench instruments for people who build circuit boards.{" "}
+            <strong style={{ color: "#fff", fontWeight: 600 }}>BlackBox</strong> quietly records the signals your board checks first, so when it dies you can play the failure back instead of hunting for it.
           </p>
 
           <div className="flex flex-wrap gap-3 mt-9">
             <PrimaryBtn onClick={onBlackBox}>Explore BlackBox <ArrowRight size={15} /></PrimaryBtn>
-            <GhostBtn onClick={onDraft}>See Draft <ArrowUpRight size={15} /></GhostBtn>
           </div>
 
           <div className="flex flex-wrap gap-x-7 gap-y-3 mt-10">
@@ -447,9 +442,6 @@ function Hero({ onBlackBox, onDraft, onReserve }: { onBlackBox: () => void; onDr
         {/* instrument column drops low and pushes left over the copy */}
         <div className="lg:mt-32 lg:-ml-10 xl:-ml-16">
           <RewindTimeline />
-          <button onClick={onReserve} className="ark-focus ark-on-photo mt-3 inline-flex items-center gap-1.5 hover:text-white transition-colors" style={{ fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "0.08em", color: "var(--ark-ink-dim)", background: "none", border: "none", cursor: "pointer" }}>
-            Drag the playhead — that's the whole idea <ArrowRight size={13} />
-          </button>
         </div>
       </div>
     </section>
@@ -535,12 +527,12 @@ function Products({ onProduct, onReserve }: { onProduct: (id: ProductId) => void
       <CircuitBackdrop tint="deep" grid={false} image={glacierPrototype} position="center 35%" />
       <div className="relative z-10 max-w-6xl mx-auto">
         <Reveal className="max-w-2xl mb-20">
-          <Eyebrow>Two instruments</Eyebrow>
+          <Eyebrow>The instrument</Eyebrow>
           <h2 className="ark-on-photo" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(2rem, 3.5vw, 3rem)", lineHeight: 1.02, color: "var(--ark-ink)", marginBottom: "1.1rem" }}>
-            Tools for the two worst parts of building hardware.
+            For the worst part of building hardware.
           </h2>
           <p style={{ fontFamily: BODY, fontSize: "1.05rem", color: "var(--ark-ink-dim)", lineHeight: 1.8 }}>
-            A board that dies without telling you why, and a bench full of solder smoke. We built one instrument for each.
+            A board that dies and won't tell you why. We built one instrument to fix exactly that.
           </p>
         </Reveal>
 
@@ -583,7 +575,7 @@ function SignalChain() {
 function Signals() {
   const signals = [
     { icon: <Gauge size={20} />, title: "Power rails", body: "Up to 2 rails, brownout and startup-dip detection, every change timestamped." },
-    { icon: <Activity size={20} />, title: "Current", body: "Continuous board current with spike and abnormal-mode detection from a high-side INA228." },
+    { icon: <Activity size={20} />, title: "Current", body: "Board current the whole time, from a high-side sensor that flags spikes and unusual draws as they happen." },
     { icon: <Terminal size={20} />, title: "UART", body: "Full serial capture — boot logs and firmware debug output, all timestamped." },
     { icon: <Zap size={20} />, title: "Reset line", body: "Watchdog, brownout, and manual resets, caught the moment they happen." },
     { icon: <CircuitBoard size={20} />, title: "GPIO ×4", body: "Four configurable inputs — name them Motor Enable, Fault Pin, whatever you're chasing." },
@@ -630,10 +622,10 @@ function Signals() {
 /* ── Mission ──────────────────────────────────────────────────────── */
 function Mission() {
   const pillars = [
-    { icon: <Rewind size={20} />, title: "Rewind, don't reproduce", body: "A failure you can replay is a failure you can fix. We record first, so the timeline already has the answer." },
-    { icon: <Radio size={20} />, title: "Capture at the source", body: "Measure where the event happens — at the pin, at the tip — not somewhere across the bench where it's already diluted." },
-    { icon: <Plug size={20} />, title: "Fits the bench you have", body: "Breadboards, a Raspberry Pi, a custom PCB, a soldering iron you already own. One harness, one USB-C cable." },
-    { icon: <Cpu size={20} />, title: "Built by two engineers", body: "A small team that states prototype status plainly and publishes honest specs, not aspirational ones." },
+    { icon: <Rewind size={20} />, title: "Rewind, don't reproduce", body: "A failure you can replay is a failure you can fix. We record first, so by the time it breaks the answer is already sitting on the timeline." },
+    { icon: <Radio size={20} />, title: "Measure at the source", body: "We read the signal right at the pin, where the fault actually happens — not somewhere across the bench where it's already smeared out." },
+    { icon: <Plug size={20} />, title: "Fits the bench you have", body: "A breadboard, a Raspberry Pi, a custom PCB — whatever's already in front of you. One harness, one USB-C cable." },
+    { icon: <Cpu size={20} />, title: "Built by two engineers", body: "There are two of us. We call it a prototype when it's a prototype, and the specs we publish are the real ones." },
   ];
 
   return (
@@ -646,7 +638,7 @@ function Mission() {
             The bench should tell you the truth.
           </h2>
           <p className="ark-on-photo" style={{ fontFamily: BODY, fontSize: "1.05rem", color: "var(--ark-ink-dim)", lineHeight: 1.8 }}>
-            Debugging hardware is mostly guessing at events you didn't see and breathing air you shouldn't. Arktos makes instruments that record what actually happened and keep the bad stuff away from your face — so building boards feels less like detective work.
+            Most hardware debugging is guessing at something you never got to see. We build an instrument that records what actually happened on the board, so you can stop reconstructing the crash and just watch it back.
           </p>
         </div>
 
@@ -682,7 +674,7 @@ const TEAM = [
   {
     name: "Kenzo Liddle",
     title: "Co-founder · Mechanical & CAD",
-    bio: "Kenzo designs the enclosures, the Draft collar and hose, and the wiring harness. He splits his time between CAD and thermodynamics, and pushes hard on manufacturing that fits real benches and doesn't waste stock.",
+    bio: "Kenzo designs the enclosure and the wiring harness. He splits his time between CAD and thermodynamics, and cares about parts that fit a real bench and don't waste stock making them.",
     accent: "#ffffff",
     photo: kenzoTree,
     photoPosition: "center 52%",
@@ -736,7 +728,7 @@ function CTA({ onReserve, onContact }: { onReserve: () => void; onContact: () =>
             Reserve a<br />prototype unit.
           </h2>
           <p className="ark-on-photo" style={{ fontFamily: BODY, fontSize: "1rem", color: "var(--ark-ink-dim)", lineHeight: 1.8, maxWidth: "31rem", marginTop: "1.5rem" }}>
-            We're building the first BlackBox and Draft units with a small group of embedded engineers. Join the reserve list — it's an expression of interest, no payment required.
+            We're building the first BlackBox units with a small group of embedded engineers. Join the reserve list — it just tells us you're interested, and there's no payment involved.
           </p>
           <div className="flex flex-wrap gap-3 mt-9">
             <PrimaryBtn onClick={onReserve}>Reserve a unit <ArrowRight size={14} /></PrimaryBtn>
@@ -926,7 +918,7 @@ function ContactPage({ onHome }: { onHome: () => void }) {
               Let's talk about<br />what you're building.
             </h1>
             <p style={{ fontFamily: BODY, fontSize: "1.02rem", color: "var(--ark-ink-dim)", lineHeight: 1.8, maxWidth: "34rem", marginTop: "1.4rem" }}>
-              Whether you want a prototype on your bench, have a debugging problem BlackBox should catch, or just want to talk hardware — send a note and we'll get back to you.
+              Want a prototype on your bench, have a bug you think BlackBox should catch, or just want to talk hardware? Send a note and we'll get back to you.
             </p>
             <Panel className="mt-8 p-6 max-w-md">
               <p style={{ ...FORM_LABEL_STYLE, marginBottom: "0.6rem" }}>Direct email</p>
@@ -962,7 +954,7 @@ function ContactPage({ onHome }: { onHome: () => void }) {
                 {status === "error" && (
                   <div className="rounded-lg px-4 py-3 border" style={{ background: "rgba(255,255,255,0.08)", borderColor: "rgba(255,255,255,0.24)", color: "var(--ark-fault-2)", fontFamily: BODY }}>{errorMessage}</div>
                 )}
-                <p style={{ fontFamily: BODY, fontSize: "0.8rem", color: "var(--ark-faint)", lineHeight: 1.6 }}>Submissions are delivered securely through Formspree to {ARKTOS_EMAIL}.</p>
+                <p style={{ fontFamily: BODY, fontSize: "0.8rem", color: "var(--ark-faint)", lineHeight: 1.6 }}>You can email us at arktossystems.com</p>
               </form>
             </Panel>
           </Reveal>
@@ -1054,7 +1046,7 @@ function CareersPage({ onHome }: { onHome: () => void }) {
                 {status === "error" && (
                   <div className="rounded-lg px-4 py-3 border" style={{ background: "rgba(255,255,255,0.08)", borderColor: "rgba(255,255,255,0.24)", color: "var(--ark-fault-2)", fontFamily: BODY }}>{errorMessage}</div>
                 )}
-                <p style={{ fontFamily: BODY, fontSize: "0.8rem", color: "var(--ark-faint)", lineHeight: 1.6 }}>Submissions are delivered securely through Formspree to {ARKTOS_EMAIL}.</p>
+                <p style={{ fontFamily: BODY, fontSize: "0.8rem", color: "var(--ark-faint)", lineHeight: 1.6 }}>You can email us at arktossystems.com</p>
               </form>
             </Panel>
           </Reveal>
@@ -1066,18 +1058,13 @@ function CareersPage({ onHome }: { onHome: () => void }) {
 
 /* ── Specs page (BlackBox reference) ──────────────────────────────── */
 function SpecsPage({ onHome, onReserve }: { onHome: () => void; onReserve: () => void }) {
-  const bom = [
-    ["STM32 NUCLEO-H743ZI2", "Main processor", "$40"],
-    ["TI INA228 breakout", "Current sensor", "$20"],
-    ["microSD module + 32GB card", "Storage", "$18"],
-    ["USB-C receptacle + cable", "Power + data", "$8"],
-    ["Buck converter (TPS62130)", "5V → 3.3V", "$5"],
-    ["Protection (ESD, TVS, polyfuse)", "Front-end", "$10"],
-    ["Universal pin header", "On-board interface", "$5"],
-    ["Wiring harness kit", "Breadboard / Pi / PCB tips", "$10"],
-    ["Custom PCB (JLCPCB)", "Fabrication", "$50"],
-    ["3D-printed enclosure", "PLA prototype", "$15"],
-    ["Miscellaneous", "Passives, connectors", "$25"],
+  const materials = [
+    ["Processor", "A 32-bit ARM microcontroller running the real-time recording."],
+    ["Sensing", "A precision high-side current sensor with protection on every input line."],
+    ["Storage", "Onboard memory that keeps a rolling record of the last window."],
+    ["Power & link", "A single USB-C connection carrying both power and data, regulated on board."],
+    ["Interface", "A universal header and a color-coded harness for breadboards, Pi headers, and PCB test points."],
+    ["Enclosure", "A 3D-printed shell over a custom-fabricated carrier board."],
   ];
   const targets = [
     ["Target 3.3V → Voltage input", "via harness"],
@@ -1094,7 +1081,7 @@ function SpecsPage({ onHome, onReserve }: { onHome: () => void; onReserve: () =>
     { phase: "Phase 3", detail: "GPIO recording, reset detection, trigger events, refined harness." },
     { phase: "Phase 4", detail: "Improved enclosure, expanded harness kit, field testing across breadboard, Pi, and PCB." },
   ];
-  const stack = [["PCB design", "KiCad"], ["Firmware", "STM32CubeIDE"], ["Desktop app", "Qt · C++"], ["Prototyping", "Python"], ["Version control", "GitHub"]];
+  const stack = [["PCB design", "KiCad"], ["Firmware", "Embedded C toolchain"], ["Desktop app", "Qt · C++"], ["Prototyping", "Python"], ["Version control", "GitHub"]];
 
   return (
     <main className="relative min-h-screen overflow-hidden px-6 pt-32 pb-24" style={{ background: "var(--ark-bg)" }}>
@@ -1107,26 +1094,21 @@ function SpecsPage({ onHome, onReserve }: { onHome: () => void; onReserve: () =>
             The build sheet.
           </h1>
           <p style={{ fontFamily: BODY, fontSize: "1.02rem", color: "var(--ark-ink-dim)", lineHeight: 1.8 }}>
-            Everything in the V1 BlackBox prototype — the parts, the connections, and where it's headed. Figures reflect current engineering direction and will change through validation.
+            A look at what goes into the V1 BlackBox prototype — the materials, the connections, and where it's headed. Everything here reflects our current direction and keeps changing as we validate it.
           </p>
         </Reveal>
 
         <div className="grid lg:grid-cols-2 gap-6">
           <Reveal>
             <Panel className="p-7">
-              <h2 style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "1.4rem", color: "var(--ark-ink)", marginBottom: "1.2rem" }}>Prototype bill of materials</h2>
+              <h2 style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "1.4rem", color: "var(--ark-ink)", marginBottom: "1.2rem" }}>What's inside</h2>
               <div className="grid gap-0 divide-y" style={{ borderColor: "var(--ark-line-soft)" }}>
-                {bom.map(([part, role, cost]) => (
-                  <div key={part} className="grid grid-cols-[1.4fr_1fr_auto] gap-3 py-3 first:pt-0 items-baseline" style={{ borderColor: "var(--ark-line-soft)" }}>
-                    <span style={{ fontFamily: BODY, fontSize: "0.9rem", color: "var(--ark-ink)" }}>{part}</span>
-                    <span style={{ fontFamily: BODY, fontSize: "0.8rem", color: "var(--ark-muted)" }}>{role}</span>
-                    <span style={{ fontFamily: MONO, fontSize: "0.85rem", color: "var(--ark-signal)", textAlign: "right" }}>{cost}</span>
+                {materials.map(([label, desc]) => (
+                  <div key={label} className="grid sm:grid-cols-[0.7fr_1.3fr] gap-2 sm:gap-4 py-3.5 first:pt-0 items-baseline" style={{ borderColor: "var(--ark-line-soft)" }}>
+                    <span style={{ fontFamily: MONO, fontSize: "0.66rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ark-signal)" }}>{label}</span>
+                    <span style={{ fontFamily: BODY, fontSize: "0.9rem", color: "var(--ark-ink-dim)", lineHeight: 1.6 }}>{desc}</span>
                   </div>
                 ))}
-                <div className="grid grid-cols-[1fr_auto] gap-3 pt-4 items-baseline">
-                  <span style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "0.95rem", color: "var(--ark-ink)" }}>Estimated hardware cost</span>
-                  <span style={{ fontFamily: MONO, fontSize: "1.05rem", color: "var(--ark-signal)", textAlign: "right" }}>≈ $206</span>
-                </div>
               </div>
             </Panel>
           </Reveal>
@@ -1194,7 +1176,7 @@ function LegalPage({ type, onHome, a11y, onToggleA11y }: { type: "privacy" | "te
       : [
         { title: "Use of the site", body: "This site presents Arktos Systems concepts, prototype information, and early-access opportunities. Product details may change as engineering validation continues." },
         { title: "Reservations", body: "Joining the reserve list is an expression of interest only. It does not reserve final inventory, guarantee price, confirm specifications, or require payment." },
-        { title: "Prototype status", body: "BlackBox and Draft are in prototype development. Performance, compatibility, materials, availability, and shipping windows may change before launch." },
+        { title: "Prototype status", body: "BlackBox is in prototype development. Performance, compatibility, materials, availability, and shipping windows may change before launch." },
         { title: "Site content", body: "Arktos names, graphics, product concepts, and site assets are presented for Arktos Systems and may not be reused as a competing product identity without permission." },
       ];
 
@@ -1271,7 +1253,7 @@ function Footer({
   onSection: (section: string) => void;
 }) {
   const columns: FooterColumn[] = [
-    { title: "Products", links: [{ label: "BlackBox", action: () => onProduct("blackbox") }, { label: "Draft", action: () => onProduct("draft") }, { label: "Reserve", action: onReserve }] },
+    { title: "Products", links: [{ label: "BlackBox", action: () => onProduct("blackbox") }, { label: "Reserve", action: onReserve }] },
     { title: "Explore", links: [{ label: "Specs", action: onSpecs }, { label: "Mission", action: () => onSection("mission") }, { label: "Team", action: () => onSection("team") }] },
     { title: "Company", links: [{ label: "Contact", action: onContact }, { label: "Careers", action: onCareers }] },
     { title: "Legal", links: [{ label: "Privacy", action: () => onLegalPage("privacy") }, { label: "Terms", action: () => onLegalPage("terms") }, { label: "Accessibility", action: () => onLegalPage("accessibility") }] },
@@ -1320,6 +1302,7 @@ export default function App() {
   const [showAnnouncement, setShowAnnouncement] = useState(true);
   const [page, setPage] = useState<Page>("home");
   const [reserveProduct, setReserveProduct] = useState<ProductId>("blackbox");
+  const [pendingSection, setPendingSection] = useState<string | null>(null);
   const [a11y, setA11y] = useState(false);
 
   useSmoothScroll();
@@ -1350,12 +1333,24 @@ export default function App() {
   const goProduct = (id: ProductId) => go(id);
   const goSection = (section: string) => {
     if (page !== "home") {
+      // Switch to home first, then scroll once the home layout has mounted —
+      // see the effect below. Scrolling synchronously here would target the
+      // old page's DOM and land nowhere, forcing a second click.
+      setPendingSection(section);
       setPage("home");
-      requestAnimationFrame(() => requestAnimationFrame(() => scrollToId(section)));
     } else {
       scrollToId(section);
     }
   };
+
+  // Runs after the home page has rendered following a section request from
+  // another page, so the target element exists and the scroll lands first try.
+  useEffect(() => {
+    if (page !== "home" || !pendingSection) return;
+    const section = pendingSection;
+    setPendingSection(null);
+    requestAnimationFrame(() => requestAnimationFrame(() => scrollToId(section)));
+  }, [page, pendingSection]);
 
   return (
     <div className="relative" style={{ fontFamily: BODY, background: "var(--ark-bg)", color: "var(--ark-ink)" }}>
@@ -1374,14 +1369,14 @@ export default function App() {
 
       {page === "home" ? (
         <>
-          <Hero onBlackBox={() => goProduct("blackbox")} onDraft={() => goProduct("draft")} onReserve={() => goReserve()} />
+          <Hero onBlackBox={() => goProduct("blackbox")} />
           <ToolMarquee />
           <Products onProduct={goProduct} onReserve={() => goReserve()} />
           <SignalChain />
           <BlackBoxExploded
             eyebrow="Inside BlackBox"
             title="Every layer, accounted for."
-            subtitle="Scroll — the V1 comes apart the way it goes together: printed shell, radio module, carrier PCB, bottom plate."
+            subtitle="The V1 comes apart the way it goes together: printed shell, radio module, carrier PCB, bottom plate."
           />
           <Signals />
           <Mission />

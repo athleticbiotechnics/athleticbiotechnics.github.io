@@ -82,7 +82,7 @@
   100% { transform: translateX(108%); opacity: 0; }
 }
 
-/* Fan blade spin for the Draft mockup */
+/* Fan blade spin (legacy mockup animation) */
 @keyframes ark-spin {
   to { transform: rotate(360deg); }
 }

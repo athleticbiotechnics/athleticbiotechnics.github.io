@@ -83,7 +83,6 @@ export function BlackBoxExploded({
   const [activeParts, setActiveParts] = useState<boolean[]>(() => PART_DEFS.map(() => false));
 
   const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
-  const hintOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
   const barScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
   /* The intro copy hands the frame to the model once the teardown starts —
      on narrow screens the lifted shell would otherwise sit behind the text. */
@@ -291,14 +290,6 @@ export function BlackBoxExploded({
                   })}
                 </ul>
 
-                {!reducedMotion && (
-                  <motion.span
-                    className="ark-on-photo hidden md:inline-flex items-center gap-2 whitespace-nowrap"
-                    style={{ fontFamily: MONO, fontSize: "0.66rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--ark-ink-dim)", opacity: hintOpacity }}
-                  >
-                    Keep scrolling — it comes apart ↓
-                  </motion.span>
-                )}
               </div>
             </div>
           </div>
