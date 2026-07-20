@@ -18,10 +18,12 @@
   --ark-signal-2: #8fb8dd;
   --ark-signal-deep: #6a9bcb;
 
-  /* Neutral action buttons — flat matte gray (no gradient), replaces blue CTAs */
-  --ark-btn: #5c6167;
-  --ark-btn-hover: #6d7278;
-  --ark-btn-ink: #f6f9fc;
+  /* Action buttons — solid signal blue on near-black ink. The matte gray CTAs
+     read as disabled next to the photography, so primary actions now carry the
+     brand accent at full strength. Still inside the baby-blue/black/white set. */
+  --ark-btn: #a8cbe8;
+  --ark-btn-hover: #c9e0f4;
+  --ark-btn-ink: #06080c;
 
   --ark-fault: #ffffff;
   --ark-fault-2: #dde8f3;

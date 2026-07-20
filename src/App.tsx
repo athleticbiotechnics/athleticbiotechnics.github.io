@@ -3,17 +3,8 @@ import { motion, useScroll, useTransform } from "motion/react";
 import {
   ArrowRight,
   ArrowLeft,
-  Rewind,
-  Radio,
-  Plug,
-  Cpu,
   Menu,
   X,
-  Activity,
-  Gauge,
-  Terminal,
-  Zap,
-  CircuitBoard,
   Youtube,
   Instagram,
   MessageCircle,
@@ -55,7 +46,6 @@ const {
   sidakProfile,
   glacierCave,
   glacierPrototype,
-  alpineBackground,
   mcdonaldLakeBackground,
   arcticIce,
   careersBackground,
@@ -108,26 +98,31 @@ function PrimaryBtn({
   onClick,
   type = "button",
   disabled = false,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
+  style?: React.CSSProperties;
 }) {
   return (
     <button
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`ark-focus ark-btn-primary group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-sm text-sm transition-colors duration-150 disabled:opacity-50 ${className}`}
+      className={`ark-focus ark-btn-primary group inline-flex items-center justify-center gap-2.5 px-9 py-4 rounded-sm transition-colors duration-150 disabled:opacity-50 ${className}`}
       style={{
         background: "var(--ark-btn)",
         backgroundImage: "none",
         color: "var(--ark-btn-ink)",
         fontFamily: BODY,
-        fontWeight: 600,
-        letterSpacing: "0.01em",
+        fontWeight: 700,
+        fontSize: "0.98rem",
+        letterSpacing: "0.015em",
+        boxShadow: "0 10px 30px rgba(168,203,232,0.22)",
+        ...style,
       }}
     >
       {children}
@@ -147,8 +142,16 @@ function GhostBtn({
   return (
     <button
       onClick={onClick}
-      className={`ark-focus group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-sm text-sm border transition-colors duration-150 hover:border-white/45 ${className}`}
-      style={{ background: "transparent", borderColor: "rgba(255,255,255,0.24)", color: "var(--ark-ink)", fontFamily: BODY }}
+      className={`ark-focus group inline-flex items-center justify-center gap-2.5 px-9 py-4 rounded-sm transition-colors duration-150 ${className}`}
+      style={{
+        background: "rgba(255,255,255,0.06)",
+        border: "2px solid rgba(168,203,232,0.55)",
+        color: "var(--ark-ink)",
+        fontFamily: BODY,
+        fontWeight: 600,
+        fontSize: "0.98rem",
+        letterSpacing: "0.015em",
+      }}
     >
       {children}
     </button>
@@ -273,7 +276,6 @@ type NavItem =
 
 const NAV_LINKS: NavItem[] = [
   { label: "BlackBox", kind: "product", id: "blackbox" },
-  { label: "Mission", kind: "section", section: "mission" },
   { label: "Team", kind: "section", section: "team" },
   { label: "Specs", kind: "page", page: "specs" },
 ];
@@ -388,13 +390,6 @@ function Navbar({
 
 /* ── Hero ─────────────────────────────────────────────────────────── */
 function Hero({ onBlackBox }: { onBlackBox: () => void }) {
-  const chips = [
-    { k: "RAIL", v: "3.30 V" },
-    { k: "CURRENT", v: "180 mA" },
-    { k: "UART", v: "live" },
-    { k: "GPIO", v: "×4" },
-  ];
-
   return (
     <section id="home" className="relative w-full min-h-screen flex items-center overflow-hidden pt-36 pb-20 px-6">
       <CircuitBackdrop image={mcdonaldLakeBackground} position="center 45%" scrim="left" />
@@ -402,12 +397,6 @@ function Hero({ onBlackBox }: { onBlackBox: () => void }) {
       <div className="relative z-20 max-w-6xl mx-auto w-full grid lg:grid-cols-[1.04fr_0.96fr] gap-14 lg:gap-10 items-start">
         {/* copy column sits high */}
         <div className="lg:pt-6">
-          <span className="inline-flex items-center mb-8">
-            <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--ark-ink-dim)" }}>
-              Arktos Systems · bench instruments
-            </span>
-          </span>
-
           <h1
             className="ark-on-photo"
             style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(2.5rem, 5vw, 4.3rem)", lineHeight: 0.96, letterSpacing: "0", color: "#ffffff" }}
@@ -425,17 +414,14 @@ function Hero({ onBlackBox }: { onBlackBox: () => void }) {
             <strong style={{ color: "#fff", fontWeight: 600 }}>BlackBox</strong> quietly records the signals your board checks first, so when it dies you can play the failure back instead of hunting for it.
           </p>
 
-          <div className="flex flex-wrap gap-3 mt-9">
-            <PrimaryBtn onClick={onBlackBox}>Explore BlackBox <ArrowRight size={15} /></PrimaryBtn>
-          </div>
-
-          <div className="flex flex-wrap gap-x-7 gap-y-3 mt-10">
-            {chips.map((c) => (
-              <span key={c.k} className="inline-flex items-baseline gap-2">
-                <span className="ark-on-photo" style={{ fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "0.16em", color: "var(--ark-muted)" }}>{c.k}</span>
-                <span className="ark-on-photo" style={{ fontFamily: MONO, fontSize: "0.82rem", color: "var(--ark-signal)" }}>{c.v}</span>
-              </span>
-            ))}
+          <div className="flex flex-wrap gap-3 mt-10">
+            <PrimaryBtn
+              className="!px-10 !py-[1.15rem]"
+              style={{ fontSize: "1.06rem", boxShadow: "0 14px 44px rgba(168,203,232,0.34)" }}
+              onClick={onBlackBox}
+            >
+              Explore BlackBox <ArrowRight size={17} />
+            </PrimaryBtn>
           </div>
         </div>
 
@@ -493,22 +479,20 @@ function ProductRow({
       }`}
     >
       <div className={`ark-on-photo relative z-10 ${flip ? "lg:order-2 lg:pl-16 lg:pt-10" : "lg:pr-16"}`}>
-        <Eyebrow>{product.code} · {product.kind}</Eyebrow>
         <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(1.9rem, 3.4vw, 2.8rem)", lineHeight: 0.98, letterSpacing: "0", color: "var(--ark-ink)", marginBottom: "1rem" }}>
           {product.name}
         </h3>
         <p style={{ fontFamily: BODY, fontSize: "1.05rem", color: "var(--ark-signal)", marginBottom: "1rem" }}>{product.tagline}</p>
-        <p style={{ fontFamily: BODY, fontSize: "0.98rem", color: "var(--ark-ink-dim)", lineHeight: 1.75, maxWidth: "34rem", marginBottom: "1.6rem" }}>{product.summary}</p>
-        <ul className="grid gap-3 mb-8 border-l" style={{ borderColor: "var(--ark-line)" }}>
-          {product.features.slice(0, 4).map((f) => (
-            <li key={f} className="pl-4" style={{ fontFamily: BODY, fontSize: "0.92rem", color: "var(--ark-ink-dim)", lineHeight: 1.6 }}>
-              {f}
-            </li>
-          ))}
-        </ul>
-        <div className="flex flex-wrap gap-3">
-          <PrimaryBtn onClick={() => onExplore(id)}>Explore {product.name} <ArrowRight size={14} /></PrimaryBtn>
-          <GhostBtn onClick={onReserve}>{product.reserveLabel}</GhostBtn>
+        <p style={{ fontFamily: BODY, fontSize: "1.02rem", color: "var(--ark-ink-dim)", lineHeight: 1.75, maxWidth: "34rem", marginBottom: "2rem" }}>{product.shortSummary}</p>
+        <div className="flex flex-wrap gap-4">
+          <PrimaryBtn
+            className="!px-10 !py-[1.15rem]"
+            style={{ fontSize: "1.06rem", boxShadow: "0 14px 44px rgba(168,203,232,0.34)" }}
+            onClick={() => onExplore(id)}
+          >
+            Explore {product.name} <ArrowRight size={17} />
+          </PrimaryBtn>
+          <GhostBtn className="!px-10 !py-[1.15rem]" onClick={onReserve}>{product.reserveLabel}</GhostBtn>
         </div>
       </div>
 
@@ -527,7 +511,6 @@ function Products({ onProduct, onReserve }: { onProduct: (id: ProductId) => void
       <CircuitBackdrop tint="deep" grid={false} image={glacierPrototype} position="center 35%" />
       <div className="relative z-10 max-w-6xl mx-auto">
         <Reveal className="max-w-2xl mb-20">
-          <Eyebrow>The instrument</Eyebrow>
           <h2 className="ark-on-photo" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(2rem, 3.5vw, 3rem)", lineHeight: 1.02, color: "var(--ark-ink)", marginBottom: "1.1rem" }}>
             For the worst part of building hardware.
           </h2>
@@ -539,121 +522,6 @@ function Products({ onProduct, onReserve }: { onProduct: (id: ProductId) => void
         <div className="flex flex-col gap-28">
           {PRODUCT_IDS.map((id, i) => (
             <ProductRow key={id} id={id} index={i} onExplore={onProduct} onReserve={onReserve} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── Signal chain (how BlackBox works) ────────────────────────────── */
-function SignalChain() {
-  const steps = ["Target board", "Wiring harness", "BlackBox", "Circular buffer", "USB-C", "Desktop timeline"];
-  return (
-    <section className="relative py-24 px-6 overflow-hidden" style={{ background: "var(--ark-bg-2)" }}>
-      <div className="relative z-10 max-w-6xl mx-auto">
-        <Reveal className="mb-12 max-w-2xl">
-          <Eyebrow>How BlackBox works</Eyebrow>
-          <h2 style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "clamp(1.8rem, 3.2vw, 2.6rem)", lineHeight: 1.02, letterSpacing: "0", color: "var(--ark-ink)" }}>
-            Always recording. You just rewind.
-          </h2>
-        </Reveal>
-        <ol className="flex flex-wrap items-baseline gap-x-10 gap-y-6">
-          {steps.map((s, i) => (
-            <li key={s} className="flex items-baseline gap-3 pt-4 border-t" style={{ borderColor: "var(--ark-line-soft)", minWidth: "132px" }}>
-              <span style={{ fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "0.14em", color: "var(--ark-signal)" }}>{String(i + 1).padStart(2, "0")}</span>
-              <span style={{ fontFamily: BODY, fontSize: "0.92rem", color: "var(--ark-ink)" }}>{s}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-  );
-}
-
-/* ── Signals grid ─────────────────────────────────────────────────── */
-function Signals() {
-  const signals = [
-    { icon: <Gauge size={20} />, title: "Power rails", body: "Up to 2 rails, brownout and startup-dip detection, every change timestamped." },
-    { icon: <Activity size={20} />, title: "Current", body: "Board current the whole time, from a high-side sensor that flags spikes and unusual draws as they happen." },
-    { icon: <Terminal size={20} />, title: "UART", body: "Full serial capture — boot logs and firmware debug output, all timestamped." },
-    { icon: <Zap size={20} />, title: "Reset line", body: "Watchdog, brownout, and manual resets, caught the moment they happen." },
-    { icon: <CircuitBoard size={20} />, title: "GPIO ×4", body: "Four configurable inputs — name them Motor Enable, Fault Pin, whatever you're chasing." },
-    { icon: <Radio size={20} />, title: "Analog in", body: "One configurable channel for a battery rail, a thermistor, or a sensor output." },
-  ];
-  return (
-    <section className="relative py-32 px-6 overflow-hidden" style={{ background: "var(--ark-bg)" }}>
-      <CircuitBackdrop grid={false} image={glacierCave} position="center 45%" />
-      <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-[0.76fr_1.24fr] gap-14 lg:gap-20 items-start">
-        <div className="lg:sticky lg:top-32">
-          <Eyebrow>V1 signal set</Eyebrow>
-          <h2 className="ark-on-photo" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(1.9rem, 3.3vw, 2.8rem)", lineHeight: 0.98, letterSpacing: "0", color: "var(--ark-ink)" }}>
-            The signals engineers check first.
-          </h2>
-          <p className="mt-6" style={{ fontFamily: BODY, fontSize: "0.95rem", color: "var(--ark-muted)", lineHeight: 1.75, maxWidth: "22rem" }}>
-            Six channels, one harness, every sample stamped against the same clock.
-          </p>
-        </div>
-
-        {/* staggered indents — deliberately not a grid of cards */}
-        <ul>
-          {signals.map((s, i) => (
-            <li
-              key={s.title}
-              className={`flex gap-5 sm:gap-7 border-t ${i % 2 === 1 ? "lg:pl-16" : ""} ${i === 0 ? "pt-0 border-t-0 pb-8" : "py-8"}`}
-              style={{ borderColor: "var(--ark-line-soft)" }}
-            >
-              <span className="pt-1 flex-shrink-0" style={{ fontFamily: MONO, fontSize: "0.62rem", letterSpacing: "0.14em", color: "var(--ark-faint)" }}>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="pt-0.5 flex-shrink-0" style={{ color: "var(--ark-signal)" }}>{s.icon}</span>
-              <div className="ark-on-photo">
-                <h3 style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "1.2rem", color: "var(--ark-ink)", marginBottom: "0.45rem" }}>{s.title}</h3>
-                <p style={{ fontFamily: BODY, fontSize: "0.92rem", color: "var(--ark-ink-dim)", lineHeight: 1.7, maxWidth: "30rem" }}>{s.body}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
-/* ── Mission ──────────────────────────────────────────────────────── */
-function Mission() {
-  const pillars = [
-    { icon: <Rewind size={20} />, title: "Rewind, don't reproduce", body: "A failure you can replay is a failure you can fix. We record first, so by the time it breaks the answer is already sitting on the timeline." },
-    { icon: <Radio size={20} />, title: "Measure at the source", body: "We read the signal right at the pin, where the fault actually happens — not somewhere across the bench where it's already smeared out." },
-    { icon: <Plug size={20} />, title: "Fits the bench you have", body: "A breadboard, a Raspberry Pi, a custom PCB — whatever's already in front of you. One harness, one USB-C cable." },
-    { icon: <Cpu size={20} />, title: "Built by two engineers", body: "There are two of us. We call it a prototype when it's a prototype, and the specs we publish are the real ones." },
-  ];
-
-  return (
-    <section id="mission" className="relative py-36 px-6 overflow-hidden" style={{ background: "var(--ark-bg-2)" }}>
-      <CircuitBackdrop image={alpineBackground} />
-      <div className="relative z-10 max-w-6xl mx-auto">
-        <div className="max-w-2xl mb-24">
-          <Eyebrow>Our mission</Eyebrow>
-          <h2 className="ark-on-photo" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(2rem, 3.7vw, 3.1rem)", lineHeight: 0.96, letterSpacing: "0", color: "var(--ark-ink)", marginBottom: "1.3rem" }}>
-            The bench should tell you the truth.
-          </h2>
-          <p className="ark-on-photo" style={{ fontFamily: BODY, fontSize: "1.05rem", color: "var(--ark-ink-dim)", lineHeight: 1.8 }}>
-            Most hardware debugging is guessing at something you never got to see. We build an instrument that records what actually happened on the board, so you can stop reconstructing the crash and just watch it back.
-          </p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 gap-x-10 gap-y-12">
-          {pillars.map((p, i) => (
-            <div key={p.title} className="ark-on-photo">
-              <div className="flex items-center gap-3 pb-4 mb-4 border-b" style={{ borderColor: "var(--ark-line)" }}>
-                <span style={{ color: "var(--ark-signal)" }}>{p.icon}</span>
-                <span style={{ fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "0.16em", color: "var(--ark-muted)" }}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
-              <h3 style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "1.35rem", lineHeight: 1.15, color: "var(--ark-ink)", marginBottom: "0.6rem" }}>{p.title}</h3>
-              <p style={{ fontFamily: BODY, fontSize: "0.92rem", color: "var(--ark-ink-dim)", lineHeight: 1.75 }}>{p.body}</p>
-            </div>
           ))}
         </div>
       </div>
@@ -723,16 +591,21 @@ function CTA({ onReserve, onContact }: { onReserve: () => void; onContact: () =>
       <CircuitBackdrop image={arcticIce} position="center 55%" scrim="left" />
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="max-w-xl">
-          <Eyebrow>Put one on your bench</Eyebrow>
           <h2 className="ark-on-photo" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(2.1rem, 4vw, 3.2rem)", lineHeight: 0.95, letterSpacing: "0", color: "#ffffff" }}>
             Reserve a<br />prototype unit.
           </h2>
           <p className="ark-on-photo" style={{ fontFamily: BODY, fontSize: "1rem", color: "var(--ark-ink-dim)", lineHeight: 1.8, maxWidth: "31rem", marginTop: "1.5rem" }}>
             We're building the first BlackBox units with a small group of embedded engineers. Join the reserve list — it just tells us you're interested, and there's no payment involved.
           </p>
-          <div className="flex flex-wrap gap-3 mt-9">
-            <PrimaryBtn onClick={onReserve}>Reserve a unit <ArrowRight size={14} /></PrimaryBtn>
-            <GhostBtn onClick={onContact}>Talk to us</GhostBtn>
+          <div className="flex flex-wrap gap-4 mt-10">
+            <PrimaryBtn
+              className="!px-10 !py-[1.15rem]"
+              style={{ fontSize: "1.06rem", boxShadow: "0 14px 44px rgba(168,203,232,0.34)" }}
+              onClick={onReserve}
+            >
+              Reserve a unit <ArrowRight size={17} />
+            </PrimaryBtn>
+            <GhostBtn className="!px-10 !py-[1.15rem]" onClick={onContact}>Talk to us</GhostBtn>
           </div>
         </div>
       </div>
@@ -1254,7 +1127,7 @@ function Footer({
 }) {
   const columns: FooterColumn[] = [
     { title: "Products", links: [{ label: "BlackBox", action: () => onProduct("blackbox") }, { label: "Reserve", action: onReserve }] },
-    { title: "Explore", links: [{ label: "Specs", action: onSpecs }, { label: "Mission", action: () => onSection("mission") }, { label: "Team", action: () => onSection("team") }] },
+    { title: "Explore", links: [{ label: "Specs", action: onSpecs }, { label: "Team", action: () => onSection("team") }] },
     { title: "Company", links: [{ label: "Contact", action: onContact }, { label: "Careers", action: onCareers }] },
     { title: "Legal", links: [{ label: "Privacy", action: () => onLegalPage("privacy") }, { label: "Terms", action: () => onLegalPage("terms") }, { label: "Accessibility", action: () => onLegalPage("accessibility") }] },
   ];
@@ -1285,9 +1158,8 @@ function Footer({
             ))}
           </div>
         </div>
-        <div className="mt-12 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" style={{ borderTop: "1px solid var(--ark-line-soft)" }}>
+        <div className="mt-12 pt-6" style={{ borderTop: "1px solid var(--ark-line-soft)" }}>
           <p style={{ fontFamily: MONO, fontSize: "0.72rem", color: "var(--ark-faint)" }}>© 2026 Arktos Systems, Inc.</p>
-          <p style={{ fontFamily: MONO, fontSize: "0.72rem", color: "var(--ark-faint)", letterSpacing: "0.04em" }}>Engineered honestly · prototype in progress</p>
         </div>
       </div>
     </footer>
@@ -1372,14 +1244,10 @@ export default function App() {
           <Hero onBlackBox={() => goProduct("blackbox")} />
           <ToolMarquee />
           <Products onProduct={goProduct} onReserve={() => goReserve()} />
-          <SignalChain />
           <BlackBoxExploded
-            eyebrow="Inside BlackBox"
             title="Every layer, accounted for."
             subtitle="The V1 comes apart the way it goes together: printed shell, radio module, carrier PCB, bottom plate."
           />
-          <Signals />
-          <Mission />
           <Team />
           <CTA onReserve={() => goReserve()} onContact={goContact} />
         </>

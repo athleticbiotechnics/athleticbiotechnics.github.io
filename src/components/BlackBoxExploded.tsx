@@ -22,8 +22,6 @@ const PART_DEFS = [
   {
     key: "top",
     url: BLACKBOX_MODELS.top,
-    label: "Top enclosure",
-    note: "Printed shell · status LEDs",
     window: [0.02, 0.52] as const,
     offset: 54,
     material: createShellMaterial,
@@ -31,8 +29,6 @@ const PART_DEFS = [
   {
     key: "esp32",
     url: BLACKBOX_MODELS.esp32,
-    label: "ESP-WROOM-32",
-    note: "Radio + compute module",
     window: [0.18, 0.66] as const,
     offset: 23,
     material: createShieldMaterial,
@@ -40,8 +36,6 @@ const PART_DEFS = [
   {
     key: "circuit",
     url: BLACKBOX_MODELS.circuit,
-    label: "Carrier PCB",
-    note: "Sensors · USB-C · universal header",
     window: [0.34, 0.8] as const,
     offset: 5,
     material: createPcbMaterial,
@@ -51,8 +45,6 @@ const PART_DEFS = [
   {
     key: "bottomPlate",
     url: BLACKBOX_MODELS.bottomPlate,
-    label: "Bottom plate",
-    note: "Four screws, fully serviceable",
     window: [0.48, 0.98] as const,
     offset: -30,
     material: createShellMaterial,
@@ -71,7 +63,7 @@ export function BlackBoxExploded({
   title,
   subtitle,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   subtitle: string;
 }) {
@@ -80,7 +72,6 @@ export function BlackBoxExploded({
   const progressRef = useRef(0);
   const reducedMotion = useReducedMotion();
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
-  const [activeParts, setActiveParts] = useState<boolean[]>(() => PART_DEFS.map(() => false));
 
   const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
   const barScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
@@ -91,15 +82,12 @@ export function BlackBoxExploded({
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     progressRef.current = v;
-    const next = PART_DEFS.map((d) => subProgress(v, d.window) > 0.12);
-    setActiveParts((prev) => (prev.every((b, i) => b === next[i]) ? prev : next));
   });
 
   useEffect(() => {
     if (reducedMotion) {
       // Static exploded pose, no scroll choreography.
       progressRef.current = 0.85;
-      setActiveParts(PART_DEFS.map(() => true));
     }
 
     const host = hostRef.current;
@@ -255,9 +243,11 @@ export function BlackBoxExploded({
           <div className="absolute inset-0 pointer-events-none px-6 lg:px-10">
             <div className="max-w-6xl mx-auto h-full flex flex-col justify-between pt-28 pb-14">
               <motion.div className="max-w-xl" style={reducedMotion ? undefined : { opacity: introOpacity, y: introY }}>
-                <span style={{ fontFamily: NORDIC, fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--ark-signal)", display: "block", marginBottom: "1.1rem" }}>
-                  {eyebrow}
-                </span>
+                {eyebrow && (
+                  <span style={{ fontFamily: NORDIC, fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--ark-signal)", display: "block", marginBottom: "1.1rem" }}>
+                    {eyebrow}
+                  </span>
+                )}
                 <h2 className="ark-on-photo" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(1.9rem, 3.4vw, 2.8rem)", lineHeight: 0.98, color: "var(--ark-ink)", marginBottom: "0.9rem" }}>
                   {title}
                 </h2>
@@ -265,32 +255,6 @@ export function BlackBoxExploded({
                   {subtitle}
                 </p>
               </motion.div>
-
-              <div className="flex items-end justify-between gap-6">
-                <ul className="grid gap-3">
-                  {PART_DEFS.map((d, i) => {
-                    const active = activeParts[i];
-                    return (
-                      <li
-                        key={d.key}
-                        className="flex items-baseline gap-3 pl-4 border-l transition-all duration-500"
-                        style={{ borderColor: active ? "var(--ark-signal)" : "var(--ark-line)", opacity: active ? 1 : 0.4 }}
-                      >
-                        <span style={{ fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "0.14em", color: active ? "var(--ark-signal)" : "var(--ark-faint)" }}>
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <div className="ark-on-photo">
-                          <div style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "1rem", color: "var(--ark-ink)" }}>{d.label}</div>
-                          <div className="hidden sm:block" style={{ fontFamily: MONO, fontSize: "0.64rem", letterSpacing: "0.08em", color: "var(--ark-muted)", marginTop: "2px" }}>
-                            {d.note}
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-
-              </div>
             </div>
           </div>
 
